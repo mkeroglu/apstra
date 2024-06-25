@@ -1,0 +1,105 @@
+---
+  ### ---------------------------------------------------------------------------
+  ### APSTRA API AUTOMATION
+  ### ---------------------------------------------------------------------------
+  - hosts: localhost
+    gather_facts: True
+    connection: local
+    roles:
+      - { role: apstra_auth }
+
+    tasks:
+      - name: "Get Blueprint ID"
+        ansible.builtin.uri:
+          url: "{{ apstra.baseurl }}/blueprints"
+          method: GET
+         # return_content: yes
+          status_code: 200
+          headers:
+            content-type: "application/json"
+            AUTHTOKEN: "{{ login.json.token }}"
+          validate_certs: false
+          force_basic_auth: yes
+        register: bp_ids
+
+
+      - name: Retrieve Blueprint ID
+        ansible.builtin.set_fact:
+          bp_id: "{{ bp_ids.json | cleanup_bp_id(bp_name) }}"
+
+
+
+
+      - name: set timedate to get consistency accross the collected data
+        ansible.builtin.set_fact:
+          datetime_of_pb: "{{ ansible_date_time['iso8601_basic'] }}"
+
+
+      - name: Get dcn_system table from PostgreSQL
+        postgresql_query:
+          db: "{{ pg_login_db }}"
+          login_user: "{{ pg_login_user }}"
+          login_password: "{{ pg_login_password }}"
+          login_host: "{{ pg_login_host }}"
+          query: SELECT (blueprint_id, remote_id) FROM {{ gensystems_tablename }}
+        register: gensystem_table
+
+      - name: show gensystem_table
+        ansible.builtin.set_fact:
+          gen_systems_bp_rmids: "{{ gensystem_table.query_result | unique | select | list }}"
+      
+      - name: show gensystem table
+        ansible.builtin.debug:
+          msg: "{{ gen_systems_bp_rmids }}"        
+      - name: Get systems
+        ansible.builtin.uri:
+          url: "{{ apstra.baseurl }}/blueprints/{{ bp_id }}/nodes?node_type=system"
+          method: GET
+          return_content: yes
+          status_code: 200
+          headers:
+            content-type: "application/json"
+            AUTHTOKEN: "{{ login.json.token }}"
+          validate_certs: false
+          force_basic_auth: yes
+          body_format: json
+        register: systems
+
+      - name: show systems apstra structured data
+        ansible.builtin.debug:
+          msg: "{{ systems.json['nodes'] }}"
+
+
+
+
+
+      - name: show presql data
+        ansible.builtin.debug:
+          msg: "{{ systems.json['nodes'] |  get_systems_pgsql_ready_format(bp_id, gen_systems_bp_rmids) }}"
+
+
+      - name: set systems_info to seed postgresql template file
+        ansible.builtin.set_fact:
+          systems_info: "{{ systems.json['nodes'] |  get_systems_pgsql_ready_format(bp_id, gen_systems_bp_rmids) }}"
+
+      - name: Insert systems of type server, a.k.a generic systems information into PostgreSQL to tale dcn_system
+        postgresql_query:
+          db: "{{ pg_login_db }}"
+          login_user: "{{ pg_login_user }}"
+          login_password: "{{ pg_login_password }}"
+          login_host: "{{ pg_login_host }}"
+          query: "{{ lookup('ansible.builtin.template', './templates/pgsql-q-insert-systems.j2') }}"
+        when: systems_info[0] != []
+
+
+
+      - name: Delete systems that does not exist in apstra but postgresql
+        postgresql_query:
+          db: "{{ pg_login_db }}"
+          login_user: "{{ pg_login_user }}"
+          login_password: "{{ pg_login_password }}"
+          login_host: "{{ pg_login_host }}"
+          query: "{{ lookup('ansible.builtin.template', './templates/pgsql-q-insert-systems.j2') }}"
+        when: systems_info[1] != []
+
+

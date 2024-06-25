@@ -1,0 +1,71 @@
+---
+  ### ---------------------------------------------------------------------------
+  ### APSTRA API AUTOMATION
+  ### ---------------------------------------------------------------------------
+  - hosts: localhost
+    gather_facts: False
+    connection: local
+    roles:
+      - { role: apstra_auth }
+
+    tasks:
+      - name: "Get Blueprint ID"
+        ansible.builtin.uri:
+          url: "{{ apstra.baseurl }}/blueprints"
+          method: GET
+         # return_content: yes
+          status_code: 200
+          headers:
+            content-type: "application/json"
+            AUTHTOKEN: "{{ login.json.token }}"
+          validate_certs: false
+          force_basic_auth: yes
+        register: bp_ids
+
+
+      - name: Retrieve Blueprint ID
+        ansible.builtin.set_fact:
+          bp_id: "{{ bp_ids.json | cleanup_bp_id(bp_name) }}"
+
+
+      - name: send query to get info about specific device
+        ansible.builtin.uri:
+          url: "{{ apstra.baseurl }}/blueprints/{{ bp_id }}/qe?type=staging"
+          method: POST
+          return_content: yes
+          status_code: 200
+          headers:
+            Content-Type: "application/json"
+            AUTHTOKEN: "{{ login.json.token }}"
+          validate_certs: false
+          body: "{{ lookup('ansible.builtin.template', './templates/gquery-to-generic-system.j2') }}"       
+          force_basic_auth: yes
+          body_format: json
+        register: genericDeviceInfo
+        run_once: True
+
+      - name: set link id list
+        ansible.builtin.set_fact:
+          linkids: []
+      - name: push ids to array
+        ansible.builtin.set_fact:
+          linkids: "{{  linkids + [ item['link']['id'] ] }}"
+        loop: "{{ genericDeviceInfo.json['items'] }}"
+      
+
+
+      - name: delete generic system
+        ansible.builtin.uri:
+          url: "{{ apstra.baseurl }}/blueprints/{{ bp_id }}/batch?comment=batch-api"
+          method: POST
+          return_content: yes
+          status_code: 201
+          headers:
+            Content-Type: "application/json"
+            AUTHTOKEN: "{{ login.json.token }}"
+          validate_certs: false
+          body: "{{ lookup('ansible.builtin.template', './templates/delete_switch-system-links.j2') }}"
+          force_basic_auth: yes
+          body_format: json
+        run_once: True
+

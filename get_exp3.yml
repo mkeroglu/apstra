@@ -1,0 +1,67 @@
+---
+  ### ---------------------------------------------------------------------------
+  ### APSTRA API AUTOMATION
+  ### ---------------------------------------------------------------------------
+  - hosts: localhost
+    gather_facts: False
+    connection: local
+    roles:
+      - { role: apstra_auth }
+
+    tasks:
+      - name: "Get Blueprint ID"
+        ansible.builtin.uri:
+          url: "{{ apstra.baseurl }}/blueprints"
+          method: GET
+         # return_content: yes
+          status_code: 200
+          headers:
+            content-type: "application/json"
+            AUTHTOKEN: "{{ login.json.token }}"
+          validate_certs: false
+          force_basic_auth: yes
+        register: bp_ids
+
+
+      - name: Retrieve Blueprint ID
+        ansible.builtin.set_fact:
+          bp_id: "{{ bp_ids.json | cleanup_bp_id(bp_name) }}"
+
+
+
+      - name: send specific query2
+        ansible.builtin.uri:
+          url: "{{ apstra.baseurl }}/blueprints/{{ bp_id }}/obj-policy-application-points"
+          method: POST
+          return_content: yes
+          status_code: 201
+          headers:
+            Content-Type: "application/json"
+            AUTHTOKEN: "{{ login.json.token }}"
+          validate_certs: false
+          body: { 'type': 'interface' }
+          force_basic_auth: yes
+          body_format: json
+        register: tstqry2
+        ignore_errors: true
+        run_once: True
+
+      - name: show qry
+        ansible.builtin.debug:
+          msg: "{{ tstqry2.json.application_points }}"
+
+
+      - name: get extracted data
+        ansible.builtin.set_fact:
+          tagged_ifs: "{{ tstqry2.json.application_points | extract_nested_children  }}"  
+
+
+      - name: show tagged_ifs
+        ansible.builtin.debug:
+          msg: "{{ tagged_ifs['children'] }}"
+
+      - name: show extracted data
+        ansible.builtin.debug:
+          msg: "{{ tagged_ifs['children'] | flatten_children_list_to_ifs }}"  
+
+

@@ -1,0 +1,57 @@
+---
+  ### ---------------------------------------------------------------------------
+  ### APSTRA API AUTOMATION
+  ### ---------------------------------------------------------------------------
+  - hosts: localhost
+    gather_facts: False
+    connection: local
+    roles:
+      - { role: apstra_auth }
+
+    tasks:
+      - name: "Get Blueprint ID"
+        ansible.builtin.uri:
+          url: "{{ apstra.baseurl }}/blueprints"
+          method: GET
+         # return_content: yes
+          status_code: 200
+          headers:
+            content-type: "application/json"
+            AUTHTOKEN: "{{ login.json.token }}"
+          validate_certs: false
+          force_basic_auth: yes
+        register: bp_ids
+
+
+      - name: Retrieve Blueprint ID
+        ansible.builtin.set_fact:
+          bp_id: "{{ bp_ids.json | cleanup_bp_id(bp_name) }}"
+
+
+
+      - name: query to collect interface with tags
+        ansible.builtin.uri:
+          url: "{{ apstra.baseurl }}/blueprints/{{ bp_id }}/obj-policy-application-points"
+          method: POST
+          return_content: yes
+          status_code: 201
+          headers:
+            Content-Type: "application/json"
+            AUTHTOKEN: "{{ login.json.token }}"
+          validate_certs: false
+          body: { 'interface_tags': '{{ interface_tag }}' }
+          force_basic_auth: yes
+          body_format: json
+        register: qry
+        ignore_errors: true
+        run_once: True
+
+
+      - name: set extracted data variable
+        ansible.builtin.set_fact:
+          tagged_ifs: "{{ qry.json.application_points | extract_nested_children  }}"
+
+
+      - name: show extracted data
+        ansible.builtin.debug:
+          msg: "{{ tagged_ifs['children'] | flatten_children_list_to_ifs }}"   

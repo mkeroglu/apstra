@@ -1,0 +1,274 @@
+---
+  ### ---------------------------------------------------------------------------
+  ### APSTRA API AUTOMATION
+  ### ---------------------------------------------------------------------------
+  - hosts: localhost
+    gather_facts: True
+    connection: local
+    roles:
+      - { role: apstra_auth }
+
+    tasks:
+      - name: "Get Blueprint ID"
+        ansible.builtin.uri:
+          url: "{{ apstra.baseurl }}/blueprints"
+          method: GET
+         # return_content: yes
+          status_code: 200
+          headers:
+            content-type: "application/json"
+            AUTHTOKEN: "{{ login.json.token }}"
+          validate_certs: false
+          force_basic_auth: yes
+        register: bp_ids
+
+
+      - name: Retrieve Blueprint ID
+        ansible.builtin.set_fact:
+          bp_id: "{{ bp_ids.json | cleanup_bp_id(bp_name) }}"
+
+
+
+      
+
+
+
+      - name: "Get interfaces"
+        ansible.builtin.uri:
+          url: "{{ apstra.baseurl }}/blueprints/{{ bp_id }}/nodes?node_type=interface"
+          method: GET
+          return_content: yes
+          status_code: 200
+          headers:
+            content-type: "application/json"
+            AUTHTOKEN: "{{ login.json.token }}"
+          validate_certs: false
+          force_basic_auth: yes
+          body_format: json
+        register: interfaces
+              
+
+        
+
+
+      - name: send query to get managed Juniper devices
+        uri:
+          url: "{{ apstra.baseurl }}/blueprints/{{ bp_id }}/qe?type=staging"
+          method: POST
+          return_content: yes
+          status_code: 200
+          headers:
+            Content-Type: "application/json"
+            AUTHTOKEN: "{{ login.json.token }}"
+          validate_certs: false
+          body: {"query": "match(node('system', name='system').out('interface_map').node('interface_map').out('device_profile').node('device_profile', name='DP').where(lambda DP: DP.selector['manufacturer'] == 'Juniper'))"}
+          force_basic_auth: yes
+          body_format: json
+        register: juniperDevices
+        run_once: True
+
+      - name: filter interface mapping from juniper devices
+        ansible.builtin.set_fact:
+          devportinfo: "{{ juniperDevices.json | flatten_filtered_managed_devices }}"
+
+
+      - name: send specific query to get policy application point for interfaces
+        ansible.builtin.uri:
+          url: "{{ apstra.baseurl }}/blueprints/{{ bp_id }}/obj-policy-application-points"
+          method: POST
+          return_content: yes
+          status_code: 201
+          headers:
+            Content-Type: "application/json"
+            AUTHTOKEN: "{{ login.json.token }}"
+          validate_certs: false
+          body: { 'type': 'interface' }
+          force_basic_auth: yes
+          body_format: json
+        register: ifs
+        ignore_errors: true
+        run_once: True
+
+
+      - name: get extracted data
+        ansible.builtin.set_fact:
+          all_ifs: "{{ ifs.json.application_points | extract_nested_children  }}"
+
+
+      - name: get extracted aep ifs
+        ansible.builtin.set_fact:
+          aep_ifs: "{{ all_ifs['children'] | flatten_children_list_to_ifs }}"
+
+      - name: set concatanated variable to use filter plugin
+        ansible.builtin.set_fact:
+          concvar: {}
+      
+
+      - name: set concatanated variable to use filter plugin
+        ansible.builtin.set_fact:
+           concvar: "{{ concvar | combine( { 'aep_ifs': aep_ifs } ) }}"
+
+      - name: set concatanated variable to use filter plugin
+        ansible.builtin.set_fact:
+          concvar: "{{ concvar | combine( { 'sw_if': devportinfo } ) }}"      
+
+
+
+
+          
+      - name: send specific query to get interface sppeed
+        uri:
+          url: "{{ apstra.baseurl }}/blueprints/{{ bp_id }}/qe?type=staging"
+          method: POST
+          return_content: yes
+          status_code: 200
+          headers:
+            Content-Type: "application/json"
+            AUTHTOKEN: "{{ login.json.token }}"
+          validate_certs: false
+          body: {"query": "match(node('system', name='system', deploy_mode='deploy', role=is_in(['leaf', 'access','spine'])).out('hosted_interfaces').node('interface', name='iface', if_name=not_none(), operation_state='up').out('link').node('link', link_type='ethernet', name='link').in_('link').node('interface').in_('hosted_interfaces').node('system', role=is_in(['generic', 'spine', 'access', 'superspine']), name='remote_system'))"}
+          force_basic_auth: yes
+          body_format: json
+        register: ifs2
+        run_once: True
+
+      - name: set concatanated variable to use filter plugin
+        ansible.builtin.set_fact:
+          concvar: "{{ concvar | combine( { 'ifsinfo': ifs2.json } ) }}"
+
+     
+      - name: set consolidated list of leafports containing rack and switch information for each entry
+        ansible.builtin.set_fact:
+          whole_inv: "{{ concvar | consolidate_sw_if_with_aep_if }}"
+
+
+     
+
+      - name: Get leaves table from PostgreSQL
+        postgresql_query:
+          db: "{{ pg_login_db }}"
+          login_user: "{{ pg_login_user }}"
+          login_password: "{{ pg_login_password }}"
+          login_host: "{{ pg_login_host }}"
+          query: SELECT (blueprint_id, remote_id) FROM {{ leaf_tablename }} WHERE blueprint_id= '{{ bp_id }}'
+        register: leaves_table
+
+
+      - name: set leaves_table
+        ansible.builtin.set_fact:
+          leaves_bp_rmids: "{{ leaves_table.query_result | unique | select | list }}"
+
+
+      - name: set timedate to get consistency accross the collected data
+        ansible.builtin.set_fact:
+          datetime_of_pb: "{{ ansible_date_time['iso8601_basic'] }}"
+
+
+
+
+      - name: set leaves variable list 
+        ansible.builtin.set_fact:
+           leaves_info: "{{ whole_inv | get_leaf_pgsql_ready_format(bp_id,leaves_bp_rmids) }}"
+      
+
+      - name: Insert leaf information into PostgreSQL to tale dcn_leaf
+        postgresql_query:
+          db: "{{ pg_login_db }}"
+          login_user: "{{ pg_login_user }}"
+          login_password: "{{ pg_login_password }}"
+          login_host: "{{ pg_login_host }}"
+          query: "{{ lookup('ansible.builtin.template', './templates/pgsql-q-insert-leaves.j2') }}"
+        when: leaves_info[0] != []
+
+
+      - name: Delete leaves from dcn_leaf table when they do not exist in apstra anymore
+        postgresql_query:
+          db: "{{ pg_login_db }}"
+          login_user: "{{ pg_login_user }}"
+          login_password: "{{ pg_login_password }}"
+          login_host: "{{ pg_login_host }}"
+          query: "{{ lookup('ansible.builtin.template', './templates/pgsql-q-insert-leaves.j2') }}"
+        when: leaves_info[1] != []
+
+
+
+      - name: Get leafports table from PostgreSQL
+        postgresql_query:
+          db: "{{ pg_login_db }}"
+          login_user: "{{ pg_login_user }}"
+          login_password: "{{ pg_login_password }}"
+          login_host: "{{ pg_login_host }}"
+          query: SELECT (name,blueprint_id,speed, remote_id,leaf_id) FROM {{ leafport_tablename }}  WHERE blueprint_id= '{{ bp_id }}'
+        register: leafport_table
+
+
+      - name: set leaves_table
+        ansible.builtin.set_fact:
+          leafport_bp_rmids: "{{ leafport_table.query_result | unique | select | list }}"
+
+
+
+      - name: set leafport variable list
+        ansible.builtin.set_fact:
+            leafport_info: "{{ whole_inv | get_leafport_pgsql_ready_format(bp_id,leafport_bp_rmids) }}"
+
+
+
+
+      - name: Insert leafport information into PostgreSQL to table dcn_leafport table and delete leafports that does not exist in apstra but dcn_leafport
+        postgresql_query:
+          db: "{{ pg_login_db }}"
+          login_user: "{{ pg_login_user }}"
+          login_password: "{{ pg_login_password }}"
+          login_host: "{{ pg_login_host }}"
+          query: "{{ lookup('ansible.builtin.template', './templates/pgsql-q-insert-leafport.j2') }}"
+        when: (leafport_info[0] != []) or (leafport_info[1] !=[])
+
+
+
+
+
+      - name: Get racks table from PostgreSQL
+        postgresql_query:
+          db: "{{ pg_login_db }}"
+          login_user: "{{ pg_login_user }}"
+          login_password: "{{ pg_login_password }}"
+          login_host: "{{ pg_login_host }}"
+          query: SELECT (blueprint_id, remote_id) FROM {{ racks_tablename }} WHERE blueprint_id= '{{ bp_id }}'
+        register: racks_table
+
+
+      - name: set racks_table
+        ansible.builtin.set_fact:
+          racks_bp_rmids: "{{ racks_table.query_result | unique | select | list }}"
+
+
+      - name: show racks table
+        ansible.builtin.debug:
+          msg: "{{ racks_bp_rmids }}"
+
+
+
+      - name: set racks variable list
+        ansible.builtin.set_fact:
+          racks_info: "{{ whole_inv | get_racks_pgsql_ready_format(bp_id,racks_bp_rmids) }}"
+
+
+
+      - name: show racks_info
+        ansible.builtin.debug:
+          msg: "{{ racks_info }}"
+
+
+      - name: Insert rack information into PostgreSQL to table dcn_rack table and delete racks that does not exist in apstra but dcn_rack
+        postgresql_query:
+          db: "{{ pg_login_db }}"
+          login_user: "{{ pg_login_user }}"
+          login_password: "{{ pg_login_password }}"
+          login_host: "{{ pg_login_host }}"
+          query: "{{ lookup('ansible.builtin.template', './templates/pgsql-q-insert-racks.j2') }}"
+        when: (racks_info[0] != []) or (racks_info[1] !=[])
+
+
+
+

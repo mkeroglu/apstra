@@ -1,0 +1,58 @@
+---
+  ### ---------------------------------------------------------------------------
+  ### APSTRA API AUTOMATION
+  ### ---------------------------------------------------------------------------
+  - hosts: localhost
+    gather_facts: True
+    connection: local
+    roles:
+      - { role: apstra_auth }
+
+    tasks:
+      - name: "Get Blueprint ID"
+        ansible.builtin.uri:
+          url: "{{ apstra.baseurl }}/blueprints"
+          method: GET
+         # return_content: yes
+          status_code: 200
+          headers:
+            content-type: "application/json"
+            AUTHTOKEN: "{{ login.json.token }}"
+          validate_certs: false
+          force_basic_auth: yes
+        register: bp_ids
+
+
+      - name: Retrieve Blueprint ID
+        ansible.builtin.set_fact:
+          bp_id: "{{ bp_ids.json | cleanup_bp_id(bp_name) }}"
+
+
+      - name: "Get securiy zones id "
+        ansible.builtin.uri:
+          url: "{{ apstra.baseurl }}/blueprints/{{ bp_id }}/revisions"
+          method: GET
+         # return_content: yes
+          status_code: 200
+          headers:
+            content-type: "application/json"
+            AUTHTOKEN: "{{ login.json.token }}"
+          validate_certs: false
+          force_basic_auth: yes
+        register: revisions
+
+      - name: show security zones
+        ansible.builtin.debug:
+          msg: "{{ revisions.json['items'] }}"
+      
+
+      - name: set securiy zones to sql ready format
+        ansible.builtin.set_fact:
+           revision_list : "{{ revisions.json['items'] | get_revisions_pgsql_ready_format(bp_id) }}"
+
+      - name: show security zones
+        ansible.builtin.debug:
+           msg: "{{ revision_list }}"
+
+
+

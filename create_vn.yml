@@ -1,0 +1,90 @@
+---
+  ### ---------------------------------------------------------------------------
+  ### APSTRA API AUTOMATION
+  ### ---------------------------------------------------------------------------
+  - hosts: localhost
+    gather_facts: False
+    connection: local
+    roles:
+      - { role: apstra_auth }
+      - { role: get_bp_id }
+
+    tasks:
+    - name: Initialize Variables
+      ansible.builtin.set_fact: 
+        leaf_ids: ""
+
+    - name: Get Device ID
+      ansible.builtin.include_role:
+        name: get_node_system
+      vars:
+        node_type: system
+    - name: set system id
+      ansible.builtin.set_fact:
+        leaf_ids: "{{ node_system.json | cleanup_leaf_ids }}"
+      when: leaf_ids == ""
+
+    - name: show vns
+      ansible.builtin.debug:
+        msg: "{{ item }}"
+      loop: "{{ sz.vns }}"
+
+
+    - name: "Retrieve Security ID if not set"
+      block:
+      - name: "Get Security ID"
+        ansible.builtin.uri:
+          url: "{{ apstra.baseurl }}/blueprints/{{ bp_id }}/nodes?node_type=security_zone"
+          method: GET
+          return_content: yes
+          status_code: 200
+          headers:
+            content-type: "application/json"
+            AUTHTOKEN: "{{ login.json.token }}"
+          validate_certs: false
+          force_basic_auth: yes
+        register: security
+
+    - name: set security zone ID
+      ansible.builtin.set_fact:
+        sz_id: "{{ security.json | cleanup_security_zone(sz.name) }}"
+
+
+    - name: "Create Virtual Networks"
+      ansible.builtin.uri:
+        url: "{{ apstra.baseurl }}/blueprints/{{ bp_id }}/virtual-networks-batch?async=full"
+        method: POST
+        return_content: yes
+        status_code: 202
+        headers:
+          content-type: "application/json"
+          AUTHTOKEN: "{{ login.json.token }}"
+        validate_certs: false
+        force_basic_auth: yes
+        body: "{{ lookup('template','roles/create_vn/templates/create_vn.j2') }}"
+        body_format: json
+      with_items: "{{ sz.vns }}"
+      ignore_errors: yes
+
+
+
+
+
+### ---------------------------------------------------------------------------
+### ASSIGN EVPN L3 VNIS
+### ---------------------------------------------------------------------------
+    - name: "Assign EVPN L3 VNIs"
+      uri:
+        url: "{{ apstra.baseurl }}/blueprints/{{ bp_id }}/resource_groups/vni/evpn_l3_vnis"
+        method: PUT
+        status_code: 202
+        headers:
+          content-type: "application/json"
+          AUTHTOKEN: "{{ login.json.token }}"
+        validate_certs: false
+        body: '{"pool_ids":["Default-10000-20000"]}'
+        body_format: json
+
+    - name: "Commit Changes"
+      include_role:
+        name: commit_changes

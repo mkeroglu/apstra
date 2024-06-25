@@ -1,0 +1,200 @@
+---
+  ### ---------------------------------------------------------------------------
+  ### APSTRA API AUTOMATION
+  ### ---------------------------------------------------------------------------
+  - hosts: localhost
+    gather_facts: False
+    connection: local
+    roles:
+      - { role: apstra_auth }
+
+    tasks:
+      - name: "Get Blueprint ID"
+        ansible.builtin.uri:
+          url: "{{ apstra.baseurl }}/blueprints"
+          method: GET
+         # return_content: yes
+          status_code: 200
+          headers:
+            content-type: "application/json"
+            AUTHTOKEN: "{{ login.json.token }}"
+          validate_certs: false
+          force_basic_auth: yes
+        register: bp_ids
+
+
+      - name: Retrieve Blueprint ID
+        ansible.builtin.set_fact:
+          bp_id: "{{ bp_ids.json | cleanup_bp_id(bp_name) }}"
+
+
+
+      - name: Get virtual networks
+        ansible.builtin.uri:
+          url: "{{ apstra.baseurl }}/blueprints/{{ bp_id }}/nodes?node_type=virtual_network"
+          method: GET
+          return_content: yes
+          status_code: 200
+          headers:
+            content-type: "application/json"
+            AUTHTOKEN: "{{ login.json.token }}"
+          validate_certs: false
+          force_basic_auth: yes
+          body_format: json
+        register: vns
+
+
+      
+
+
+
+      - name: "Get interfaces"
+        uri:
+          url: "{{ apstra.baseurl }}/blueprints/{{ bp_id }}/nodes?node_type=interface"
+          method: GET
+          return_content: yes
+          status_code: 200
+          headers:
+            content-type: "application/json"
+            AUTHTOKEN: "{{ login.json.token }}"
+          validate_certs: false
+          force_basic_auth: yes
+          body_format: json
+        register: interfaces
+              
+      - name: create list
+        ansible.builtin.set_fact:
+          connections: []
+
+      - name: summary connections
+        ansible.builtin.set_fact:
+           connections: "{{ connections + [ item.value.id + ',' + item.value.if_name + ',' + item.value.description ] }}"
+        ignore_errors: yes
+        when: 
+          - item.value.id != None
+          - item.value.if_name != None
+          - item.value.description != None    
+        loop: "{{ interfaces.json.nodes | dict2items }}"  
+
+      - name: show connections
+        ansible.builtin.debug:
+          msg: "{{ connections }}"
+
+      - name: "Get switches"
+        uri:
+          url: "{{ apstra.baseurl }}/blueprints/{{ bp_id }}/nodes?node_type=system"
+          method: GET
+          return_content: yes
+          status_code: 200
+          headers:
+            content-type: "application/json"
+            AUTHTOKEN: "{{ login.json.token }}"
+          validate_certs: false
+          force_basic_auth: yes
+          body_format: json
+        register: systems
+        
+      
+      - name: show connections
+        ansible.builtin.debug:
+          msg: "{{ interfaces }}"
+
+
+      - name: send specific query2
+        ansible.builtin.uri:
+          url: "{{ apstra.baseurl }}/blueprints/{{ bp_id }}/obj-policy-application-points"
+          method: POST
+          return_content: yes
+          status_code: 201
+          headers:
+            Content-Type: "application/json"
+            AUTHTOKEN: "{{ login.json.token }}"
+          validate_certs: false
+          body: { 'rack': 'apstra_single_001', 'rack_tags': '' }
+          force_basic_auth: yes
+          body_format: json
+        register: tstqry2
+        ignore_errors: true
+        run_once: True
+
+
+
+      - name: send query to get managed Juniper devices
+        uri:
+          url: "{{ apstra.baseurl }}/blueprints/{{ bp_id }}/qe?type=staging"
+          method: POST
+          return_content: yes
+          status_code: 200
+          headers:
+            Content-Type: "application/json"
+            AUTHTOKEN: "{{ login.json.token }}"
+          validate_certs: false
+          body: {"query": "match(node('system', name='system').out('interface_map').node('interface_map').out('device_profile').node('device_profile', name='DP').where(lambda DP: DP.selector['manufacturer'] == 'Juniper'))"}
+          force_basic_auth: yes
+          body_format: json
+        register: juniperDevices
+        run_once: True
+
+      - name: filter interface mapping from juniper devices
+        ansible.builtin.set_fact:
+          devportinfo: "{{ juniperDevices.json | flatten_filtered_managed_devices }}"
+
+      - name: show filtered information
+        ansible.builtin.debug:
+          msg: "{{ item }}"
+        loop: "{{ devportinfo }}"
+
+
+      - name: send specific query to get policy application point for interfaces
+        ansible.builtin.uri:
+          url: "{{ apstra.baseurl }}/blueprints/{{ bp_id }}/obj-policy-application-points"
+          method: POST
+          return_content: yes
+          status_code: 201
+          headers:
+            Content-Type: "application/json"
+            AUTHTOKEN: "{{ login.json.token }}"
+          validate_certs: false
+          body: { 'type': 'interface' }
+          force_basic_auth: yes
+          body_format: json
+        register: ifs
+        ignore_errors: true
+        run_once: True
+
+      - name: show qry for interfaces
+        ansible.builtin.debug:
+          msg: "{{ ifs.json.application_points }}"
+
+
+      - name: get extracted data
+        ansible.builtin.set_fact:
+          all_ifs: "{{ ifs.json.application_points | extract_nested_children  }}"
+
+
+
+
+
+      - name: show extracted data
+        ansible.builtin.set_fact:
+          aep_ifs: "{{ all_ifs['children'] | flatten_children_list_to_ifs }}"
+
+      - name: set concatanated variable to use filter plugin
+        ansible.builtin.set_fact:
+          concvar: {}
+      
+
+      - name: set concatanated variable to use filter plugin
+        ansible.builtin.set_fact:
+           concvar: "{{ concvar | combine( { 'aep_ifs': aep_ifs } ) }}"
+
+      - name: set concatanated variable to use filter plugin
+        ansible.builtin.set_fact:
+          concvar: "{{ concvar | combine( { 'sw_if': devportinfo } ) }}"      
+
+
+
+
+      - name: show concvar
+        ansible.builtin.debug:
+          msg: "{{ concvar | consolidate_sw_if_with_aep_if }}"

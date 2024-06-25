@@ -1,0 +1,164 @@
+---
+  ### ---------------------------------------------------------------------------
+  ### APSTRA API AUTOMATION
+  ### ---------------------------------------------------------------------------
+  - hosts: localhost
+    gather_facts: False
+    connection: local
+    roles:
+      - { role: apstra_auth }
+
+    tasks:
+      - name: "Get Blueprint ID"
+        ansible.builtin.uri:
+          url: "{{ apstra.baseurl }}/blueprints"
+          method: GET
+         # return_content: yes
+          status_code: 200
+          headers:
+            content-type: "application/json"
+            AUTHTOKEN: "{{ login.json.token }}"
+          validate_certs: false
+          force_basic_auth: yes
+        register: bp_ids
+
+
+      - name: Retrieve Blueprint ID
+        ansible.builtin.set_fact:
+          bp_id: "{{ bp_ids.json | cleanup_bp_id(bp_name) }}"
+
+
+
+      - name: Get virtual networks
+        ansible.builtin.uri:
+          url: "{{ apstra.baseurl }}/blueprints/{{ bp_id }}/nodes?node_type=virtual_network"
+          method: GET
+          return_content: yes
+          status_code: 200
+          headers:
+            content-type: "application/json"
+            AUTHTOKEN: "{{ login.json.token }}"
+          validate_certs: false
+          force_basic_auth: yes
+          body_format: json
+        register: vns
+
+
+      - name: send specific query       
+        uri:
+          url: "{{ apstra.baseurl }}/blueprints/{{ bp_id }}/qe?type=staging"
+          method: POST
+          return_content: yes
+          status_code: 200
+          headers:
+            Content-Type: "application/json"
+            AUTHTOKEN: "{{ login.json.token }}"
+          validate_certs: false
+          # body: {"query": "match(node('system', name='leaf', role='leaf', label='isa_single_leaf_001_leaf1'))"}
+          body: {"query": "match(node('system', name='leaf', role='leaf', label='leaf2'))"}
+          force_basic_auth: yes
+          body_format: json
+        register: tstqry
+        run_once: True
+      
+
+
+      - name: send specific query2     
+        uri:
+          url: "{{ apstra.baseurl }}/blueprints/{{ bp_id }}/qe?type=staging"
+          method: POST
+          return_content: yes
+          status_code: 422
+          headers:
+            Content-Type: "application/json"
+            AUTHTOKEN: "{{ login.json.token }}"
+          validate_certs: false
+          body: {"query": "match(node('system', name='server', role='generic', group_label='TSTANSL'))"}
+          force_basic_auth: yes
+          body_format: json
+        register: tstqry2
+        ignore_errors: true
+        run_once: True
+      
+      - name: show specific query2
+        ansible.builtin.debug:
+          msg: "{{ tstqry2.json }}"
+
+
+      - name: Get application points
+        ansible.builtin.uri:
+          url: "{{ apstra.baseurl }}/blueprints/{{ bp_id }}/obj-policy-application-points"
+          method: GET
+          return_content: yes
+          status_code: 200
+          headers:
+            content-type: "application/json"
+            AUTHTOKEN: "{{ login.json.token }}"
+          validate_certs: false
+          force_basic_auth: yes
+          body_format: json
+        register: application_points
+
+
+
+      - name: show application points
+        ansible.builtin.debug:
+          msg: "{{ application_points.json | community.general.json_query('*.children[*].children[*].children[*]')}}" 
+
+
+      - name: "Get interfaces"
+        uri:
+          url: "{{ apstra.baseurl }}/blueprints/{{ bp_id }}/nodes?node_type=interface"
+          method: GET
+          return_content: yes
+          status_code: 200
+          headers:
+            content-type: "application/json"
+            AUTHTOKEN: "{{ login.json.token }}"
+          validate_certs: false
+          force_basic_auth: yes
+          body_format: json
+        register: interfaces
+              
+      - name: create list
+        ansible.builtin.set_fact:
+          connections: []
+
+      - name: summary connections
+        ansible.builtin.set_fact:
+           connections: "{{ connections + [ item.value.id + ',' + item.value.if_name + ',' + item.value.description ] }}"
+        ignore_errors: yes
+        when: 
+          - item.value.id != None
+          - item.value.if_name != None
+          - item.value.description != None    
+        loop: "{{ interfaces.json.nodes | dict2items }}"  
+
+      - name: show connections
+        ansible.builtin.debug:
+          msg: "{{ connections }}"
+
+      - name: "Get switches"
+        uri:
+          url: "{{ apstra.baseurl }}/blueprints/{{ bp_id }}/nodes?node_type=system"
+          method: GET
+          return_content: yes
+          status_code: 200
+          headers:
+            content-type: "application/json"
+            AUTHTOKEN: "{{ login.json.token }}"
+          validate_certs: false
+          force_basic_auth: yes
+          body_format: json
+        register: systems
+        
+      
+      - name: show connections
+        ansible.builtin.debug:
+          msg: "{{ interfaces }}"
+
+      - name: show systems
+        ansible.builtin.debug:
+          msg: "{{ systems.json }}"
+
+

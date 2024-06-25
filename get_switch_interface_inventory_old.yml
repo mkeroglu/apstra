@@ -1,0 +1,215 @@
+---
+  ### ---------------------------------------------------------------------------
+  ### APSTRA API AUTOMATION
+  ### ---------------------------------------------------------------------------
+  - hosts: localhost
+    gather_facts: True
+    connection: local
+    roles:
+      - { role: apstra_auth }
+
+    tasks:
+      - name: "Get Blueprint ID"
+        ansible.builtin.uri:
+          url: "{{ apstra.baseurl }}/blueprints"
+          method: GET
+         # return_content: yes
+          status_code: 200
+          headers:
+            content-type: "application/json"
+            AUTHTOKEN: "{{ login.json.token }}"
+          validate_certs: false
+          force_basic_auth: yes
+        register: bp_ids
+
+
+      - name: Retrieve Blueprint ID
+        ansible.builtin.set_fact:
+          bp_id: "{{ bp_ids.json | cleanup_bp_id(bp_name) }}"
+
+
+
+      
+
+
+
+      - name: "Get interfaces"
+        uri:
+          url: "{{ apstra.baseurl }}/blueprints/{{ bp_id }}/nodes?node_type=interface"
+          method: GET
+          return_content: yes
+          status_code: 200
+          headers:
+            content-type: "application/json"
+            AUTHTOKEN: "{{ login.json.token }}"
+          validate_certs: false
+          force_basic_auth: yes
+          body_format: json
+        register: interfaces
+              
+
+        
+
+
+      - name: send query to get managed Juniper devices
+        uri:
+          url: "{{ apstra.baseurl }}/blueprints/{{ bp_id }}/qe?type=staging"
+          method: POST
+          return_content: yes
+          status_code: 200
+          headers:
+            Content-Type: "application/json"
+            AUTHTOKEN: "{{ login.json.token }}"
+          validate_certs: false
+          body: {"query": "match(node('system', name='system').out('interface_map').node('interface_map').out('device_profile').node('device_profile', name='DP').where(lambda DP: DP.selector['manufacturer'] == 'Juniper'))"}
+          force_basic_auth: yes
+          body_format: json
+        register: juniperDevices
+        run_once: True
+
+      - name: filter interface mapping from juniper devices
+        ansible.builtin.set_fact:
+          devportinfo: "{{ juniperDevices.json | flatten_filtered_managed_devices }}"
+
+
+      - name: send specific query to get policy application point for interfaces
+        ansible.builtin.uri:
+          url: "{{ apstra.baseurl }}/blueprints/{{ bp_id }}/obj-policy-application-points"
+          method: POST
+          return_content: yes
+          status_code: 201
+          headers:
+            Content-Type: "application/json"
+            AUTHTOKEN: "{{ login.json.token }}"
+          validate_certs: false
+          body: { 'type': 'interface' }
+          force_basic_auth: yes
+          body_format: json
+        register: ifs
+        ignore_errors: true
+        run_once: True
+
+
+      - name: get extracted data
+        ansible.builtin.set_fact:
+          all_ifs: "{{ ifs.json.application_points | extract_nested_children  }}"
+
+
+      - name: get extracted aep ifs
+        ansible.builtin.set_fact:
+          aep_ifs: "{{ all_ifs['children'] | flatten_children_list_to_ifs }}"
+
+      - name: set concatanated variable to use filter plugin
+        ansible.builtin.set_fact:
+          concvar: {}
+      
+
+      - name: set concatanated variable to use filter plugin
+        ansible.builtin.set_fact:
+           concvar: "{{ concvar | combine( { 'aep_ifs': aep_ifs } ) }}"
+
+      - name: set concatanated variable to use filter plugin
+        ansible.builtin.set_fact:
+          concvar: "{{ concvar | combine( { 'sw_if': devportinfo } ) }}"      
+
+
+      - name: show concvar
+        ansible.builtin.debug:
+          msg: "{{ concvar | consolidate_sw_if_with_aep_if }}"
+
+      - name: show interfaces
+        ansible.builtin.debug:
+          msg: "{{ aep_ifs  }}"
+
+          
+      - name: send specific query to get interface sppeed
+        uri:
+          url: "{{ apstra.baseurl }}/blueprints/{{ bp_id }}/qe?type=staging"
+          method: POST
+          return_content: yes
+          status_code: 200
+          headers:
+            Content-Type: "application/json"
+            AUTHTOKEN: "{{ login.json.token }}"
+          validate_certs: false
+          body: {"query": "match(node('system', name='system', deploy_mode='deploy', role=is_in(['leaf', 'access','spine'])).out('hosted_interfaces').node('interface', name='iface', if_name=not_none(), operation_state='up').out('link').node('link', link_type='ethernet', name='link').in_('link').node('interface').in_('hosted_interfaces').node('system', role=is_in(['generic', 'spine', 'access', 'superspine']), name='remote_system'))"}
+          force_basic_auth: yes
+          body_format: json
+        register: ifs2
+        run_once: True
+
+      - name: set concatanated variable to use filter plugin
+        ansible.builtin.set_fact:
+          concvar: "{{ concvar | combine( { 'ifsinfo': ifs2.json } ) }}"
+
+      - name: show concvar2
+        ansible.builtin.set_fact:
+          whole_inv: "{{ concvar | consolidate_sw_if_with_aep_if }}"
+     
+
+
+      - name: set timedate to get consistency accross the collected data
+        ansible.builtin.set_fact:
+          datetime_of_pb: "{{ ansible_date_time['iso8601_basic'] }}"
+
+
+
+
+      - name: set leaves variable list 
+        ansible.builtin.set_fact:
+           leaves_only : "{{ whole_inv | get_leaf_pgsql_ready_format(bp_id) }}"
+      
+      - name: show leaves only
+        ansible.builtin.debug:
+          msg: "{{ leaves_only }}"
+
+      - name: set leafport variable list
+        ansible.builtin.set_fact:
+            leaf_port_list: "{{ whole_inv | get_leafport_pgsql_ready_format(bp_id) }}"
+
+
+      - name: show leaf_port_list
+        ansible.builtin.debug:
+          msg: "{{ leaf_port_list }}"
+
+
+      - name: set rack variable list
+        ansible.builtin.set_fact:
+           racks : "{{ whole_inv | get_racks_pgsql_ready_format(bp_id) }}"
+
+      - name: show racks
+        ansible.builtin.debug:
+          msg: "{{ racks }}"
+
+
+
+      - name: show sql statement
+        ansible.builtin.debug:
+           msg: "{{ lookup('ansible.builtin.template', './templates/pgsql-q-insert-leaves.j2') }}"
+
+      - name: Insert leaf information into PostgreSQL to tale dcn_leaf
+        postgresql_query:
+          db: "{{ pg_login_db }}"
+          login_user: "{{ pg_login_user }}"
+          login_password: "{{ pg_login_password }}"
+          login_host: "{{ pg_login_host }}"
+          query: "{{ lookup('ansible.builtin.template', './templates/pgsql-q-insert-leaves.j2') }}"
+
+
+      - name: Insert port information into PostgreSQL to tale dcn_leafport
+        postgresql_query:
+          db: "{{ pg_login_db }}"
+          login_user: "{{ pg_login_user }}"
+          login_password: "{{ pg_login_password }}"
+          login_host: "{{ pg_login_host }}"
+          query: "{{ lookup('ansible.builtin.template', './templates/pgsql-q-insert-leafport.j2') }}"
+
+
+
+      - name: Insert rack information into PostgreSQL to tale dcn_rack
+        postgresql_query:
+          db: "{{ pg_login_db }}"
+          login_user: "{{ pg_login_user }}"
+          login_password: "{{ pg_login_password }}"
+          login_host: "{{ pg_login_host }}"
+          query: "{{ lookup('ansible.builtin.template', './templates/pgsql-q-insert-racks.j2') }}"
