@@ -17,3 +17,7 @@
 - name: Retrieve Blueprint ID
   set_fact: 
     bp_id: "{{ bp_ids.json | cleanup_bp_id(bp_name) }}"
+
+- name:
+  ansible.builtin.debug:
+    msg: "{{ bp_id }}"

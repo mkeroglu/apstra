@@ -1,0 +1,48 @@
+[
+    {
+        "attributes": {
+            "subpolicies": [
+                "8221c08e-545c-510d-bd73-d6c36fbe7cac"
+            ]
+        },
+        "description": "",
+        "id": "d84071d7-7916-4b26-9381-00860702f116",
+        "label": "ABC-TEST-CT-1",
+        "policy_type_name": "batch",
+        "tags": [],
+        "user_data": "{\"isSausage\":true,\"positions\":{\"a1c172b4-b431-52b6-a93a-4980a3a35d78\":[290,80,1]}}",
+        "visible": true
+    },
+    {
+        "attributes": {
+            "first_subpolicy": "a1c172b4-b431-52b6-a93a-4980a3a35d78",
+            "resolver": null,
+            "second_subpolicy": null
+        },
+        "description": "Add a single VLAN to interfaces, as tagged or untagged.",
+        "id": "8221c08e-545c-510d-bd73-d6c36fbe7cac",
+        "label": "Virtual Network (Single) (pipeline)",
+        "policy_type_name": "pipeline",
+        "tags": [],
+        "visible": false
+    },
+    {
+        "attributes": {
+            "tag_type": "vlan_tagged",
+            "vn_node_id": "DREy_XxY9HvHooNlUmo"
+        },
+        "description": "Add a single VLAN to interfaces, as tagged or untagged.",
+        "id": "a1c172b4-b431-52b6-a93a-4980a3a35d78",
+        "label": "Virtual Network (Single)",
+        "policy_type_name": "AttachSingleVLAN",
+        "tags": [],
+        "visible": false
+    },
+    {
+        "changed": false,
+        "content": "ewogICJpZCI6ICJ7eyByYW5kb21fdXVpZCB9fSIsCiAgImxhYmVsIjogIlZpcnR1YWwgTmV0d29yayAoU2luZ2xlKSIsCiAgImRlc2NyaXB0aW9uIjogIkFkZCBhIHNpbmdsZSBWTEFOIHRvIGludGVyZmFjZXMsIGFzIHRhZ2dlZCBvciB1bnRhZ2dlZC4iLAogICJwb2xpY3lfdHlwZV9uYW1lIjogIkF0dGFjaFNpbmdsZVZMQU4iLAogICJhdHRyaWJ1dGVzIjogewogICAgInZuX25vZGVfaWQiOiAie3sgdm5faWQgfX0iLAogICAgInRhZ190eXBlIjogInZsYW5fdGFnZ2VkIgogIH0sCiAgInZpc2libGUiOiBmYWxzZQp9LAp7CiAgImlkIjogInt7IHJhbmRvbV91dWlkMiB9fSIsCiAgImxhYmVsIjogIlZpcnR1YWwgTmV0d29yayAoU2luZ2xlKSAocGlwZWxpbmUpIiwKICAiZGVzY3JpcHRpb24iOiAiQWRkIGEgc2luZ2xlIFZMQU4gdG8gaW50ZXJmYWNlcywgYXMgdGFnZ2VkIG9yIHVudGFnZ2VkLiIsCiAgInBvbGljeV90eXBlX25hbWUiOiAicGlwZWxpbmUiLAogICJhdHRyaWJ1dGVzIjogewogICAgImZpcnN0X3N1YnBvbGljeSI6ICJ7eyByYW5kb21fdXVpZCB9fSIsCiAgICAic2Vjb25kX3N1YnBvbGljeSI6IG51bGwKICB9LAogICJ2aXNpYmxlIjogZmFsc2UKfQo=",
+        "encoding": "base64",
+        "failed": false,
+        "source": "templates/add-vn-to-connectivity-template.j2"
+    }
+]

@@ -1,0 +1,99 @@
+---
+  ### ---------------------------------------------------------------------------
+  ### APSTRA API AUTOMATION
+  ### ---------------------------------------------------------------------------
+  - hosts: localhost
+    gather_facts: False
+    connection: local
+    roles:
+      - { role: apstra_auth }
+
+    tasks:
+    - name: Initialize Variables
+      set_fact: 
+        leaf_ids: ""
+
+    - name: "Get Blueprint ID"
+      ansible.builtin.uri:
+        url: "{{ apstra.baseurl }}/blueprints"
+        method: GET
+        status_code: 200
+        headers:
+          content-type: "application/json"
+          AUTHTOKEN: "{{ login.json.token }}"
+        validate_certs: false
+        force_basic_auth: yes
+      register: bp_ids
+
+
+    - name: Retrieve Blueprint ID
+      ansible.builtin.set_fact:
+        bp_id: "{{ bp_ids.json | cleanup_bp_id(bp_name) }}"
+
+
+    - name: "Get Connectvity Template"
+      uri:
+        url: "{{ apstra.baseurl }}/blueprints/{{ bp_id }}/obj-policy-export"
+        method: GET
+        status_code: 200
+        headers:
+          content-type: "application/json"
+          AUTHTOKEN: "{{ login.json.token }}"
+        validate_certs: false
+        force_basic_auth: yes
+          #body: "{{ lookup('ansible.builtin.template','templates/connectivity-template.j2') }}"
+        body_format: json
+      ignore_errors: yes
+      register: cts
+    - name:
+      ansible.builtin.debug:
+        msg: "{{ cts }}"
+
+    - name: Retrieve Blueprint ID
+      ansible.builtin.set_fact:
+        desired_id: "{{ cts.json.policies | selectattr('label', '==', ct_name) | map(attribute='id') | first }}"
+
+    - name: show blueprint id
+      ansible.builtin.debug:
+        msg: "{{ desired_id }}"
+
+    - name: "Get Connectvity Template"
+      uri:
+        url: "{{ apstra.baseurl }}/blueprints/{{ bp_id }}/virtual-networks"
+        method: GET
+        status_code: 200
+        headers:
+          content-type: "application/json"
+          AUTHTOKEN: "{{ login.json.token }}"
+        validate_certs: false
+        force_basic_auth: yes
+          #body: "{{ lookup('ansible.builtin.template','templates/connectivity-template.j2') }}"
+        body_format: json
+      ignore_errors: yes
+      register: vns
+
+    - name:
+      ansible.builtin.debug:
+        msg: "{{ vns }}"
+
+    - name: Retrieve Blueprint ID
+      ansible.builtin.set_fact:
+        vn_id: "{{ vns.json | json_query('virtual_networks[?label == vn_name].id | [0]') }}"
+
+    - name:
+      ansible.builtin.debug:
+        msg: "{{ vn_id }}"
+
+          #    - name: "Create connectivity template"
+          #uri:
+          #url: "{{ apstra.baseurl }}/blueprints/{{ bp_id }}/obj-policy-import"
+          #method: PUT
+          #status_code: 204
+          #headers:
+          #content-type: "application/json"
+          #AUTHTOKEN: "{{ login.json.token }}"
+          #validate_certs: false
+          #force_basic_auth: yes
+          #body: "{{ lookup('ansible.builtin.template','templates/add-vn-to-connectivity-template.j2') }}"
+          #body_format: json
+          #ignore_errors: yes

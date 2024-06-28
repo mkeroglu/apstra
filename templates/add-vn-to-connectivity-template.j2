@@ -1,0 +1,24 @@
+[
+  {
+    "id": "{{ random_uuid }}",
+    "label": "Virtual Network (Single)",
+    "description": "Add a single VLAN to interfaces, as tagged or untagged.",
+    "policy_type_name": "AttachSingleVLAN",
+    "attributes": {
+      "vn_node_id": "{{ vn_id }}",
+      "tag_type": "vlan_tagged"
+    },
+    "visible": false
+  },
+  {
+    "id": "{{ random_uuid2 }}",
+    "label": "Virtual Network (Single) (pipeline)",
+    "description": "Add a single VLAN to interfaces, as tagged or untagged.",
+    "policy_type_name": "pipeline",
+    "attributes": {
+      "first_subpolicy": "{{ random_uuid }}",
+      "second_subpolicy": null
+    },
+    "visible": false
+  }
+]

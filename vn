@@ -1,0 +1,1036 @@
+TASK [ansible.builtin.debug] **********************************************************************************************************************************************************************************
+ok: [localhost] => {
+    "msg": {
+        "cache_control": "no-cache",
+        "changed": false,
+        "connection": "close",
+        "content_security_policy": "default-src 'self'; img-src 'self' data:; font-src 'self' data:; script-src 'self' 'unsafe-inline' 'unsafe-eval'; worker-src 'self' blob:; style-src 'self' 'unsafe-inline'",
+        "content_type": "application/json",
+        "cookies": {},
+        "cookies_string": "",
+        "date": "Thu, 27 Jun 2024 21:35:06 GMT",
+        "elapsed": 0,
+        "failed": false,
+        "json": {
+            "virtual_networks": {
+                "2WlQCKt-RATv-EjNnwg": {
+                    "bound_to": [
+                        {
+                            "access_switch_node_ids": [],
+                            "system_id": "1iJjhpHG-k4B_Nm_xYo",
+                            "vlan_id": 1001
+                        },
+                        {
+                            "access_switch_node_ids": [],
+                            "system_id": "D7Sp9XSajy0wBzkZa88",
+                            "vlan_id": 1001
+                        },
+                        {
+                            "access_switch_node_ids": [],
+                            "system_id": "Ont0TL8Gz-zDDGIjVDY",
+                            "vlan_id": 1001
+                        }
+                    ],
+                    "description": null,
+                    "dhcp_service": "dhcpServiceDisabled",
+                    "id": "2WlQCKt-RATv-EjNnwg",
+                    "ipv4_enabled": false,
+                    "ipv4_subnet": null,
+                    "ipv6_enabled": false,
+                    "ipv6_subnet": null,
+                    "l3_mtu": 9000,
+                    "label": "TEST-VNI-1",
+                    "reserved_vlan_id": null,
+                    "route_target": "10009:1",
+                    "rt_policy": null,
+                    "security_zone_id": "f5sTi11xBvDWjGyWtYk",
+                    "virtual_gateway_ipv4": null,
+                    "virtual_gateway_ipv4_enabled": false,
+                    "virtual_gateway_ipv6": null,
+                    "virtual_gateway_ipv6_enabled": false,
+                    "virtual_mac": null,
+                    "vn_id": "10009",
+                    "vn_type": "vxlan"
+                },
+                "5OHjpGHkea7_-IIUvI4": {
+                    "bound_to": [
+                        {
+                            "access_switch_node_ids": [],
+                            "system_id": "1iJjhpHG-k4B_Nm_xYo",
+                            "vlan_id": 120
+                        },
+                        {
+                            "access_switch_node_ids": [],
+                            "system_id": "ovqKWMQJsXBcJq91CXU",
+                            "vlan_id": 120
+                        },
+                        {
+                            "access_switch_node_ids": [],
+                            "system_id": "D7Sp9XSajy0wBzkZa88",
+                            "vlan_id": 120
+                        },
+                        {
+                            "access_switch_node_ids": [],
+                            "system_id": "Ont0TL8Gz-zDDGIjVDY",
+                            "vlan_id": 120
+                        }
+                    ],
+                    "description": null,
+                    "dhcp_service": "dhcpServiceDisabled",
+                    "id": "5OHjpGHkea7_-IIUvI4",
+                    "ipv4_enabled": true,
+                    "ipv4_subnet": "192.200.200.0/24",
+                    "ipv6_enabled": false,
+                    "ipv6_subnet": null,
+                    "l3_mtu": 9000,
+                    "label": "default_vlan_120",
+                    "reserved_vlan_id": null,
+                    "route_target": "10006:1",
+                    "rt_policy": null,
+                    "security_zone_id": "f5sTi11xBvDWjGyWtYk",
+                    "virtual_gateway_ipv4": "192.200.200.50",
+                    "virtual_gateway_ipv4_enabled": true,
+                    "virtual_gateway_ipv6": null,
+                    "virtual_gateway_ipv6_enabled": false,
+                    "virtual_mac": null,
+                    "vn_id": "10006",
+                    "vn_type": "vxlan"
+                },
+                "79YaqjFBFsdSOTV3YqE": {
+                    "bound_to": [
+                        {
+                            "access_switch_node_ids": [],
+                            "system_id": "1iJjhpHG-k4B_Nm_xYo",
+                            "vlan_id": 105
+                        },
+                        {
+                            "access_switch_node_ids": [],
+                            "system_id": "ovqKWMQJsXBcJq91CXU",
+                            "vlan_id": 105
+                        }
+                    ],
+                    "description": null,
+                    "dhcp_service": "dhcpServiceDisabled",
+                    "id": "79YaqjFBFsdSOTV3YqE",
+                    "ipv4_enabled": false,
+                    "ipv4_subnet": null,
+                    "ipv6_enabled": false,
+                    "ipv6_subnet": null,
+                    "l3_mtu": 9000,
+                    "label": "NET01_10_25_105_3_28",
+                    "reserved_vlan_id": null,
+                    "route_target": "800105:1",
+                    "rt_policy": null,
+                    "security_zone_id": "f5sTi11xBvDWjGyWtYk",
+                    "virtual_gateway_ipv4": null,
+                    "virtual_gateway_ipv4_enabled": false,
+                    "virtual_gateway_ipv6": null,
+                    "virtual_gateway_ipv6_enabled": false,
+                    "virtual_mac": null,
+                    "vn_id": "800105",
+                    "vn_type": "vxlan"
+                },
+                "9DgbtxvmW5XXfirRaHg": {
+                    "bound_to": [
+                        {
+                            "access_switch_node_ids": [],
+                            "system_id": "1iJjhpHG-k4B_Nm_xYo",
+                            "vlan_id": 500
+                        },
+                        {
+                            "access_switch_node_ids": [],
+                            "system_id": "ovqKWMQJsXBcJq91CXU",
+                            "vlan_id": 500
+                        }
+                    ],
+                    "description": null,
+                    "dhcp_service": "dhcpServiceDisabled",
+                    "id": "9DgbtxvmW5XXfirRaHg",
+                    "ipv4_enabled": false,
+                    "ipv4_subnet": null,
+                    "ipv6_enabled": false,
+                    "ipv6_subnet": null,
+                    "l3_mtu": 9000,
+                    "label": "PA_10_215_150_3_24",
+                    "reserved_vlan_id": null,
+                    "route_target": "800500:1",
+                    "rt_policy": null,
+                    "security_zone_id": "f5sTi11xBvDWjGyWtYk",
+                    "virtual_gateway_ipv4": null,
+                    "virtual_gateway_ipv4_enabled": false,
+                    "virtual_gateway_ipv6": null,
+                    "virtual_gateway_ipv6_enabled": false,
+                    "virtual_mac": null,
+                    "vn_id": "800500",
+                    "vn_type": "vxlan"
+                },
+                "C0mv_VZ1bY1QVidy43M": {
+                    "bound_to": [
+                        {
+                            "access_switch_node_ids": [],
+                            "system_id": "1iJjhpHG-k4B_Nm_xYo",
+                            "vlan_id": 2
+                        },
+                        {
+                            "access_switch_node_ids": [],
+                            "system_id": "Ont0TL8Gz-zDDGIjVDY",
+                            "vlan_id": 2
+                        },
+                        {
+                            "access_switch_node_ids": [],
+                            "system_id": "D7Sp9XSajy0wBzkZa88",
+                            "vlan_id": 2
+                        }
+                    ],
+                    "description": null,
+                    "dhcp_service": "dhcpServiceDisabled",
+                    "id": "C0mv_VZ1bY1QVidy43M",
+                    "ipv4_enabled": false,
+                    "ipv4_subnet": null,
+                    "ipv6_enabled": false,
+                    "ipv6_subnet": null,
+                    "l3_mtu": 9000,
+                    "label": "TEST_VNI",
+                    "reserved_vlan_id": null,
+                    "route_target": "10002:1",
+                    "rt_policy": null,
+                    "security_zone_id": "f5sTi11xBvDWjGyWtYk",
+                    "virtual_gateway_ipv4": null,
+                    "virtual_gateway_ipv4_enabled": false,
+                    "virtual_gateway_ipv6": null,
+                    "virtual_gateway_ipv6_enabled": false,
+                    "virtual_mac": null,
+                    "vn_id": "10002",
+                    "vn_type": "vxlan"
+                },
+                "D1V7vzCdNMCGCHlT2xg": {
+                    "bound_to": [
+                        {
+                            "access_switch_node_ids": [],
+                            "system_id": "1iJjhpHG-k4B_Nm_xYo",
+                            "vlan_id": 1275
+                        },
+                        {
+                            "access_switch_node_ids": [],
+                            "system_id": "ovqKWMQJsXBcJq91CXU",
+                            "vlan_id": 1275
+                        }
+                    ],
+                    "description": null,
+                    "dhcp_service": "dhcpServiceDisabled",
+                    "id": "D1V7vzCdNMCGCHlT2xg",
+                    "ipv4_enabled": false,
+                    "ipv4_subnet": null,
+                    "ipv6_enabled": false,
+                    "ipv6_subnet": null,
+                    "l3_mtu": 9000,
+                    "label": "NET_replikasyon",
+                    "reserved_vlan_id": null,
+                    "route_target": "801275:1",
+                    "rt_policy": null,
+                    "security_zone_id": "f5sTi11xBvDWjGyWtYk",
+                    "virtual_gateway_ipv4": null,
+                    "virtual_gateway_ipv4_enabled": false,
+                    "virtual_gateway_ipv6": null,
+                    "virtual_gateway_ipv6_enabled": false,
+                    "virtual_mac": null,
+                    "vn_id": "801275",
+                    "vn_type": "vxlan"
+                },
+                "DREy_XxY9HvHooNlUmo": {
+                    "bound_to": [
+                        {
+                            "access_switch_node_ids": [],
+                            "system_id": "1iJjhpHG-k4B_Nm_xYo",
+                            "vlan_id": 103
+                        },
+                        {
+                            "access_switch_node_ids": [],
+                            "system_id": "Ont0TL8Gz-zDDGIjVDY",
+                            "vlan_id": 103
+                        },
+                        {
+                            "access_switch_node_ids": [],
+                            "system_id": "ovqKWMQJsXBcJq91CXU",
+                            "vlan_id": 103
+                        }
+                    ],
+                    "description": null,
+                    "dhcp_service": "dhcpServiceDisabled",
+                    "id": "DREy_XxY9HvHooNlUmo",
+                    "ipv4_enabled": false,
+                    "ipv4_subnet": null,
+                    "ipv6_enabled": false,
+                    "ipv6_subnet": null,
+                    "l3_mtu": 9000,
+                    "label": "ILO_10_25_103_3_24",
+                    "reserved_vlan_id": null,
+                    "route_target": "800103:1",
+                    "rt_policy": null,
+                    "security_zone_id": "f5sTi11xBvDWjGyWtYk",
+                    "virtual_gateway_ipv4": null,
+                    "virtual_gateway_ipv4_enabled": false,
+                    "virtual_gateway_ipv6": null,
+                    "virtual_gateway_ipv6_enabled": false,
+                    "virtual_mac": null,
+                    "vn_id": "800103",
+                    "vn_type": "vxlan"
+                },
+                "E-AIMWr29YSGY__4haI": {
+                    "bound_to": [
+                        {
+                            "access_switch_node_ids": [],
+                            "system_id": "1iJjhpHG-k4B_Nm_xYo",
+                            "vlan_id": 501
+                        },
+                        {
+                            "access_switch_node_ids": [],
+                            "system_id": "ovqKWMQJsXBcJq91CXU",
+                            "vlan_id": 501
+                        }
+                    ],
+                    "description": null,
+                    "dhcp_service": "dhcpServiceDisabled",
+                    "id": "E-AIMWr29YSGY__4haI",
+                    "ipv4_enabled": false,
+                    "ipv4_subnet": null,
+                    "ipv6_enabled": false,
+                    "ipv6_subnet": null,
+                    "l3_mtu": 9000,
+                    "label": "PA_10_215_151_3_24",
+                    "reserved_vlan_id": null,
+                    "route_target": "800501:1",
+                    "rt_policy": null,
+                    "security_zone_id": "f5sTi11xBvDWjGyWtYk",
+                    "virtual_gateway_ipv4": null,
+                    "virtual_gateway_ipv4_enabled": false,
+                    "virtual_gateway_ipv6": null,
+                    "virtual_gateway_ipv6_enabled": false,
+                    "virtual_mac": null,
+                    "vn_id": "800501",
+                    "vn_type": "vxlan"
+                },
+                "ENJpgY8cK8WygaqWZ7Y": {
+                    "bound_to": [
+                        {
+                            "access_switch_node_ids": [],
+                            "system_id": "1iJjhpHG-k4B_Nm_xYo",
+                            "vlan_id": 600
+                        },
+                        {
+                            "access_switch_node_ids": [],
+                            "system_id": "ovqKWMQJsXBcJq91CXU",
+                            "vlan_id": 600
+                        }
+                    ],
+                    "description": null,
+                    "dhcp_service": "dhcpServiceDisabled",
+                    "id": "ENJpgY8cK8WygaqWZ7Y",
+                    "ipv4_enabled": false,
+                    "ipv4_subnet": null,
+                    "ipv6_enabled": false,
+                    "ipv6_subnet": null,
+                    "l3_mtu": 9000,
+                    "label": "PA_10_215_160_3_24",
+                    "reserved_vlan_id": null,
+                    "route_target": "800600:1",
+                    "rt_policy": null,
+                    "security_zone_id": "f5sTi11xBvDWjGyWtYk",
+                    "virtual_gateway_ipv4": null,
+                    "virtual_gateway_ipv4_enabled": false,
+                    "virtual_gateway_ipv6": null,
+                    "virtual_gateway_ipv6_enabled": false,
+                    "virtual_mac": null,
+                    "vn_id": "800600",
+                    "vn_type": "vxlan"
+                },
+                "Eqhp0xZg9H9tBfifepQ": {
+                    "bound_to": [
+                        {
+                            "access_switch_node_ids": [],
+                            "system_id": "1iJjhpHG-k4B_Nm_xYo",
+                            "vlan_id": 1002
+                        },
+                        {
+                            "access_switch_node_ids": [],
+                            "system_id": "Ont0TL8Gz-zDDGIjVDY",
+                            "vlan_id": 1002
+                        }
+                    ],
+                    "description": null,
+                    "dhcp_service": "dhcpServiceDisabled",
+                    "id": "Eqhp0xZg9H9tBfifepQ",
+                    "ipv4_enabled": false,
+                    "ipv4_subnet": null,
+                    "ipv6_enabled": false,
+                    "ipv6_subnet": null,
+                    "l3_mtu": 9000,
+                    "label": "TEST-VNI-2",
+                    "reserved_vlan_id": null,
+                    "route_target": "10010:1",
+                    "rt_policy": null,
+                    "security_zone_id": "f5sTi11xBvDWjGyWtYk",
+                    "virtual_gateway_ipv4": null,
+                    "virtual_gateway_ipv4_enabled": false,
+                    "virtual_gateway_ipv6": null,
+                    "virtual_gateway_ipv6_enabled": false,
+                    "virtual_mac": null,
+                    "vn_id": "10010",
+                    "vn_type": "vxlan"
+                },
+                "KE2t4wx1h_AE_Ldup4c": {
+                    "bound_to": [
+                        {
+                            "access_switch_node_ids": [],
+                            "system_id": "1iJjhpHG-k4B_Nm_xYo",
+                            "vlan_id": 1252
+                        },
+                        {
+                            "access_switch_node_ids": [],
+                            "system_id": "ovqKWMQJsXBcJq91CXU",
+                            "vlan_id": 1252
+                        }
+                    ],
+                    "description": null,
+                    "dhcp_service": "dhcpServiceDisabled",
+                    "id": "KE2t4wx1h_AE_Ldup4c",
+                    "ipv4_enabled": true,
+                    "ipv4_subnet": "10.10.252.0/24",
+                    "ipv6_enabled": false,
+                    "ipv6_subnet": null,
+                    "l3_mtu": 9000,
+                    "label": "L3-Test-1",
+                    "reserved_vlan_id": null,
+                    "route_target": "10004:1",
+                    "rt_policy": null,
+                    "security_zone_id": "f5sTi11xBvDWjGyWtYk",
+                    "virtual_gateway_ipv4": "10.10.252.1",
+                    "virtual_gateway_ipv4_enabled": true,
+                    "virtual_gateway_ipv6": null,
+                    "virtual_gateway_ipv6_enabled": false,
+                    "virtual_mac": null,
+                    "vn_id": "10004",
+                    "vn_type": "vxlan"
+                },
+                "N7TeaaRNVsM-9hx137U": {
+                    "bound_to": [
+                        {
+                            "access_switch_node_ids": [],
+                            "system_id": "1iJjhpHG-k4B_Nm_xYo",
+                            "vlan_id": 123
+                        },
+                        {
+                            "access_switch_node_ids": [],
+                            "system_id": "ovqKWMQJsXBcJq91CXU",
+                            "vlan_id": 123
+                        }
+                    ],
+                    "description": null,
+                    "dhcp_service": "dhcpServiceDisabled",
+                    "id": "N7TeaaRNVsM-9hx137U",
+                    "ipv4_enabled": false,
+                    "ipv4_subnet": null,
+                    "ipv6_enabled": false,
+                    "ipv6_subnet": null,
+                    "l3_mtu": 9000,
+                    "label": "NET-pdom0_data2",
+                    "reserved_vlan_id": null,
+                    "route_target": "800123:1",
+                    "rt_policy": null,
+                    "security_zone_id": "f5sTi11xBvDWjGyWtYk",
+                    "virtual_gateway_ipv4": null,
+                    "virtual_gateway_ipv4_enabled": false,
+                    "virtual_gateway_ipv6": null,
+                    "virtual_gateway_ipv6_enabled": false,
+                    "virtual_mac": null,
+                    "vn_id": "800123",
+                    "vn_type": "vxlan"
+                },
+                "O4CTNct-q6VSiSQ9Ggg": {
+                    "bound_to": [
+                        {
+                            "access_switch_node_ids": [],
+                            "system_id": "1iJjhpHG-k4B_Nm_xYo",
+                            "vlan_id": 101
+                        },
+                        {
+                            "access_switch_node_ids": [],
+                            "system_id": "Ont0TL8Gz-zDDGIjVDY",
+                            "vlan_id": 101
+                        },
+                        {
+                            "access_switch_node_ids": [],
+                            "system_id": "ovqKWMQJsXBcJq91CXU",
+                            "vlan_id": 101
+                        }
+                    ],
+                    "description": null,
+                    "dhcp_service": "dhcpServiceDisabled",
+                    "id": "O4CTNct-q6VSiSQ9Ggg",
+                    "ipv4_enabled": false,
+                    "ipv4_subnet": null,
+                    "ipv6_enabled": false,
+                    "ipv6_subnet": null,
+                    "l3_mtu": 9000,
+                    "label": "ILO_10_25_101_3_24",
+                    "reserved_vlan_id": null,
+                    "route_target": "800101:1",
+                    "rt_policy": null,
+                    "security_zone_id": "f5sTi11xBvDWjGyWtYk",
+                    "virtual_gateway_ipv4": null,
+                    "virtual_gateway_ipv4_enabled": false,
+                    "virtual_gateway_ipv6": null,
+                    "virtual_gateway_ipv6_enabled": false,
+                    "virtual_mac": null,
+                    "vn_id": "800101",
+                    "vn_type": "vxlan"
+                },
+                "Qtof3t1DNlbkvOpBtw4": {
+                    "bound_to": [
+                        {
+                            "access_switch_node_ids": [],
+                            "system_id": "1iJjhpHG-k4B_Nm_xYo",
+                            "vlan_id": 102
+                        },
+                        {
+                            "access_switch_node_ids": [],
+                            "system_id": "Ont0TL8Gz-zDDGIjVDY",
+                            "vlan_id": 102
+                        },
+                        {
+                            "access_switch_node_ids": [],
+                            "system_id": "ovqKWMQJsXBcJq91CXU",
+                            "vlan_id": 102
+                        }
+                    ],
+                    "description": null,
+                    "dhcp_service": "dhcpServiceDisabled",
+                    "id": "Qtof3t1DNlbkvOpBtw4",
+                    "ipv4_enabled": false,
+                    "ipv4_subnet": null,
+                    "ipv6_enabled": false,
+                    "ipv6_subnet": null,
+                    "l3_mtu": 9000,
+                    "label": "ILO_10_25_102_3_24",
+                    "reserved_vlan_id": null,
+                    "route_target": "800102:1",
+                    "rt_policy": null,
+                    "security_zone_id": "f5sTi11xBvDWjGyWtYk",
+                    "virtual_gateway_ipv4": null,
+                    "virtual_gateway_ipv4_enabled": false,
+                    "virtual_gateway_ipv6": null,
+                    "virtual_gateway_ipv6_enabled": false,
+                    "virtual_mac": null,
+                    "vn_id": "800102",
+                    "vn_type": "vxlan"
+                },
+                "R0k-gAG6zGt9rBe49GI": {
+                    "bound_to": [
+                        {
+                            "access_switch_node_ids": [],
+                            "system_id": "1iJjhpHG-k4B_Nm_xYo",
+                            "vlan_id": 124
+                        },
+                        {
+                            "access_switch_node_ids": [],
+                            "system_id": "ovqKWMQJsXBcJq91CXU",
+                            "vlan_id": 124
+                        }
+                    ],
+                    "description": null,
+                    "dhcp_service": "dhcpServiceDisabled",
+                    "id": "R0k-gAG6zGt9rBe49GI",
+                    "ipv4_enabled": false,
+                    "ipv4_subnet": null,
+                    "ipv6_enabled": false,
+                    "ipv6_subnet": null,
+                    "l3_mtu": 9000,
+                    "label": "NET-pdom0_data1",
+                    "reserved_vlan_id": null,
+                    "route_target": "800124:1",
+                    "rt_policy": null,
+                    "security_zone_id": "f5sTi11xBvDWjGyWtYk",
+                    "virtual_gateway_ipv4": null,
+                    "virtual_gateway_ipv4_enabled": false,
+                    "virtual_gateway_ipv6": null,
+                    "virtual_gateway_ipv6_enabled": false,
+                    "virtual_mac": null,
+                    "vn_id": "800124",
+                    "vn_type": "vxlan"
+                },
+                "RKaGXZIcmRU-ySdpeoA": {
+                    "bound_to": [
+                        {
+                            "access_switch_node_ids": [],
+                            "system_id": "1iJjhpHG-k4B_Nm_xYo",
+                            "vlan_id": 1003
+                        }
+                    ],
+                    "description": null,
+                    "dhcp_service": "dhcpServiceDisabled",
+                    "id": "RKaGXZIcmRU-ySdpeoA",
+                    "ipv4_enabled": false,
+                    "ipv4_subnet": null,
+                    "ipv6_enabled": false,
+                    "ipv6_subnet": null,
+                    "l3_mtu": 9000,
+                    "label": "TEST-VNI-3",
+                    "reserved_vlan_id": null,
+                    "route_target": "10011:1",
+                    "rt_policy": null,
+                    "security_zone_id": "f5sTi11xBvDWjGyWtYk",
+                    "virtual_gateway_ipv4": null,
+                    "virtual_gateway_ipv4_enabled": false,
+                    "virtual_gateway_ipv6": null,
+                    "virtual_gateway_ipv6_enabled": false,
+                    "virtual_mac": null,
+                    "vn_id": "10011",
+                    "vn_type": "vxlan"
+                },
+                "RQMWg_5E-2lb9E5OR2A": {
+                    "bound_to": [
+                        {
+                            "access_switch_node_ids": [],
+                            "system_id": "1iJjhpHG-k4B_Nm_xYo",
+                            "vlan_id": 110
+                        },
+                        {
+                            "access_switch_node_ids": [],
+                            "system_id": "ovqKWMQJsXBcJq91CXU",
+                            "vlan_id": 110
+                        }
+                    ],
+                    "description": null,
+                    "dhcp_service": "dhcpServiceDisabled",
+                    "id": "RQMWg_5E-2lb9E5OR2A",
+                    "ipv4_enabled": false,
+                    "ipv4_subnet": null,
+                    "ipv6_enabled": false,
+                    "ipv6_subnet": null,
+                    "l3_mtu": 9000,
+                    "label": "NET02_10_25_110_3_28",
+                    "reserved_vlan_id": null,
+                    "route_target": "800110:1",
+                    "rt_policy": null,
+                    "security_zone_id": "f5sTi11xBvDWjGyWtYk",
+                    "virtual_gateway_ipv4": null,
+                    "virtual_gateway_ipv4_enabled": false,
+                    "virtual_gateway_ipv6": null,
+                    "virtual_gateway_ipv6_enabled": false,
+                    "virtual_mac": null,
+                    "vn_id": "800110",
+                    "vn_type": "vxlan"
+                },
+                "S_79rxzLXmfQ6L6lQjk": {
+                    "bound_to": [
+                        {
+                            "access_switch_node_ids": [],
+                            "system_id": "1iJjhpHG-k4B_Nm_xYo",
+                            "vlan_id": 112
+                        },
+                        {
+                            "access_switch_node_ids": [],
+                            "system_id": "Ont0TL8Gz-zDDGIjVDY",
+                            "vlan_id": 112
+                        },
+                        {
+                            "access_switch_node_ids": [],
+                            "system_id": "D7Sp9XSajy0wBzkZa88",
+                            "vlan_id": 101
+                        }
+                    ],
+                    "description": null,
+                    "dhcp_service": "dhcpServiceDisabled",
+                    "id": "S_79rxzLXmfQ6L6lQjk",
+                    "ipv4_enabled": false,
+                    "ipv4_subnet": null,
+                    "ipv6_enabled": false,
+                    "ipv6_subnet": null,
+                    "l3_mtu": 8998,
+                    "label": "TVNI-112-101",
+                    "reserved_vlan_id": null,
+                    "route_target": "112101:1",
+                    "rt_policy": null,
+                    "security_zone_id": "f5sTi11xBvDWjGyWtYk",
+                    "virtual_gateway_ipv4": null,
+                    "virtual_gateway_ipv4_enabled": false,
+                    "virtual_gateway_ipv6": null,
+                    "virtual_gateway_ipv6_enabled": false,
+                    "virtual_mac": null,
+                    "vn_id": "112101",
+                    "vn_type": "vxlan"
+                },
+                "VOr162CSRv41ex0l4pw": {
+                    "bound_to": [
+                        {
+                            "access_switch_node_ids": [],
+                            "system_id": "1iJjhpHG-k4B_Nm_xYo",
+                            "vlan_id": 223
+                        },
+                        {
+                            "access_switch_node_ids": [],
+                            "system_id": "ovqKWMQJsXBcJq91CXU",
+                            "vlan_id": 223
+                        }
+                    ],
+                    "description": null,
+                    "dhcp_service": "dhcpServiceDisabled",
+                    "id": "VOr162CSRv41ex0l4pw",
+                    "ipv4_enabled": false,
+                    "ipv4_subnet": null,
+                    "ipv6_enabled": false,
+                    "ipv6_subnet": null,
+                    "l3_mtu": 9000,
+                    "label": "NET-pdom6_data1",
+                    "reserved_vlan_id": null,
+                    "route_target": "800223:1",
+                    "rt_policy": null,
+                    "security_zone_id": "f5sTi11xBvDWjGyWtYk",
+                    "virtual_gateway_ipv4": null,
+                    "virtual_gateway_ipv4_enabled": false,
+                    "virtual_gateway_ipv6": null,
+                    "virtual_gateway_ipv6_enabled": false,
+                    "virtual_mac": null,
+                    "vn_id": "800223",
+                    "vn_type": "vxlan"
+                },
+                "W3LJ-yC0D-A5Zow5b_I": {
+                    "bound_to": [
+                        {
+                            "access_switch_node_ids": [],
+                            "system_id": "1iJjhpHG-k4B_Nm_xYo",
+                            "vlan_id": 111
+                        },
+                        {
+                            "access_switch_node_ids": [],
+                            "system_id": "Ont0TL8Gz-zDDGIjVDY",
+                            "vlan_id": 111
+                        }
+                    ],
+                    "description": null,
+                    "dhcp_service": "dhcpServiceEnabled",
+                    "id": "W3LJ-yC0D-A5Zow5b_I",
+                    "ipv4_enabled": true,
+                    "ipv4_subnet": "172.40.0.0/24",
+                    "ipv6_enabled": false,
+                    "ipv6_subnet": null,
+                    "l3_mtu": 8998,
+                    "label": "TVNI-111",
+                    "reserved_vlan_id": null,
+                    "route_target": "10001:1",
+                    "rt_policy": null,
+                    "security_zone_id": "f5sTi11xBvDWjGyWtYk",
+                    "virtual_gateway_ipv4": "172.40.0.1",
+                    "virtual_gateway_ipv4_enabled": true,
+                    "virtual_gateway_ipv6": null,
+                    "virtual_gateway_ipv6_enabled": false,
+                    "virtual_mac": null,
+                    "vn_id": "10001",
+                    "vn_type": "vxlan"
+                },
+                "_AF7otAxn2pKBXSHj8M": {
+                    "bound_to": [
+                        {
+                            "access_switch_node_ids": [],
+                            "system_id": "1iJjhpHG-k4B_Nm_xYo",
+                            "vlan_id": 99
+                        },
+                        {
+                            "access_switch_node_ids": [],
+                            "system_id": "ovqKWMQJsXBcJq91CXU",
+                            "vlan_id": 99
+                        },
+                        {
+                            "access_switch_node_ids": [],
+                            "system_id": "Ont0TL8Gz-zDDGIjVDY",
+                            "vlan_id": 99
+                        },
+                        {
+                            "access_switch_node_ids": [],
+                            "system_id": "D7Sp9XSajy0wBzkZa88",
+                            "vlan_id": 99
+                        }
+                    ],
+                    "description": null,
+                    "dhcp_service": "dhcpServiceDisabled",
+                    "id": "_AF7otAxn2pKBXSHj8M",
+                    "ipv4_enabled": false,
+                    "ipv4_subnet": null,
+                    "ipv6_enabled": false,
+                    "ipv6_subnet": null,
+                    "l3_mtu": 9000,
+                    "label": "v99",
+                    "reserved_vlan_id": null,
+                    "route_target": "10007:1",
+                    "rt_policy": null,
+                    "security_zone_id": "f5sTi11xBvDWjGyWtYk",
+                    "virtual_gateway_ipv4": null,
+                    "virtual_gateway_ipv4_enabled": false,
+                    "virtual_gateway_ipv6": null,
+                    "virtual_gateway_ipv6_enabled": false,
+                    "virtual_mac": null,
+                    "vn_id": "10007",
+                    "vn_type": "vxlan"
+                },
+                "apt4WxRK6jvddoVtUmM": {
+                    "bound_to": [
+                        {
+                            "access_switch_node_ids": [],
+                            "system_id": "1iJjhpHG-k4B_Nm_xYo",
+                            "vlan_id": 104
+                        },
+                        {
+                            "access_switch_node_ids": [],
+                            "system_id": "Ont0TL8Gz-zDDGIjVDY",
+                            "vlan_id": 104
+                        },
+                        {
+                            "access_switch_node_ids": [],
+                            "system_id": "ovqKWMQJsXBcJq91CXU",
+                            "vlan_id": 104
+                        }
+                    ],
+                    "description": null,
+                    "dhcp_service": "dhcpServiceDisabled",
+                    "id": "apt4WxRK6jvddoVtUmM",
+                    "ipv4_enabled": false,
+                    "ipv4_subnet": null,
+                    "ipv6_enabled": false,
+                    "ipv6_subnet": null,
+                    "l3_mtu": 9000,
+                    "label": "ILO_10_25_104_3_24",
+                    "reserved_vlan_id": null,
+                    "route_target": "800104:1",
+                    "rt_policy": null,
+                    "security_zone_id": "f5sTi11xBvDWjGyWtYk",
+                    "virtual_gateway_ipv4": null,
+                    "virtual_gateway_ipv4_enabled": false,
+                    "virtual_gateway_ipv6": null,
+                    "virtual_gateway_ipv6_enabled": false,
+                    "virtual_mac": null,
+                    "vn_id": "800104",
+                    "vn_type": "vxlan"
+                },
+                "eSHrh4mnxA29tkrBr1o": {
+                    "bound_to": [
+                        {
+                            "access_switch_node_ids": [],
+                            "system_id": "1iJjhpHG-k4B_Nm_xYo",
+                            "vlan_id": 200
+                        },
+                        {
+                            "access_switch_node_ids": [],
+                            "system_id": "ovqKWMQJsXBcJq91CXU",
+                            "vlan_id": 200
+                        },
+                        {
+                            "access_switch_node_ids": [],
+                            "system_id": "Ont0TL8Gz-zDDGIjVDY",
+                            "vlan_id": 200
+                        },
+                        {
+                            "access_switch_node_ids": [],
+                            "system_id": "D7Sp9XSajy0wBzkZa88",
+                            "vlan_id": 200
+                        }
+                    ],
+                    "description": null,
+                    "dhcp_service": "dhcpServiceDisabled",
+                    "id": "eSHrh4mnxA29tkrBr1o",
+                    "ipv4_enabled": false,
+                    "ipv4_subnet": null,
+                    "ipv6_enabled": false,
+                    "ipv6_subnet": null,
+                    "l3_mtu": 9000,
+                    "label": "v200",
+                    "reserved_vlan_id": null,
+                    "route_target": "10008:1",
+                    "rt_policy": null,
+                    "security_zone_id": "f5sTi11xBvDWjGyWtYk",
+                    "virtual_gateway_ipv4": null,
+                    "virtual_gateway_ipv4_enabled": false,
+                    "virtual_gateway_ipv6": null,
+                    "virtual_gateway_ipv6_enabled": false,
+                    "virtual_mac": null,
+                    "vn_id": "10008",
+                    "vn_type": "vxlan"
+                },
+                "g8r80QVEoeH4IMGAPZ8": {
+                    "bound_to": [
+                        {
+                            "access_switch_node_ids": [],
+                            "system_id": "Ont0TL8Gz-zDDGIjVDY",
+                            "vlan_id": 1005
+                        }
+                    ],
+                    "description": null,
+                    "dhcp_service": "dhcpServiceDisabled",
+                    "id": "g8r80QVEoeH4IMGAPZ8",
+                    "ipv4_enabled": false,
+                    "ipv4_subnet": null,
+                    "ipv6_enabled": false,
+                    "ipv6_subnet": null,
+                    "l3_mtu": 9000,
+                    "label": "TEST-VNI-5",
+                    "reserved_vlan_id": null,
+                    "route_target": "10013:1",
+                    "rt_policy": null,
+                    "security_zone_id": "f5sTi11xBvDWjGyWtYk",
+                    "virtual_gateway_ipv4": null,
+                    "virtual_gateway_ipv4_enabled": false,
+                    "virtual_gateway_ipv6": null,
+                    "virtual_gateway_ipv6_enabled": false,
+                    "virtual_mac": null,
+                    "vn_id": "10013",
+                    "vn_type": "vxlan"
+                },
+                "idM5NfI20Sf64H-6Las": {
+                    "bound_to": [
+                        {
+                            "access_switch_node_ids": [],
+                            "system_id": "1iJjhpHG-k4B_Nm_xYo",
+                            "vlan_id": 1004
+                        }
+                    ],
+                    "description": null,
+                    "dhcp_service": "dhcpServiceDisabled",
+                    "id": "idM5NfI20Sf64H-6Las",
+                    "ipv4_enabled": false,
+                    "ipv4_subnet": null,
+                    "ipv6_enabled": false,
+                    "ipv6_subnet": null,
+                    "l3_mtu": 9000,
+                    "label": "TEST-VNI-4",
+                    "reserved_vlan_id": null,
+                    "route_target": "10012:1",
+                    "rt_policy": null,
+                    "security_zone_id": "f5sTi11xBvDWjGyWtYk",
+                    "virtual_gateway_ipv4": null,
+                    "virtual_gateway_ipv4_enabled": false,
+                    "virtual_gateway_ipv6": null,
+                    "virtual_gateway_ipv6_enabled": false,
+                    "virtual_mac": null,
+                    "vn_id": "10012",
+                    "vn_type": "vxlan"
+                },
+                "oEBjaGcEGR34xVD6Ijo": {
+                    "bound_to": [
+                        {
+                            "access_switch_node_ids": [],
+                            "system_id": "1iJjhpHG-k4B_Nm_xYo",
+                            "vlan_id": 100
+                        },
+                        {
+                            "access_switch_node_ids": [],
+                            "system_id": "Ont0TL8Gz-zDDGIjVDY",
+                            "vlan_id": 100
+                        },
+                        {
+                            "access_switch_node_ids": [],
+                            "system_id": "ovqKWMQJsXBcJq91CXU",
+                            "vlan_id": 100
+                        }
+                    ],
+                    "description": null,
+                    "dhcp_service": "dhcpServiceDisabled",
+                    "id": "oEBjaGcEGR34xVD6Ijo",
+                    "ipv4_enabled": false,
+                    "ipv4_subnet": null,
+                    "ipv6_enabled": false,
+                    "ipv6_subnet": null,
+                    "l3_mtu": 9000,
+                    "label": "ILO_10_25_90_3_24",
+                    "reserved_vlan_id": null,
+                    "route_target": "800100:1",
+                    "rt_policy": null,
+                    "security_zone_id": "f5sTi11xBvDWjGyWtYk",
+                    "virtual_gateway_ipv4": null,
+                    "virtual_gateway_ipv4_enabled": false,
+                    "virtual_gateway_ipv6": null,
+                    "virtual_gateway_ipv6_enabled": false,
+                    "virtual_mac": null,
+                    "vn_id": "800100",
+                    "vn_type": "vxlan"
+                },
+                "pwEeFVRmTQTJ87Cb9Io": {
+                    "bound_to": [
+                        {
+                            "access_switch_node_ids": [],
+                            "system_id": "1iJjhpHG-k4B_Nm_xYo",
+                            "vlan_id": 1100
+                        },
+                        {
+                            "access_switch_node_ids": [],
+                            "system_id": "ovqKWMQJsXBcJq91CXU",
+                            "vlan_id": 1100
+                        }
+                    ],
+                    "description": null,
+                    "dhcp_service": "dhcpServiceDisabled",
+                    "id": "pwEeFVRmTQTJ87Cb9Io",
+                    "ipv4_enabled": false,
+                    "ipv4_subnet": null,
+                    "ipv6_enabled": false,
+                    "ipv6_subnet": null,
+                    "l3_mtu": 9000,
+                    "label": "DC_FW_NET",
+                    "reserved_vlan_id": null,
+                    "route_target": "801100:1",
+                    "rt_policy": null,
+                    "security_zone_id": "f5sTi11xBvDWjGyWtYk",
+                    "virtual_gateway_ipv4": null,
+                    "virtual_gateway_ipv4_enabled": false,
+                    "virtual_gateway_ipv6": null,
+                    "virtual_gateway_ipv6_enabled": false,
+                    "virtual_mac": null,
+                    "vn_id": "801100",
+                    "vn_type": "vxlan"
+                },
+                "wODfYm-T3fbI3mrBDws": {
+                    "bound_to": [
+                        {
+                            "access_switch_node_ids": [],
+                            "system_id": "1iJjhpHG-k4B_Nm_xYo",
+                            "vlan_id": 3
+                        },
+                        {
+                            "access_switch_node_ids": [],
+                            "system_id": "ovqKWMQJsXBcJq91CXU",
+                            "vlan_id": 2
+                        }
+                    ],
+                    "description": null,
+                    "dhcp_service": "dhcpServiceDisabled",
+                    "id": "wODfYm-T3fbI3mrBDws",
+                    "ipv4_enabled": true,
+                    "ipv4_subnet": "10.10.253.0/24",
+                    "ipv6_enabled": false,
+                    "ipv6_subnet": null,
+                    "l3_mtu": 9000,
+                    "label": "L3-Test-2",
+                    "reserved_vlan_id": null,
+                    "route_target": "10005:1",
+                    "rt_policy": null,
+                    "security_zone_id": "f5sTi11xBvDWjGyWtYk",
+                    "virtual_gateway_ipv4": "10.10.253.1",
+                    "virtual_gateway_ipv4_enabled": true,
+                    "virtual_gateway_ipv6": null,
+                    "virtual_gateway_ipv6_enabled": false,
+                    "virtual_mac": null,
+                    "vn_id": "10005",
+                    "vn_type": "vxlan"
+                }
+            }
+        },
+        "msg": "OK (unknown bytes)",
+        "redirected": false,
+        "referrer_policy": "strict-origin-when-cross-origin",
+        "server": "nginx",
+        "status": 200,
+        "strict_transport_security": "max-age=63072000; includeSubdomains;",
+        "transfer_encoding": "chunked",
+        "url": "https://10.106.32.3/api/blueprints/56ba2516-6e3b-462d-8eba-17c4dc69e8f3/virtual-networks",
+        "x_content_type_options": "nosniff",
+        "x_frame_options": "deny",
+        "x_xss_protection": "1; mode=block"
+    }
