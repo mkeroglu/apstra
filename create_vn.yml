@@ -24,6 +24,10 @@
         leaf_ids: "{{ node_system.json | cleanup_leaf_ids }}"
       when: leaf_ids == ""
 
+    - name:
+      debug:
+        var: leaf_ids
+
     - name: show vns
       ansible.builtin.debug:
         msg: "{{ item }}"
@@ -49,6 +53,9 @@
       ansible.builtin.set_fact:
         sz_id: "{{ security.json | cleanup_security_zone(sz.name) }}"
 
+    - name:
+      debug:
+        var: leaf_ids
 
     - name: "Create Virtual Networks"
       ansible.builtin.uri:

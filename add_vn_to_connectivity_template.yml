@@ -46,6 +46,10 @@
       ignore_errors: yes
       register: cts
 
+    - name:
+      debug:
+        var: cts
+
     - name: Retrieve Blueprint ID
       ansible.builtin.set_fact:
         desired_id: "{{ cts.json.policies | selectattr('label', '==', ct_name) | map(attribute='id') | first }}"

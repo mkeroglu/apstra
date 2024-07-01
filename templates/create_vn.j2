@@ -1,0 +1,39 @@
+{
+  "virtual_networks": [
+    {
+      "virtual_gateway_ipv4_enabled": false,
+      "vn_id": "100004",
+      "vn_type": "vxlan",
+      "svi_ips": [],
+      "virtual_gateway_ipv4": null,
+      "ipv6_subnet": null,
+      "bound_to": [
+      {% for i in specific_ids %}
+         {
+            "system_id": "{{ i }}",
+            "access_switch_node_ids": [],
+            "vlan_id": {{ vlan_id }}
+         }
+      {% if not loop.last %},{% endif %}{% endfor %}
+      ],
+      "vni_ids": [
+        100004
+      ],
+      "reserved_vlan_id": null,
+      "virtual_gateway_ipv6": null,
+      "ipv4_subnet": null,
+      "rt_policy": {
+        "import_RTs": null,
+        "export_RTs": null
+      },
+      "label": "KUTAY-TEST-1",
+      "ipv4_enabled": false,
+      "create_policy_untagged": true,
+      "virtual_gateway_ipv6_enabled": false,
+      "ipv6_enabled": false,
+      "security_zone_id": "f5sTi11xBvDWjGyWtYk",
+      "dhcp_service": "dhcpServiceDisabled",
+      "create_policy_tagged": true
+    }
+  ]
+}
