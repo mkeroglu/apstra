@@ -34,5 +34,5 @@
       AUTHTOKEN: "{{ login.json.token }}"
     validate_certs: false
     force_basic_auth: yes
-    body: '{ "version": {{ diff_status.json.staging_version }} }'
+    body: "{{ lookup('template','templates/commit.j2') }}"
     body_format: json

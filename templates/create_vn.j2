@@ -2,7 +2,7 @@
   "virtual_networks": [
     {
       "virtual_gateway_ipv4_enabled": false,
-      "vn_id": "100004",
+      "vn_id": "{{ vn_id }}",
       "vn_type": "vxlan",
       "svi_ips": [],
       "virtual_gateway_ipv4": null,
@@ -16,9 +16,7 @@
          }
       {% if not loop.last %},{% endif %}{% endfor %}
       ],
-      "vni_ids": [
-        100004
-      ],
+      "vni_ids": {{ vn_id }},
       "reserved_vlan_id": null,
       "virtual_gateway_ipv6": null,
       "ipv4_subnet": null,
