@@ -74,6 +74,25 @@
       debug:
         var: leaf_ids
 
+    - name: "Retrieve Security ID if not set"
+      block:
+      - name: "Get Security ID"
+        ansible.builtin.uri:
+          url: "{{ apstra.baseurl }}/blueprints/{{ bp_id }}/nodes?node_type=security_zone"
+          method: GET
+          return_content: yes
+          status_code: 200
+          headers:
+            content-type: "application/json"
+            AUTHTOKEN: "{{ login.json.token }}"
+          validate_certs: false
+          force_basic_auth: yes
+        register: security
+
+    - name: set security zone ID
+      ansible.builtin.set_fact:
+        sz_id: "{{ security.json | cleanup_security_zone(sz.name) }}"
+
     - name: "Create connectivity template"
       uri:
         url: "{{ apstra.baseurl }}/blueprints/{{ bp_id }}/virtual-networks-batch?async=full"
