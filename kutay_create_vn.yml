@@ -51,10 +51,6 @@
       debug:
         var: specific_ids
 
-    - name: Template'i hedef makinelerde kullan
-      template:
-        src: templates/create_vn.j2
-        dest: /create_vn.j2
 
     - name: Initialize Variables
       ansible.builtin.set_fact:
