@@ -68,7 +68,7 @@
 
     - name: set system id
       ansible.builtin.set_fact:
-        leaf_ids: "{{ node_system.json }}"
+        leaf_ids: "{{ node_system.json  | cleanup_leaf_ids }}"
       when: leaf_ids == ""
     - name:
       debug:
