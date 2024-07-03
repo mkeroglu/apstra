@@ -56,6 +56,24 @@
         src: templates/create_vn.j2
         dest: /create_vn.j2
 
+    - name: Initialize Variables
+      ansible.builtin.set_fact:
+        leaf_ids: ""
+
+    - name: Get Device ID
+      ansible.builtin.include_role:
+        name: get_node_system
+      vars:
+        node_type: system
+
+    - name: set system id
+      ansible.builtin.set_fact:
+        leaf_ids: "{{ node_system.json }}"
+      when: leaf_ids == ""
+    - name:
+      debug:
+        var: leaf_ids
+
     - name: "Create connectivity template"
       uri:
         url: "{{ apstra.baseurl }}/blueprints/{{ bp_id }}/virtual-networks-batch?async=full"
