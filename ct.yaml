@@ -1,0 +1,57 @@
+---
+  ### ---------------------------------------------------------------------------
+  ### APSTRA API AUTOMATION
+  ### ---------------------------------------------------------------------------
+  - hosts: localhost
+    gather_facts: False
+    connection: local
+    roles:
+      - { role: apstra_auth }
+
+    tasks:
+    - name: Initialize Variables
+      set_fact:
+        leaf_ids: ""
+
+    - name: "Get Blueprint ID"
+      ansible.builtin.uri:
+        url: "{{ apstra.baseurl }}/blueprints"
+        method: GET
+        status_code: 200
+        headers:
+          content-type: "application/json"
+          AUTHTOKEN: "{{ login.json.token }}"
+        validate_certs: false
+        force_basic_auth: yes
+      register: bp_ids
+
+
+    - name: Retrieve Blueprint ID
+      ansible.builtin.set_fact:
+        bp_id: "{{ bp_ids.json | cleanup_bp_id(bp_name) }}"
+
+    - name: "Get Connectvity Template"
+      uri:
+        url: "{{ apstra.baseurl }}/blueprints/{{ bp_id }}/anomalies"
+        method: GET
+        status_code: 200
+        headers:
+          content-type: "application/json"
+          AUTHTOKEN: "{{ login.json.token }}"
+        validate_certs: false
+        force_basic_auth: yes
+        body_format: json
+      ignore_errors: yes
+      register: cts
+
+    - name: Debug cts variable
+      debug:
+        var: cts
+
+    - name:
+      ansible.builtin.set_fact:
+        critical_deployments: "{{ cts.json.items | json_query('[?severity == `critical`].actual.deployment_status') }}"
+
+    - name:
+      debug:
+        var: critical_deployments
