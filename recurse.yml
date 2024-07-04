@@ -1,0 +1,4 @@
+- name: Collect policies from this node
+  set_fact:
+    collected_policies: "{{ collected_policies | default([]) + (item.policies | default([])) }}"
+  loop: "{{ children }}"

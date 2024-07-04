@@ -1,0 +1,8 @@
+# extract_policies.yml
+- name: Extract policies from current node
+  vars:
+    policies_here: "{{ current_node.policies | json_query('[*].policy') | list }}"
+  set_fact:
+    all_policies: "{{ all_policies + policies_here }}"
+  ignore_errors: yes
+

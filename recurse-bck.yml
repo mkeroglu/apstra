@@ -1,0 +1,11 @@
+---
+- name: Check if there are children
+  debug:
+    msg: "Processing node with policies: {{ item.policies | default([]) }}"
+  loop: "{{ children }}"
+- name: Check for more children
+  include_tasks: recurse.yml
+  vars:
+    children: "{{ item.children }}"
+  when: item.children is defined and item.children | length > 0
+  loop: "{{ children }}"

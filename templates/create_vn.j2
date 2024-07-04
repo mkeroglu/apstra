@@ -12,7 +12,7 @@
          {
             "system_id": "{{ i }}",
             "access_switch_node_ids": [],
-            "vlan_id": {{ vlan_id }}
+            "vlan_id": {{ sz.vns.vlan_id }}
          }
       {% if not loop.last %},{% endif %}{% endfor %}
       ],
@@ -24,7 +24,7 @@
         "import_RTs": null,
         "export_RTs": null
       },
-      "label": "{{ vn_name }}",
+      "label": "{{ sz.vns.name }}",
       "ipv4_enabled": false,
       "create_policy_untagged": true,
       "virtual_gateway_ipv6_enabled": false,

@@ -1,0 +1,90 @@
+---
+  ### ---------------------------------------------------------------------------
+  ### APSTRA API AUTOMATION
+  ### ---------------------------------------------------------------------------
+  - hosts: localhost
+    gather_facts: False
+    connection: local
+    roles:
+      - { role: apstra_auth }
+
+    tasks:
+    - name: Initialize Variables
+      set_fact: 
+        leaf_ids: ""
+
+    - name: "Get Blueprint ID"
+      ansible.builtin.uri:
+        url: "{{ apstra.baseurl }}/blueprints"
+        method: GET
+        status_code: 200
+        headers:
+          content-type: "application/json"
+          AUTHTOKEN: "{{ login.json.token }}"
+        validate_certs: false
+        force_basic_auth: yes
+      register: bp_ids
+
+
+    - name: Retrieve Blueprint ID
+      ansible.builtin.set_fact:
+        bp_id: "{{ bp_ids.json | cleanup_bp_id(bp_name) }}"
+
+
+    - name: "Get Connectvity Template"
+      uri:
+        url: "{{ apstra.baseurl }}/blueprints/{{ bp_id }}/obj-policy-application-points"
+        method: GET
+        status_code: 200
+        headers:
+          content-type: "application/json"
+          AUTHTOKEN: "{{ login.json.token }}"
+        validate_certs: false
+        force_basic_auth: yes
+          #body: "{{ lookup('ansible.builtin.template','templates/connectivity-template.j2') }}"
+        body_format: json
+      ignore_errors: yes
+      register: leafs
+
+    - name:
+      debug:
+        var: leafs
+
+    - name:
+      ansible.builtin.set_fact:
+        leafs2: "{{ leafs.json.application_points }}"
+
+    - name: Recursively gather policies
+      include_tasks: recurse.yml
+      vars:
+        children: "{{ leafs2['children'] }}"
+    - name: Display all collected policies
+      debug:
+        var: collected_policies
+
+    - name: "Get Connectvity Template"
+      uri:
+        url: "{{ apstra.baseurl }}/blueprints/{{ bp_id }}/obj-policy-export"
+        method: GET
+        status_code: 200
+        headers:
+          content-type: "application/json"
+          AUTHTOKEN: "{{ login.json.token }}"
+        validate_certs: false
+        force_basic_auth: yes
+          #body: "{{ lookup('ansible.builtin.template','templates/connectivity-template.j2') }}"
+        body_format: json
+      ignore_errors: yes
+      register: cts
+
+    - name:
+      debug:
+        var: cts
+
+    - name: Retrieve Blueprint ID
+      ansible.builtin.set_fact:
+        desired_id: "{{ cts.json.policies | selectattr('label', '==', ct_name) | map(attribute='id') | first }}"
+
+    - name: show blueprint id
+      ansible.builtin.debug:
+        msg: "{{ desired_id }}"
