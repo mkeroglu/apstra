@@ -14,6 +14,10 @@
       ansible.builtin.set_fact: 
         leaf_ids: ""
 
+    - name:
+      debug:
+        var: sz
+
     - name: Get Device ID
       ansible.builtin.include_role:
         name: get_node_system
@@ -70,6 +74,10 @@
       debug:
         var: leaf_ids
 
+    - name: show vns
+      ansible.builtin.debug:
+        msg: "{{ sz }}"
+
     - name: "Retrieve Security ID if not set"
       block:
       - name: "Get Security ID"
@@ -99,9 +107,10 @@
           AUTHTOKEN: "{{ login.json.token }}"
         validate_certs: false
         force_basic_auth: yes
-        body: "{{ lookup('ansible.builtin.template','templates/create_vn.j2') }}"
+        body: "{{ lookup('ansible.builtin.template','templates/create_vn_kutay.j2') }}"
         body_format: json
       ignore_errors: yes
+      with_items: "{{ sz.vns }}" 
 #
 #
 #
