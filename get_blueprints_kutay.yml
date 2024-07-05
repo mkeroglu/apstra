@@ -1,0 +1,67 @@
+---
+  ### ---------------------------------------------------------------------------
+  ### APSTRA API AUTOMATION
+  ### ---------------------------------------------------------------------------
+  - hosts: localhost
+    gather_facts: False
+    connection: local
+    roles:
+      - { role: apstra_auth }
+
+    tasks:
+      - name: "Get Blueprint ID"
+        ansible.builtin.uri:
+          url: "{{ apstra.baseurl }}/blueprints"
+          method: GET
+         # return_content: yes
+          status_code: 200
+          headers:
+            content-type: "application/json"
+            AUTHTOKEN: "{{ login.json.token }}"
+          validate_certs: false
+          force_basic_auth: yes
+        register: bp_ids
+
+      - name: show blue prints
+        ansible.builtin.debug:
+          msg: "{{ bp_ids }}"
+
+      - name: Retrieve Blueprint ID
+        ansible.builtin.set_fact:
+          bp_id: "{{ bp_ids | json_query('json.items[].id') }}"
+
+      - name: show blueprint label
+        ansible.builtin.debug:
+          msg: "{{ bp_id }}"
+
+      - name: Retrieve Blueprint Label
+        ansible.builtin.set_fact:
+          bp_label: "{{ bp_ids | json_query('json.items[].label') }}"
+
+      - name: show blueprint id
+        ansible.builtin.debug:
+          msg: "{{ bp_label }}"
+
+      - name: Get current date and time
+        command: python3 -c 'import datetime; now = datetime.datetime.now(); print(now.strftime("%Y-%m-%d %H:%M:%S.%f"))'
+        register: current_datetime
+
+      - name: Print current date and time with timezone offset
+        debug:
+          msg: "{{ current_datetime.stdout }}+03:00"
+
+      - name:
+        ansible.builtin.set_fact:
+          hostname: "{{ apstra.baseurl | regex_replace('....$', '') }}"
+
+      - name:
+        debug:
+          var: hostname
+
+      - name: Delete routing zones that does not exist in apstra but postgresql
+        postgresql_query:
+          db: "{{ pg_login_db }}"
+          login_user: "{{ pg_login_user }}"
+          login_password: "{{ pg_login_password }}"
+          login_host: "{{ pg_login_host }}"
+          query: "{{ lookup('ansible.builtin.template', './templates/pgsql-q-insert-blueprints-kutay.j2') }}"

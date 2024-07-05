@@ -1,0 +1,7 @@
+{% for index in range(bp_label | length) %}          
+  INSERT INTO "{{ bp_tablename }}" (created_at, updated_at, name, remote_id, apstra_hostname)
+  VALUES ( '{{ current_datetime.stdout }}+03', '{{ current_datetime.stdout }}+03', '{{ bp_label[index] }}', '{{ bp_id[index] }}', '{{ hostname }}')
+  ON CONFLICT (name, remote_id, apstra_hostname) DO UPDATE SET
+  remote_id = EXCLUDED.remote_id,
+  updated_at = EXCLUDED.updated_at;
+{% endfor %}
