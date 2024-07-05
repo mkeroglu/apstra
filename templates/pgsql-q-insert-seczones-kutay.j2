@@ -1,0 +1,7 @@
+{% for index in range(label | length) %}          
+  INSERT INTO "{{ sz_tablename }}" (name, blueprint_id, remote_id, status, created_at, updated_at)
+  VALUES ( '{{ label[index] }}', '{{ bp_id }}', '{{ id[index] }}', '{{ datetime_of_pb }}', '{{ current_datetime.stdout }}+03', '{{ current_datetime.stdout }}+03')
+  ON CONFLICT (name, blueprint_id, remote_id) DO UPDATE SET
+  status = EXCLUDED.status,
+  updated_at = EXCLUDED.updated_at;
+{% endfor %}
