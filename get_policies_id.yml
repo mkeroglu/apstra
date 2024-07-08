@@ -78,19 +78,22 @@
     - name: Display extracted ID
       debug:
         var: policy_id
-
-    - name: Extract ID based on policy and state
-      debug:
-        msg: "{{ item.id }}"
-      loop: "{{ policies.json.application_points.children | json_query(query) }}"
-      vars:
-        query: "[?children[].children[].children[].policies[?policy == '73d49f90-cc5c-47cc-895f-1e7a7a7b540a' && state == 'used-directly']]"
-
-    - name:
+    - name: Extract all children IDs
       set_fact:
-        policy2: "{{ policy_id | json_query('[].children[].id')  }}"
+        poli: "{{ policies.json | json_query('application_points.children[*].children[*]') }}"
 
-    - name:
+    - name: Display extracted ID
       debug:
-        var: policy2
+        var: poli
 
+    - name: Parse JSON data
+      set_fact:
+        poli_data: "{{ poli | json_query('[0][:27345737]') }}"
+
+    - name: Display filtered data
+      debug:
+        var: poli_data
+
+    - name: Get the specific id value
+      debug:
+        msg: "{{ poli_data[0].id }}"
