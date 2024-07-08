@@ -73,11 +73,18 @@
       set_fact:
         policy_id: "{{ policies.json.application_points.children | json_query(query) }}"
       vars:
-        query: "[?children[].children[].children[].policies[?policy == '73d49f90-cc5c-47cc-895f-1e7a7a7b540a']]"
+        query: "[?children[].children[].children[].policies[?policy == '73d49f90-cc5c-47cc-895f-1e7a7a7b540a' && state == 'used-directly']]"
 
     - name: Display extracted ID
       debug:
         var: policy_id
+
+    - name: Extract ID based on policy and state
+      debug:
+        msg: "{{ item.id }}"
+      loop: "{{ policies.json.application_points.children | json_query(query) }}"
+      vars:
+        query: "[?children[].children[].children[].policies[?policy == '73d49f90-cc5c-47cc-895f-1e7a7a7b540a' && state == 'used-directly']]"
 
     - name:
       set_fact:
