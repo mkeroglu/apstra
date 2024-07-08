@@ -96,4 +96,4 @@
 
     - name: Get the specific id value
       debug:
-        msg: "{{ poli_data[0].id }}"
+        msg: "{{ poli_data | json_query('[?children[].children[?policies[?policy == `73d49f90-cc5c-47cc-895f-1e7a7a7b540a` && state == `used-directly`]]].id') }}"
