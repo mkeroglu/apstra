@@ -1,0 +1,89 @@
+---
+  ### ---------------------------------------------------------------------------
+  ### APSTRA API AUTOMATION
+  ### ---------------------------------------------------------------------------
+  - hosts: localhost
+    gather_facts: False
+    connection: local
+    roles:
+      - { role: apstra_auth }
+    tasks:
+    - name: "Get Blueprint ID"
+      ansible.builtin.uri:
+        url: "{{ apstra.baseurl }}/blueprints"
+        method: GET
+        status_code: 200
+        headers:
+          content-type: "application/json"
+          AUTHTOKEN: "{{ login.json.token }}"
+        validate_certs: false
+        force_basic_auth: yes
+      register: bp_ids
+
+
+    - name: Retrieve Blueprint ID
+      ansible.builtin.set_fact:
+        bp_id: "{{ bp_ids.json | cleanup_bp_id(bp_name) }}"
+
+    - name: "Get Connectvity Template"
+      uri:
+        url: "{{ apstra.baseurl }}/blueprints/{{ bp_id }}/obj-policy-application-points"
+        method: GET
+        status_code: 200
+        headers:
+          content-type: "application/json"
+          AUTHTOKEN: "{{ login.json.token }}"
+        validate_certs: false
+        force_basic_auth: yes
+        body_format: json
+      ignore_errors: yes
+      register: policies
+
+    - name:
+      debug:
+        var: policies
+
+    - name: Parse JSON output
+      set_fact:
+        parsed_json: "{{ policies.json }}"
+    
+    - name: Extract all children IDs
+      debug:
+        msg: "{{ policies.json | json_query('application_points.children[*].children[*].id') }}"
+
+
+    - name: Get policy names
+      debug:
+        msg: "{{ parsed_json | json_query('application_points.children[*].children[*].children[*].children[*].policies[*].policy') }}"
+
+    - name:
+      set_fact:
+        policies_id: "{{ parsed_json | json_query('application_points.children[*].children[*].children[*].children[*].policies[*].policy') }}"
+
+    - name:
+      debug:
+        var: policies_id
+
+    - name:
+      debug:
+        msg: "{{ item }}"
+      loop: "{{ parsed_json | json_query('application_points.children[*].children[*].id') }}"
+
+    - name: Parse JSON and extract ID
+      set_fact:
+        policy_id: "{{ policies.json.application_points.children | json_query(query) }}"
+      vars:
+        query: "[?children[].children[].children[].policies[?policy == '73d49f90-cc5c-47cc-895f-1e7a7a7b540a']]"
+
+    - name: Display extracted ID
+      debug:
+        var: policy_id
+
+    - name:
+      set_fact:
+        policy2: "{{ policy_id | json_query('[].children[].id')  }}"
+
+    - name:
+      debug:
+        var: policy2
+
