@@ -78,6 +78,10 @@
       ansible.builtin.debug:
         msg: "{{ sz }}"
 
+    - name: Include example_role
+      include_role:
+        name: get_leaf_ids
+
     - name: "Retrieve Security ID if not set"
       block:
       - name: "Get Security ID"
@@ -111,26 +115,7 @@
         body_format: json
       ignore_errors: yes
       with_items: "{{ sz.vns }}" 
-#
-#
-#
-#
-#
-#### ---------------------------------------------------------------------------
-#### ASSIGN EVPN L3 VNIS
-#### ---------------------------------------------------------------------------
-#    - name: "Assign EVPN L3 VNIs"
-#      uri:
-#        url: "{{ apstra.baseurl }}/blueprints/{{ bp_id }}/resource_groups/vni/evpn_l3_vnis"
-#        method: PUT
-#        status_code: 202
-#        headers:
-#          content-type: "application/json"
-#          AUTHTOKEN: "{{ login.json.token }}"
-#        validate_certs: false
-#        body: '{"pool_ids":["Default-10000-20000"]}'
-#        body_format: json
-#
+
     - name: "Commit Changes"
       include_role:
         name: commit_changes

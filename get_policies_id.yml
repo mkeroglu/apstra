@@ -80,7 +80,7 @@
         var: policy_id
     - name: Extract all children IDs
       set_fact:
-        poli: "{{ policies.json | json_query('application_points.children[*].children[*]') }}"
+        poli: "{{ policies.json | json_query('application_points.children[*].children[*].children[*]') }}"
 
     - name: Display extracted ID
       debug:
@@ -88,7 +88,15 @@
 
     - name: Parse JSON data
       set_fact:
-        poli_data: "{{ poli | json_query('[0][:27345737]') }}"
+        poli_data2: "{{ poli | json_query('[0][:27345737]') }}"
+
+    - name: Display filtered data
+      debug:
+        var: poli_data2
+
+    - name: Parse JSON data
+      set_fact:
+        poli_data: "{{ poli_data2 | json_query('[0][:27345737]') }}"
 
     - name: Display filtered data
       debug:
@@ -97,3 +105,11 @@
     - name: Get the specific id value
       debug:
         msg: "{{ poli_data | json_query('[?children[].children[?policies[?policy == `73d49f90-cc5c-47cc-895f-1e7a7a7b540a` && state == `used-directly`]]].id') }}"
+
+    - name:
+      set_fact:
+        leaf_id: "{{ poli_data | json_query('[?children[].children[?policies[?policy == `73d49f90-cc5c-47cc-895f-1e7a7a7b540a` && state == `used-directly`]]].id') }}"
+
+    - name:
+      debug:
+        var: leaf_id

@@ -1,0 +1,126 @@
+---
+- name: "Get Connectvity Template"
+  uri:
+    url: "{{ apstra.baseurl }}/blueprints/{{ bp_id }}/obj-policy-export"
+    method: GET
+    status_code: 200
+    headers:
+      content-type: "application/json"
+      AUTHTOKEN: "{{ login.json.token }}"
+    validate_certs: false
+    force_basic_auth: yes
+      #body: "{{ lookup('ansible.builtin.template','templates/connectivity-template.j2') }}"
+    body_format: json
+  ignore_errors: yes
+  register: cts
+
+- name:
+  debug:
+    var: cts
+
+- name: Retrieve Blueprint ID
+  ansible.builtin.set_fact:
+    desired_id: "{{ cts.json.policies | selectattr('tags', 'search', ct_tag) | map(attribute='id') | first }}"
+
+- name: show blueprint id
+  ansible.builtin.debug:
+    var: desired_id
+
+- name: "Get Connectvity Template"
+  uri:
+    url: "{{ apstra.baseurl }}/blueprints/{{ bp_id }}/obj-policy-application-points"
+    method: GET
+    status_code: 200
+    headers:
+      content-type: "application/json"
+      AUTHTOKEN: "{{ login.json.token }}"
+    validate_certs: false
+    force_basic_auth: yes
+    body_format: json
+  ignore_errors: yes
+  register: policies
+
+- name:
+  debug:
+    var: policies
+
+- name: Parse JSON output
+  set_fact:
+    parsed_json: "{{ policies.json }}"
+
+- name: Extract all children IDs
+  debug:
+    msg: "{{ policies.json | json_query('application_points.children[*].children[*].id') }}"
+
+
+- name: Get policy names
+  debug:
+    msg: "{{ parsed_json | json_query('application_points.children[*].children[*].children[*].children[*].policies[*].policy') }}"
+
+- name:
+  set_fact:
+    policies_id: "{{ parsed_json | json_query('application_points.children[*].children[*].children[*].children[*].policies[*].policy') }}"
+
+- name:
+  debug:
+    var: policies_id
+
+- name:
+  debug:
+    msg: "{{ item }}"
+  loop: "{{ parsed_json | json_query('application_points.children[*].children[*].id') }}"
+
+- name: Parse JSON and extract ID
+  set_fact:
+    policy_id: "{{ policies.json.application_points.children | json_query(query) }}"
+  vars:
+    query: "[?children[].children[].children[].policies[?policy == desired_id && state == 'used-directly']]"
+
+- name: Display extracted ID
+  debug:
+    var: policy_id
+- name: Extract all children IDs
+  set_fact:
+    poli: "{{ policies.json | json_query('application_points.children[*].children[*].children[*]') }}"
+
+- name: Display extracted ID
+  debug:
+    var: poli
+
+- name: Parse JSON data
+  set_fact:
+    poli_data2: "{{ poli | json_query('[0][:27345737]') }}"
+
+- name: Display filtered data
+  debug:
+    var: poli_data2
+
+- name: Parse JSON data
+  set_fact:
+    poli_data: "{{ poli_data2 | map('first') }}"
+
+- name: Display filtered data
+  debug:
+    var: poli_data
+          
+      #- name: Get the specific id value
+      #debug:
+      #msg: "{{ poli_data | json_query('[?children[].children[?policies[?policy == 'a276093b-b9f7-47c1-adb1-252b7618b1af' && state == `used-directly`]]].id') }}"
+
+- name:
+  debug:
+    var: desired_id
+
+- name: Set leaf_id fact
+  set_fact:
+    leaf_id: "{{ poli_data2 | json_query(query) }}"
+  vars:
+    query: "[*][?children[?policies[?policy == '{{ desired_id }}' && state == `used-directly`]]].id"
+- name: Flatten the nested list
+  set_fact:
+    leaf_id: "{{ leaf_id | flatten | select('string') | list }}"
+
+- name:
+  debug:
+    var: leaf_id
+
