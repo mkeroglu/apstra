@@ -45,15 +45,15 @@
       set_fact:
         specific_ids: []
 
-    - name: Add ids to specific_ids list
-      set_fact:
-        specific_ids: "{{ specific_ids + [item.value.id] }}"
-      loop: "{{ leaf_id }}"
-      when: item.value.label in leaf_name
+          #    - name: Add ids to specific_ids list
+          #set_fact:
+          #specific_ids: "{{ specific_ids + [item.value.id] }}"
+          #loop: "{{ leaf_id }}"
+          #when: item.value.label in leaf_name
 
-    - name: Display specific_ids
-      debug:
-        var: specific_ids
+          #    - name: Display specific_ids
+          #debug:
+          #var: specific_ids
 
 
     - name: Initialize Variables
@@ -116,6 +116,10 @@
       ignore_errors: yes
       with_items: "{{ sz.vns }}" 
 
-    - name: "Commit Changes"
-      include_role:
-        name: commit_changes
+    - name: Add VN to CT 
+      ansible.builtin.include_role:
+        name: add_vn_to_ct
+
+        #    - name: "Commit Changes"
+        #include_role:
+        #name: commit_changes

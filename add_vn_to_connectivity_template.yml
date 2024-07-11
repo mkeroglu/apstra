@@ -95,6 +95,22 @@
       ignore_errors: yes
       register: vns
 
+    - name:
+      set_fact:
+        vn_name: "{{ sz.vns | json_query('[].name') }}"
+
+    - name:
+      debug:
+        var: vn_name
+
+    - name:
+      set_fact:
+        vn_id: "{{ sz.vns | json_query('[].vn_id') }}"
+
+    - name:
+      debug:
+        var: vn_id
+
     - name: Retrieve Blueprint IDs
       ansible.builtin.set_fact:
         vn_ids: "{{ vns.json.virtual_networks | dict2items | map(attribute='key') | list }}"
@@ -143,23 +159,23 @@
 
     - name: Filter policies except ABC-TEST-CT-1-1-1-1-1
       set_fact:
-        filtered_policies: "{{ ctt_j2.policies | json_query('[?label != `' + ct_name + '`]') }}"       
+        filtered_policies: "{{ ctt_j2.policies | json_query('[?tag != `' + ct_tag + '`]') }}"       
 
-          #- name: Print updated ct_j2 for verification
-          #debug:
-          #var: filtered_policies
+    - name: Print updated ct_j2 for verification
+      debug:
+        var: filtered_policies
 
     - name: Filter policies except ABC-TEST-CT-1
       set_fact:
-        filtered_policies_ct_name: "{{ ctt_j2.policies | json_query('[?label == `' + ct_name + '`]') }}"
+        filtered_policies_ct_name: "{{ ctt_j2.policies | json_query('[?tag == `' + ct_tag + '`]') }}"
 
-          #- name: Print updated ct_j2 for verification
-          #debug:
-          #var: filtered_policies_ct_name
+    - name: Print updated ct_j2 for verification
+      debug:
+        var: filtered_policies_ct_name
 
     - name: Clone filtered_policies_ct_name structure
       set_fact:
-        updated_filtered_policies_ct_name: "{{ filtered_policies_ct_name | map('combine', {'attributes': {'subpolicies': (filtered_policies_ct_name | map(attribute='attributes.subpolicies') | list | first) + [random_uuid2]}}) | list }}"
+        updated_filtered_policies_ct_name: "{{ filtered_policies | map('combine', {'attributes': {'subpolicies': (filtered_policies | map(attribute='attributes.subpolicies') | list | first) + [random_uuid2]}}) | list }}"
 
           #- name: Show updated filtered_policies_ct_name
           #debug:
