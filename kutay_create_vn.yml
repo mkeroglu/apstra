@@ -8,7 +8,8 @@
     roles:
       - { role: apstra_auth }
       - { role: get_bp_id }
-
+        #      - { role: check_ds }
+        #      - { role: check_diff }
     tasks:
     - name: Initialize Variables
       ansible.builtin.set_fact: 

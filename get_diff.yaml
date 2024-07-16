@@ -1,0 +1,56 @@
+---
+  ### ---------------------------------------------------------------------------
+  ### APSTRA API AUTOMATION
+  ### ---------------------------------------------------------------------------
+- hosts: localhost
+  gather_facts: False
+  connection: local
+  roles:
+    - { role: apstra_auth }
+    - { role: get_bp_id }
+
+  tasks:
+    - name: "Get Security ID"
+      ansible.builtin.uri:
+        url: "{{ apstra.baseurl }}/blueprints/{{ bp_id }}/diff"
+        method: GET
+        return_content: yes
+        status_code: 200
+        headers:
+          content-type: "application/json"
+          AUTHTOKEN: "{{ login.json.token }}"
+        validate_certs: false
+        force_basic_auth: yes
+      register: security
+
+    - name:
+      debug:
+        msg: "{{ security.json }}"
+
+    - name: Filter non-null values
+      set_fact:
+        filtered_output: "{{ security.json | dict2items }}"
+    
+    
+    - debug:
+        var: filtered_output
+
+    - name: Filter items with non-null value
+      set_fact:
+        non_null: "{{ filtered_output | json_query('[?value != `null`].key') }}"
+
+    - name:
+      set_fact:
+        digest: "{{ security.json.digest }}"
+
+    - name:
+      debug:
+        var: digest
+
+    - name: Check if any value is greater than zero
+      fail:
+        msg: "Commit Control edilmelidir. {{ non_null }}"
+      when: item.value.added > 0 or item.value.changed > 0 or item.value.removed > 0
+      loop: "{{ digest | dict2items }}"
+      loop_control:
+        label: "{{ item.key }}"

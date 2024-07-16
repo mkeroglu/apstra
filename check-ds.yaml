@@ -1,0 +1,46 @@
+---
+  ### ---------------------------------------------------------------------------
+  ### APSTRA API AUTOMATION
+  ### ---------------------------------------------------------------------------
+  - hosts: localhost
+    gather_facts: False
+    connection: local
+    roles:
+      - { role: apstra_auth }
+      - { role: get_bp_id }
+    tasks:
+      - name: "Get Deployment Status"
+        ansible.builtin.uri:
+          url: "{{ apstra.baseurl }}/blueprints/{{ bp_id }}/anomalies_services_count"
+          method: GET
+          return_content: yes
+          status_code: 200
+          headers:
+            content-type: "application/json"
+            AUTHTOKEN: "{{ login.json.token }}"
+          validate_certs: false
+          force_basic_auth: yes
+        register: deployment_status
+
+      - name:
+        debug:
+          var: deployment_status
+
+      - name: Set fact for types
+        set_fact:
+          types: ["deployment", "config"]
+
+      - name: Debug items from JSON based on types
+        debug:
+          msg: "{{ deployment_status.json | json_query('items[?type == `' + item + '`].count') }}"
+        loop: "{{ types }}"
+        loop_control:
+          loop_var: item
+
+      - name: Check items from JSON based on types
+        fail:
+          msg: "Deployment Status içerisinde {{ item }} anomali vardır {{ deployment_status.json | json_query('items[?type == `' + item + '`].count') }}"
+        when: deployment_status.json | json_query('items[?type == `' + item + '`].count') | length == 1
+        loop: "{{ types }}"
+        loop_control:
+          loop_var: item
