@@ -181,4 +181,4 @@
     force_basic_auth: yes
     body: "{{ ctt_j2 }}"
     body_format: json
-  #ignore_errors: yes
+  ignore_errors: yes
