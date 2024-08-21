@@ -38,7 +38,7 @@
 
 - name:
   ansible.builtin.debug:
-    msg: "{{ sz }}"
+    msg: "{{ sz.vns[0].fw_ct_tag }}"
 
 - name:
   ansible.builtin.debug:
