@@ -121,6 +121,10 @@
       ansible.builtin.include_role:
         name: add_vn_to_ct
 
+    - name: show vns
+      ansible.builtin.debug:
+        msg: "{{ sz }}"
+
     - name: Add VN to FW_CT
       ansible.builtin.include_role:
         name: add_vn_to_fw_ct
