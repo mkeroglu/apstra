@@ -38,7 +38,7 @@
 
 - name: Retrieve Blueprint ID
   ansible.builtin.set_fact:
-    desired_id: "{{ cts.json.policies | selectattr('tags', 'search', ct_tag) | map(attribute='id') | first }}"
+    desired_id: "{{ cts.json.policies | selectattr('tags', 'search', fw_ct_tag) | map(attribute='id') | first }}"
 
 - name: show blueprint id
   ansible.builtin.debug:
@@ -138,7 +138,7 @@
 
 - name: Filter policies except ABC-TEST-CT-1-1-1-1-1
   set_fact:
-    filtered_policies: "{{ ctt_j2.policies | json_query('[?tag != `' + ct_tag + '`]') }}"
+    filtered_policies: "{{ ctt_j2.policies | json_query('[?tag != `' + fw_ct_tag + '`]') }}"
 
 - name: Print updated ct_j2 for verification
   debug:
@@ -146,7 +146,7 @@
 
 - name: Filter policies except ABC-TEST-CT-1
   set_fact:
-    filtered_policies_ct_name: "{{ ctt_j2.policies | json_query('[?tag == `' + ct_tag + '`]') }}"
+    filtered_policies_ct_name: "{{ ctt_j2.policies | json_query('[?tag == `' + fw_ct_tag + '`]') }}"
 
 - name: Print updated ct_j2 for verification
   debug:

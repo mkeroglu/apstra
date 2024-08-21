@@ -114,12 +114,16 @@
         force_basic_auth: yes
         body: "{{ lookup('ansible.builtin.template','templates/create_vn_kutay.j2') }}"
         body_format: json
-      ignore_errors: yes
+      #ignore_errors: yes
       with_items: "{{ sz.vns }}" 
 
     - name: Add VN to CT 
       ansible.builtin.include_role:
         name: add_vn_to_ct
+
+    - name: Add VN to FW_CT
+      ansible.builtin.include_role:
+        name: add_vn_to_fw_ct
 
         #    - name: "Commit Changes"
         #include_role:

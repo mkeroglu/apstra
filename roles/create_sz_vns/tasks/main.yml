@@ -21,7 +21,7 @@
     force_basic_auth: yes
     body: "{{ lookup('file','/var/tmp/create_sz_{{ sz.name }}.json') }}"
     body_format: json
-  ignore_errors: yes
+  #ignore_errors: yes
  # with_items: "{{ security_zone }}"
 
 - name: Get Security Zone ID
@@ -42,7 +42,7 @@
     force_basic_auth: yes
     body: '{"pool_ids":["Private-172_16_0_0-12"]}'
     body_format: json
-  ignore_errors: yes
+  #ignore_errors: yes
 
 - name: Retrieve Leaf IDs
   block:
@@ -84,4 +84,4 @@
     body: "{{ lookup('file','/var/tmp/create_{{ sz.name }}-VLAN{{ item.vlan_id }}.json') }}"
     body_format: json
   with_items: "{{ sz.vns }}"
-  ignore_errors: yes
+  #ignore_errors: yes

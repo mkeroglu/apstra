@@ -13,4 +13,4 @@
       content-type: "application/json"
       AUTHTOKEN: "{{ login.json.token }}"
     validate_certs: false
-  ignore_errors: yes
+  #ignore_errors: yes
