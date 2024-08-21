@@ -1,0 +1,17 @@
+---
+  ### ---------------------------------------------------------------------------
+  ### APSTRA API AUTOMATION
+  ### ---------------------------------------------------------------------------
+  - hosts: localhost
+    gather_facts: False
+    connection: local
+    roles:
+      - { role: apstra_auth }
+      - { role: get_bp_id }
+        #      - { role: check_ds }
+        #      - { role: check_diff }
+    tasks:
+
+    - name: Add VN to CT 
+      ansible.builtin.include_role:
+        name: add_vn_to_ct

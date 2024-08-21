@@ -36,6 +36,22 @@
   ignore_errors: yes
   register: cts
 
+- name:
+  ansible.builtin.set_fact:
+    ct_tag: "{{ sz.vns[0].ct_tag }}"
+
+- name:
+  ansible.builtin.set_fact:
+    vn_id: "{{ sz.vns[0].ct_tag }}"
+
+- name:
+  ansible.builtin.set_fact:
+    vlan_id: "{{ sz.vns[0].ct_tag }}"
+
+- name:
+  ansible.builtin.set_fact:
+    name: "{{ sz.vns[0].name }}"
+
 - name: Retrieve Blueprint ID
   ansible.builtin.set_fact:
     desired_id: "{{ cts.json.policies | selectattr('tags', 'search', ct_tag) | map(attribute='id') | first }}"
