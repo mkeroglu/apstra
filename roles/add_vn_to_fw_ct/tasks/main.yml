@@ -38,7 +38,7 @@
 
 - name:
   ansible.builtin.set_fact:
-    ct_name: "{{ sz.vns[0].fw_ct_name }}"
+    fw_ct_name: "{{ sz.vns[0].fw_ct_name }}"
 
 - name:
   ansible.builtin.set_fact:
