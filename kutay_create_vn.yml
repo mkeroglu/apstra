@@ -121,6 +121,10 @@
       ansible.builtin.include_role:
         name: add_vn_to_ct
 
+    - name: Add VN to FWCT
+      ansible.builtin.include_role:
+        name: add_vn_to_fw_ct
+
         #    - name: "Commit Changes"
         #include_role:
         #name: commit_changes

@@ -38,7 +38,7 @@
 
 - name:
   ansible.builtin.set_fact:
-    ct_name: "{{ sz.vns[0].ct_name }}"
+    ct_name: "{{ sz.vns[0].fw_ct_name }}"
 
 - name:
   ansible.builtin.set_fact:
@@ -154,7 +154,7 @@
 
 - name: Filter policies except ABC-TEST-CT-1-1-1-1-1
   set_fact:
-    filtered_policies: "{{ ctt_j2.policies | json_query('[?label != `' + ct_name + '`]') }}"
+    filtered_policies: "{{ ctt_j2.policies | json_query('[?label != `' + fw_ct_name + '`]') }}"
 
 - name: Print updated ct_j2 for verification
   debug:
@@ -162,7 +162,7 @@
 
 - name: Filter policies except ABC-TEST-CT-1
   set_fact:
-    filtered_policies_ct_name: "{{ ctt_j2.policies | json_query('[?label == `' + ct_name + '`]') }}"
+    filtered_policies_ct_name: "{{ ctt_j2.policies | json_query('[?label == `' + fw_ct_name + '`]') }}"
 
 - name: Print updated ct_j2 for verification
   debug:
