@@ -54,7 +54,7 @@
 
 - name: Retrieve Blueprint ID
   ansible.builtin.set_fact:
-    desired_id: "{{ cts.json.policies | selectattr('label', 'search', ct_name) | map(attribute='id') | first }}"
+    desired_id: "{{ cts.json.policies | selectattr('label', 'search', fw_ct_name) | map(attribute='id') | first }}"
 
 - name: show blueprint id
   ansible.builtin.debug:
@@ -148,9 +148,9 @@
   debug:
     var: json_template
 
-      #- name: Print updated ct_j2 for verification
-      #debug:
-      #var: ctt_j2
+- name: Print updated ct_j2 for verification
+  debug:
+    var: ctt_j2
 
 - name: Filter policies except ABC-TEST-CT-1-1-1-1-1
   set_fact:
