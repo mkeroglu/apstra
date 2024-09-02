@@ -1,0 +1,29 @@
+[
+  {
+    "id": "{{ attach_id }}",
+    "label": "Virtual Network (Multiple)",
+    "description": "Add a list of VLANs to interfaces, as tagged or untagged.",
+    "policy_type_name": "AttachMultipleVLAN",
+    "attributes": {
+      "untagged_vn_node_id": "{{ untagged_vn_node_id }}",
+      "tagged_vn_node_ids": [
+        {% for id in vn_node_ids %}
+        "{{ id }}"{{ "," if not loop.last else "" }}
+        {% endfor %}
+      ]
+    },
+    "visible": false
+  },
+  {
+    "id": "{{ pipeline_id }}",
+    "label": "Virtual Network (Multiple) (pipeline)",
+    "description": "Add a list of VLANs to interfaces, as tagged or untagged.",
+    "policy_type_name": "pipeline",
+    "attributes": {
+      "first_subpolicy": "{{ attach_id }}",
+      "second_subpolicy": null
+    },
+    "visible": false
+  }
+]
+

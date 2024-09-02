@@ -117,13 +117,17 @@
       ignore_errors: yes
       with_items: "{{ sz.vns }}" 
 
-    - name: Add VN to CT 
+        #    - name: Add VN to CT 
+        #      ansible.builtin.include_role:
+        #        name: add_vn_to_ct
+
+    - name: Add VN to CT
       ansible.builtin.include_role:
-        name: add_vn_to_ct
+        name: add_vn_to_ct_multiple
 
     - name: Add VN to FWCT
       ansible.builtin.include_role:
-        name: add_vn_to_fw_ct
+        name: add_vn_to_fw_ct_multiple
 
         #    - name: "Commit Changes"
         #include_role:
