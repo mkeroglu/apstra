@@ -1,0 +1,133 @@
+---
+  ### ---------------------------------------------------------------------------
+  ### APSTRA API AUTOMATION
+  ### ---------------------------------------------------------------------------
+  - hosts: localhost
+    gather_facts: False
+    connection: local
+    roles:
+      - { role: apstra_auth }
+      - { role: get_bp_id }
+        #      - { role: check_ds }
+        #      - { role: check_diff }
+    tasks:
+      - name: "Get Security ID"
+        ansible.builtin.uri:
+          url: "{{ apstra.baseurl }}/blueprints/{{ bp_id }}/virtual-networks"
+          method: GET
+          return_content: yes
+          status_code: 200
+          headers:
+            content-type: "application/json"
+            AUTHTOKEN: "{{ login.json.token }}"
+          validate_certs: false
+          force_basic_auth: yes
+        register: virtual_networks
+
+      - name:
+        debug:
+          msg: "{{ virtual_networks.json.virtual_networks }}"
+        register: virtual_networks
+
+      - name:
+        debug:
+          var: virtual_networks
+
+      - name: Extract labels
+        set_fact:
+          labels: "{{ virtual_networks.msg | dict2items }}"
+
+      - name:
+        ansible.builtin.set_fact:
+          vn_name: "{{ sz.vns[0].name }}"
+
+      - name: Print labels
+        debug:
+          msg: "{{ labels }}"
+
+      - name: Find ID for label "TVNI-112-101"
+        set_fact:
+          desired_vn_id: "{{ labels | selectattr('value.label', 'equalto', vn_name) | map(attribute='value.id') | first }}"
+
+      - name: Print the ID
+        debug:
+          msg: "ID for label {{ vn_name }} is: {{ desired_vn_id }}"
+
+      - name: "Get Connectvity Template"
+        uri:
+          url: "{{ apstra.baseurl }}/blueprints/{{ bp_id }}/obj-policy-export"
+          method: GET
+          status_code: 200
+          headers:
+            content-type: "application/json"
+            AUTHTOKEN: "{{ login.json.token }}"
+          validate_certs: false
+          force_basic_auth: yes
+            #body: "{{ lookup('ansible.builtin.template','templates/connectivity-template.j2') }}"
+          body_format: json
+        ignore_errors: yes
+        register: cts
+      
+      - name:
+        ansible.builtin.set_fact:
+          ct_name: "{{ sz.vns[0].ct_name }}"
+      
+      - name:
+        ansible.builtin.set_fact:
+          vn_id: "{{ sz.vns[0].vn_id }}"
+      
+      - name:
+        ansible.builtin.set_fact:
+          vlan_id: "{{ sz.vns[0].vlan_id }}"
+      
+      - name:
+        ansible.builtin.set_fact:
+          name: "{{ sz.vns[0].name }}"
+      
+      - name: Retrieve Blueprint ID
+        ansible.builtin.set_fact:
+          desired_id: "{{ cts.json.policies | selectattr('label', 'search', ct_name) | map(attribute='id') | first }}"
+      
+      - name: show blueprint id
+        ansible.builtin.debug:
+          msg: "{{ desired_id }}"
+      
+      - name: "Get Connectvity Template"
+        uri:
+          url: "{{ apstra.baseurl }}/blueprints/{{ bp_id }}/obj-policy-export/{{ desired_id }}"
+          method: GET
+          status_code: 200
+          headers:
+            content-type: "application/json"
+            AUTHTOKEN: "{{ login.json.token }}"
+          validate_certs: false
+          force_basic_auth: yes
+            #body: "{{ lookup('ansible.builtin.template','templates/connectivity-template.j2') }}"
+          body_format: json
+        ignore_errors: yes
+        register: ct_j2
+      
+      - name: Retrieve Blueprint IDs22
+        ansible.builtin.set_fact:
+          ctt_j2: "{{ ct_j2.json }}"
+
+      - name:
+        debug:
+          var: ctt_j2
+
+      - name:
+        ansible.builtin.set_fact:
+          attach_node_ids: "{{ ct_j2.json.policies | json_query('[?policy_type_name==`AttachMultipleVLAN`].attributes.tagged_vn_node_ids') | first }}"
+
+      - name:
+        debug:
+          var: attach_node_ids
+
+      - name: Set fact if node ID is in the list
+        set_fact:
+          is_node_id_present: "{{ desired_vn_id in attach_node_ids }}"
+
+      - name: Print the result
+        debug:
+          msg: "Node ID is present: {{ is_node_id_present }}"
+
