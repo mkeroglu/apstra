@@ -184,6 +184,6 @@
         name: add_vn_to_fw_ct_multiple
       when: is_node_id_present_fw == false
 
-        #    - name: "Commit Changes"
-        #      include_role:
-        #        name: commit_changes
+    - name: "Commit Changes"
+      include_role:
+        name: commit_changes
