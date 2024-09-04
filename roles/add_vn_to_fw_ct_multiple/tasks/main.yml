@@ -33,7 +33,7 @@
     force_basic_auth: yes
       #body: "{{ lookup('ansible.builtin.template','templates/connectivity-template.j2') }}"
     body_format: json
-  ignore_errors: yes
+  #ignore_errors: yes
   register: cts
 #
 - name:
@@ -76,7 +76,7 @@
     force_basic_auth: yes
       #body: "{{ lookup('ansible.builtin.template','templates/connectivity-template.j2') }}"
     body_format: json
-  ignore_errors: yes
+  #ignore_errors: yes
   register: ct_j2
 #
 - name:
@@ -130,7 +130,7 @@
     validate_certs: false
     force_basic_auth: yes
     body_format: json
-  ignore_errors: yes
+  #ignore_errors: yes
   register: vns
 
 - name: Retrieve Blueprint IDs
@@ -254,4 +254,4 @@
     force_basic_auth: yes
     body: "{{ ctt_j2 }}"
     body_format: json
-#  ignore_errors: yes
+#  #ignore_errors: yes

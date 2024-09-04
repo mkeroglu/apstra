@@ -133,7 +133,7 @@
         force_basic_auth: yes
         body: "{{ lookup('ansible.builtin.template','templates/create_vn_kutay.j2') }}"
         body_format: json
-      ignore_errors: yes
+      #ignore_errors: yes
       with_items: "{{ sz.vns }}" 
       when: is_shared_vn == false
 
