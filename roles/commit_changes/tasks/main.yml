@@ -23,6 +23,10 @@
   set_fact:
     version_id: "{{ diff_status.json.staging_version }}"
 
+- name:
+  set_fact:
+    commit_description: "Ansible"
+
 - name: "Deploy Staged Version"
   uri:
     url: "{{ apstra.baseurl }}/blueprints/{{ bp_id }}/deploy"
