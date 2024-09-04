@@ -28,6 +28,11 @@
          {% else %}
          "label": "{{ sz.name }}_VN",
          {% endif %}
+         {% if item.ipv4_gw is defined or item.ip_subnet is defined %}
+         "ipv4_enabled": true,
+         "ipv4_subnet": "{{ item.ip_subnet }}",
+         "virtual_gateway_ipv4": "{{ item.ipv4_gw }}",
+         {% else %}
          "ipv4_enabled": false,
          {% endif %}
          "ipv6_enabled": false,
