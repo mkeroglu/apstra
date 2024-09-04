@@ -100,6 +100,31 @@
         name: get_leaf_ids
       when: is_shared_vn == false
 
+    - name: Include example_role
+      include_role:
+        name: get_leaf_ids_fw
+      when: is_shared_vn == false
+
+    - name:
+      debug:
+        var: leaf_id_fw
+      when: is_shared_vn == false
+
+    - name:
+      debug:
+        var: leaf_id_vsphere
+      when: is_shared_vn == false
+
+    - name: Combine leaf_id_fw and leaf_id_vsphere
+      set_fact:
+        combined_leaf_ids: "{{ leaf_id_fw + leaf_id_vsphere }}"
+      when: is_shared_vn == false
+
+    - name: Display combined_leaf_ids
+      debug:
+        var: combined_leaf_ids
+      when: is_shared_vn == false
+
     - name: "Retrieve Security ID if not set"
       block:
       - name: "Get Security ID"
@@ -159,6 +184,6 @@
         name: add_vn_to_fw_ct_multiple
       when: is_node_id_present_fw == false
 
-    - name: "Commit Changes"
-      include_role:
-        name: commit_changes
+        #    - name: "Commit Changes"
+        #      include_role:
+        #        name: commit_changes

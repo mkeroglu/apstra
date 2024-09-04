@@ -136,8 +136,8 @@
 
 - name: Flatten the nested list
   set_fact:
-    leaf_id: "{{ leaf_id | flatten | select('string') | list }}"
+    leaf_id_vsphere: "{{ leaf_id | flatten | select('string') | list }}"
 
 - name:
   debug:
-    var: leaf_id
+    var: leaf_id_vsphere
