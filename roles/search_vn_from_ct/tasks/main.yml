@@ -1,4 +1,3 @@
----
 - name: "Get Security ID"
   ansible.builtin.uri:
     url: "{{ apstra.baseurl }}/blueprints/{{ bp_id }}/virtual-networks"

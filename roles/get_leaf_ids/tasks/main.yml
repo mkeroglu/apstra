@@ -133,6 +133,7 @@
     leaf_id: "{{ poli_data2 | json_query(query) }}"
   vars:
     query: "[*][?children[?policies[?policy == '{{ desired_id }}' && state == `used-directly`]]].id"
+
 - name: Flatten the nested list
   set_fact:
     leaf_id: "{{ leaf_id | flatten | select('string') | list }}"
@@ -140,4 +141,3 @@
 - name:
   debug:
     var: leaf_id
-
