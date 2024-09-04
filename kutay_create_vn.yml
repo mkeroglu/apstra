@@ -11,40 +11,51 @@
         #      - { role: check_ds }
         #      - { role: check_diff }
     tasks:
+    - name:
+      ansible.builtin.set_fact:
+        is_shared_vlan: "{{ sz.vns[0].is_shared_vlan }}"
+
     - name: Initialize Variables
       ansible.builtin.set_fact: 
         leaf_ids: ""
+      when: is_shared_vlan == false
 
     - name:
       debug:
         var: sz
+      when: is_shared_vlan == false
 
     - name: Get Device ID
       ansible.builtin.include_role:
         name: get_node_system
       vars:
         node_type: system
+      when: is_shared_vlan == false
 
     - name: set system id
       ansible.builtin.set_fact:
         leaf_ids: "{{ node_system.json }}"
-      when: leaf_ids == ""
+      when: (leaf_ids | default('')) == "" and is_shared_vlan == false
 
     - name:
       debug:
         var: leaf_ids
+      when: is_shared_vlan == false
 
     - name: Get id of the system with specific label
       ansible.builtin.set_fact:
         leaf_id: "{{ leaf_ids.nodes | dict2items }}"
+      when: is_shared_vlan == false
 
     - name:
       debug:
         var: leaf_id
+      when: is_shared_vlan == false
 
     - name: Initialize empty list for ids
       set_fact:
         specific_ids: []
+      when: is_shared_vlan == false
 
           #    - name: Add ids to specific_ids list
           #set_fact:
@@ -60,28 +71,34 @@
     - name: Initialize Variables
       ansible.builtin.set_fact:
         leaf_ids: ""
+      when: is_shared_vlan == false
 
     - name: Get Device ID
       ansible.builtin.include_role:
         name: get_node_system
       vars:
         node_type: system
+      when: is_shared_vlan == false
 
     - name: set system id
       ansible.builtin.set_fact:
         leaf_ids: "{{ node_system.json  | cleanup_leaf_ids }}"
-      when: leaf_ids == ""
+      when: (leaf_ids | default('')) == "" and is_shared_vlan == false
+
     - name:
       debug:
         var: leaf_ids
+      when: is_shared_vlan == false
 
     - name: show vns
       ansible.builtin.debug:
         msg: "{{ sz }}"
+      when: is_shared_vlan == false
 
     - name: Include example_role
       include_role:
         name: get_leaf_ids
+      when: is_shared_vlan == false
 
     - name: "Retrieve Security ID if not set"
       block:
@@ -97,10 +114,12 @@
           validate_certs: false
           force_basic_auth: yes
         register: security
+      when: is_shared_vlan == false
 
     - name: set security zone ID
       ansible.builtin.set_fact:
         sz_id: "{{ security.json | cleanup_security_zone(sz.name) }}"
+      when: is_shared_vlan == false
 
     - name: "Create connectivity template"
       uri:
@@ -116,6 +135,7 @@
         body_format: json
       ignore_errors: yes
       with_items: "{{ sz.vns }}" 
+      when: is_shared_vlan == false
 
         #    - name: Add VN to CT 
         #      ansible.builtin.include_role:
