@@ -15,6 +15,10 @@
       ansible.builtin.set_fact:
         is_shared_vn: "{{ sz.vns[0].is_shared_vn }}"
 
+    - name:
+      ansible.builtin.set_fact:
+        is_current_vn: "{{ sz.vns[0].is_current_vn }}"
+
     - name: Initialize Variables
       ansible.builtin.set_fact: 
         leaf_ids: ""
