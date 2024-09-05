@@ -37,7 +37,7 @@
 
 - name: Retrieve Blueprint ID
   ansible.builtin.set_fact:
-    desired_id: "{{ cts.json.policies | selectattr('label', 'search', ct_name) | map(attribute='id') | first }}"
+    desired_id: "{{ cts.json.policies | selectattr('label', 'search', ct_name) | map(attribute='id') }}"
 
 - name: show blueprint id
   ansible.builtin.debug:
