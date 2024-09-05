@@ -1,0 +1,38 @@
+---
+- name: "Get Blueprint ID"
+  ansible.builtin.uri:
+    url: "{{ apstra.baseurl }}/blueprints"
+    method: GET
+   # return_content: yes
+    status_code: 200
+    headers:
+      content-type: "application/json"
+      AUTHTOKEN: "{{ login.json.token }}"
+    validate_certs: false
+    force_basic_auth: yes
+  register: bp_ids
+
+
+- name: Retrieve Blueprint ID
+  ansible.builtin.set_fact:
+    bp_id: "{{ bp_ids.json | cleanup_bp_id(bp_name) }}"
+
+
+
+- name: Get virtual networks
+  ansible.builtin.uri:
+    url: "{{ apstra.baseurl }}/blueprints/{{ bp_id }}/revert?async=full"
+    method: POST
+    return_content: yes
+    status_code: 202
+    headers:
+      content-type: "application/json"
+      AUTHTOKEN: "{{ login.json.token }}"
+    validate_certs: false
+    force_basic_auth: yes
+    body_format: json
+  register: revert
+
+- name:
+  debug:
+    var: revert
