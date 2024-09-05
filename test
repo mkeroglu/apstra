@@ -5,10 +5,13 @@
   - hosts: localhost
     gather_facts: False
     connection: local
+    roles:
+      - { role: apstra_auth }
+      - { role: get_bp_id }
     tasks:
-      - name:
-        debug:
-          var: vn
+      - name: Add VN to CT
+        ansible.builtin.include_role:
+          name: search_vn_from_fw_ct
         vars:
           vn: "{{ item }}"
-        loop: "{{ sz.vns }}" 
+        loop: "{{ sz.vns }}"

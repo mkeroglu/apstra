@@ -116,12 +116,16 @@
 
 - name:
   debug:
-    var: desired_id
+    var: desired_vn_id
 
-- name: Set fact if node ID is in the list
+- name: Extract the first item from desired_vn_id list
   set_fact:
-    is_node_id_present_fw: "{{ desired_vn_id in attach_node_ids }}"
+    first_vn_id: "{{ desired_vn_id[0] }}"
 
-- name: Print the result
+- name: Check if first_vn_id is in attach_node_ids
+  set_fact:
+    is_vn_id_in_nodes_fw: "{{ first_vn_id in attach_node_ids }}"
+
+- name: Debug output
   debug:
-    msg: "Node ID is present: {{ is_node_id_present_fw }}"
+    msg: "first_vn_id is in attach_node_ids: {{ is_vn_id_in_nodes_fw }}"

@@ -10,9 +10,9 @@
 - name: Add VN to CT
   ansible.builtin.include_role:
     name: add_vn_to_ct_multiple
-  when: is_node_id_present == false
+  when: is_vn_id_in_nodes == false
 
 - name: Add VN to FWCT
   ansible.builtin.include_role:
     name: add_vn_to_fw_ct_multiple
-  when: is_node_id_present_fw == false
+  when: is_vn_id_in_nodes_fw == false
