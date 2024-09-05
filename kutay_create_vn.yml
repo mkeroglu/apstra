@@ -18,45 +18,45 @@
     - name: Initialize Variables
       ansible.builtin.set_fact: 
         leaf_ids: ""
-      when: is_shared_vn == false or is_current_vn == false
+      when: is_shared_vn == false and is_current_vn == false
 
     - name:
       debug:
         var: sz
-      when: is_shared_vn == false or is_current_vn == false
+      when: is_shared_vn == false and is_current_vn == false
 
     - name: Get Device ID
       ansible.builtin.include_role:
         name: get_node_system
       vars:
         node_type: system
-      when: is_shared_vn == false or is_current_vn == false
+      when: is_shared_vn == false and is_current_vn == false
 
     - name: set system id
       ansible.builtin.set_fact:
         leaf_ids: "{{ node_system.json }}"
-      when: (leaf_ids | default('')) == "" and (is_shared_vn == false or is_current_vn == false)
+      when: (leaf_ids | default('')) == "" and (is_shared_vn == false and is_current_vn == false)
           #when: (leaf_ids | default('')) == "" and is_shared_vn == false
 
     - name:
       debug:
         var: leaf_ids
-      when: is_shared_vn == false or is_current_vn == false
+      when: is_shared_vn == false and is_current_vn == false
 
     - name: Get id of the system with specific label
       ansible.builtin.set_fact:
         leaf_id: "{{ leaf_ids.nodes | dict2items }}"
-      when: is_shared_vn == false or is_current_vn == false
+      when: is_shared_vn == false and is_current_vn == false
 
     - name:
       debug:
         var: leaf_id
-      when: is_shared_vn == false or is_current_vn == false
+      when: is_shared_vn == false and is_current_vn == false
 
     - name: Initialize empty list for ids
       set_fact:
         specific_ids: []
-      when: is_shared_vn == false or is_current_vn == false
+      when: is_shared_vn == false and is_current_vn == false
 
           #    - name: Add ids to specific_ids list
           #set_fact:
@@ -72,60 +72,60 @@
     - name: Initialize Variables
       ansible.builtin.set_fact:
         leaf_ids: ""
-      when: is_shared_vn == false or is_current_vn == false
+      when: is_shared_vn == false and is_current_vn == false
 
     - name: Get Device ID
       ansible.builtin.include_role:
         name: get_node_system
       vars:
         node_type: system
-      when: is_shared_vn == false or is_current_vn == false
+      when: is_shared_vn == false and is_current_vn == false
 
     - name: set system id
       ansible.builtin.set_fact:
         leaf_ids: "{{ node_system.json  | cleanup_leaf_ids }}"
-      when: (leaf_ids | default('')) == "" and (is_shared_vn == false or is_current_vn == false)
+      when: (leaf_ids | default('')) == "" and (is_shared_vn == false and is_current_vn == false)
           # when: (leaf_ids | default('')) == "" and is_shared_vn == false
 
     - name:
       debug:
         var: leaf_ids
-      when: is_shared_vn == false or is_current_vn == false
+      when: is_shared_vn == false and is_current_vn == false
 
     - name: show vns
       ansible.builtin.debug:
         msg: "{{ sz }}"
-      when: is_shared_vn == false or is_current_vn == false
+      when: is_shared_vn == false and is_current_vn == false
 
     - name: Include example_role
       include_role:
         name: get_leaf_ids
-      when: is_shared_vn == false or is_current_vn == false
+      when: is_shared_vn == false and is_current_vn == false
 
     - name: Include example_role
       include_role:
         name: get_leaf_ids_fw
-      when: is_shared_vn == false or is_current_vn == false
+      when: is_shared_vn == false and is_current_vn == false
 
     - name:
       debug:
         var: leaf_id_fw
-      when: is_shared_vn == false or is_current_vn == false
+      when: is_shared_vn == false and is_current_vn == false
 
     - name:
       debug:
         var: leaf_id_vsphere
-      when: is_shared_vn == false or is_current_vn == false
+      when: is_shared_vn == false and is_current_vn == false
 
     - name: Combine leaf_id_fw and leaf_id_vsphere
       set_fact:
         combined_leaf_ids: "{{ leaf_id_fw + leaf_id_vsphere }}"
-      when: is_shared_vn == false or is_current_vn == false
+      when: is_shared_vn == false and is_current_vn == false
 
     - name: Display combined_leaf_ids
       debug:
         var: combined_leaf_ids
-      when: is_shared_vn == false or is_current_vn == false
+      when: is_shared_vn == false and is_current_vn == false
 
     - name: "Retrieve Security ID if not set"
       block:
@@ -141,12 +141,12 @@
           validate_certs: false
           force_basic_auth: yes
         register: security
-      when: is_shared_vn == false or is_current_vn == false
+      when: is_shared_vn == false and is_current_vn == false
 
     - name: set security zone ID
       ansible.builtin.set_fact:
         sz_id: "{{ security.json | cleanup_security_zone(sz.name) }}"
-      when: is_shared_vn == false or is_current_vn == false
+      when: is_shared_vn == false and is_current_vn == false
 
     - name: "Create connectivity template"
       uri:
@@ -162,7 +162,7 @@
         body_format: json
       #ignore_errors: yes
       with_items: "{{ sz.vns }}" 
-      when: is_shared_vn == false or is_current_vn == false
+      when: is_shared_vn == false and is_current_vn == false
 
         #    - name: Add VN to CT 
         #      ansible.builtin.include_role:
