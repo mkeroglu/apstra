@@ -1,0 +1,18 @@
+---
+- name: Add VN to CT
+  ansible.builtin.include_role:
+    name: search_vn_from_ct
+
+- name: Add VN to CT
+  ansible.builtin.include_role:
+    name: search_vn_from_fw_ct
+
+- name: Add VN to CT
+  ansible.builtin.include_role:
+    name: add_vn_to_ct_multiple
+  when: is_node_id_present == false
+
+- name: Add VN to FWCT
+  ansible.builtin.include_role:
+    name: add_vn_to_fw_ct_multiple
+  when: is_node_id_present_fw == false

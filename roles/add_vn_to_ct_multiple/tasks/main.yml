@@ -38,19 +38,19 @@
 #
 - name:
   ansible.builtin.set_fact:
-    ct_name: "{{ sz.vns[0].ct_name }}"
+    ct_name: "{{ vn.ct_name }}"
 #
 - name:
   ansible.builtin.set_fact:
-    vn_id: "{{ sz.vns[0].vn_id }}"
+    vn_id: "{{ vn.vn_id }}"
 #
 - name:
   ansible.builtin.set_fact:
-    vlan_id: "{{ sz.vns[0].vlan_id }}"
+    vlan_id: "{{ vn.vlan_id }}"
 #
 - name:
   ansible.builtin.set_fact:
-    name: "{{ sz.vns[0].name }}"
+    name: "{{ vn.name }}"
 
 - name:
   ansible.builtin.debug:

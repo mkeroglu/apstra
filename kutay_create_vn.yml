@@ -166,23 +166,29 @@
         #      ansible.builtin.include_role:
         #        name: add_vn_to_ct
 
-    - name: Add VN to CT
-      ansible.builtin.include_role:
-        name: search_vn_from_ct
+        #    - name: Add VN to CT
+        #      ansible.builtin.include_role:
+        #        name: search_vn_from_ct
 
-    - name: Add VN to CT
-      ansible.builtin.include_role:
-        name: search_vn_from_fw_ct
+        #    - name: Add VN to CT
+        #      ansible.builtin.include_role:
+        #        name: search_vn_from_fw_ct
 
-    - name: Add VN to CT
-      ansible.builtin.include_role:
-        name: add_vn_to_ct_multiple
-      when: is_node_id_present == false
+        #    - name: Add VN to CT
+        #      ansible.builtin.include_role:
+        #        name: add_vn_to_ct_multiple
+        #      when: is_node_id_present == false
 
-    - name: Add VN to FWCT
-      ansible.builtin.include_role:
-        name: add_vn_to_fw_ct_multiple
-      when: is_node_id_present_fw == false
+        #    - name: Add VN to FWCT
+        #      ansible.builtin.include_role:
+        #        name: add_vn_to_fw_ct_multiple
+        #      when: is_node_id_present_fw == false
+
+    - name: deploy files with network address in them
+      include_tasks: import_ct.yml
+      vars:
+        vn: "{{ item }}"
+      loop: "{{ sz.vns }}"
 
     - name: "Commit Changes"
       include_role:

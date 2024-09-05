@@ -1,0 +1,14 @@
+---
+  ### ---------------------------------------------------------------------------
+  ### APSTRA API AUTOMATION
+  ### ---------------------------------------------------------------------------
+  - hosts: localhost
+    gather_facts: False
+    connection: local
+    tasks:
+      - name:
+        debug:
+          var: vn
+        vars:
+          vn: "{{ item }}"
+        loop: "{{ sz.vns }}" 
