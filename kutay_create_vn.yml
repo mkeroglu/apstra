@@ -150,7 +150,7 @@
       uri:
         url: "{{ apstra.baseurl }}/blueprints/{{ bp_id }}/virtual-networks-batch"
         method: POST
-        status_code: 202
+        status_code: 201
         headers:
           content-type: "application/json"
           AUTHTOKEN: "{{ login.json.token }}"
