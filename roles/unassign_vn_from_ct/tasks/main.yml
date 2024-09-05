@@ -1,0 +1,236 @@
+---
+- name: Initialize Variables
+  set_fact:
+    leaf_ids: ""
+
+- name: "Get Blueprint ID"
+  ansible.builtin.uri:
+    url: "{{ apstra.baseurl }}/blueprints"
+    method: GET
+    status_code: 200
+    headers:
+      content-type: "application/json"
+      AUTHTOKEN: "{{ login.json.token }}"
+    validate_certs: false
+    force_basic_auth: yes
+  register: bp_ids
+#
+#
+- name: Retrieve Blueprint ID
+  ansible.builtin.set_fact:
+    bp_id: "{{ bp_ids.json | cleanup_bp_id(bp_name) }}"
+#
+#
+- name: "Get Connectvity Template"
+  uri:
+    url: "{{ apstra.baseurl }}/blueprints/{{ bp_id }}/obj-policy-export"
+    method: GET
+    status_code: 200
+    headers:
+      content-type: "application/json"
+      AUTHTOKEN: "{{ login.json.token }}"
+    validate_certs: false
+    force_basic_auth: yes
+      #body: "{{ lookup('ansible.builtin.template','templates/connectivity-template.j2') }}"
+    body_format: json
+  #ignore_errors: yes
+  register: cts
+#
+- name:
+  ansible.builtin.set_fact:
+    ct_name: "{{ vn.ct_name }}"
+#
+- name:
+  ansible.builtin.set_fact:
+    vn_id: "{{ vn.vn_id }}"
+#
+- name:
+  ansible.builtin.set_fact:
+    vlan_id: "{{ vn.vlan_id }}"
+#
+- name:
+  ansible.builtin.set_fact:
+    name: "{{ vn.name }}"
+
+- name:
+  ansible.builtin.debug:
+    var: cts  
+#
+- name: Retrieve Blueprint ID
+  ansible.builtin.set_fact:
+    desired_id: "{{ cts.json.policies | selectattr('label', 'search', ct_name) | map(attribute='id') | first }}"
+#
+- name: show blueprint id
+  ansible.builtin.debug:
+    msg: "{{ desired_id }}"
+#
+- name: "Get Connectvity Template"
+  uri:
+    url: "{{ apstra.baseurl }}/blueprints/{{ bp_id }}/obj-policy-export/{{ desired_id }}"
+    method: GET
+    status_code: 200
+    headers:
+      content-type: "application/json"
+      AUTHTOKEN: "{{ login.json.token }}"
+    validate_certs: false
+    force_basic_auth: yes
+      #body: "{{ lookup('ansible.builtin.template','templates/connectivity-template.j2') }}"
+    body_format: json
+  #ignore_errors: yes
+  register: ct_j2
+#
+- name:
+  ansible.builtin.debug:
+    var: ct_j2
+
+- name:
+  ansible.builtin.set_fact:
+    attach_id: "{{ ct_j2.json.policies | json_query('[?policy_type_name==`AttachMultipleVLAN`].id') | first }}"
+
+- name:
+  ansible.builtin.debug:
+    var: attach_id
+
+- name:
+  ansible.builtin.set_fact:
+    pipeline_id: "{{ ct_j2.json.policies | json_query('[?policy_type_name==`pipeline`].id') | first }}"
+
+- name:
+  ansible.builtin.debug:
+    var: pipeline_id
+
+- name:
+  ansible.builtin.set_fact:
+    attach_node_ids: "{{ ct_j2.json.policies | json_query('[?policy_type_name==`AttachMultipleVLAN`].attributes.tagged_vn_node_ids') | first }}"
+
+- name:
+  ansible.builtin.set_fact:
+    untagged_vn_node_id: "{{ ct_j2.json.policies | json_query('[?policy_type_name==`AttachMultipleVLAN`].attributes.untagged_vn_node_id') | first }}"
+
+- name:
+  ansible.builtin.debug:
+    var: untagged_vn_node_id
+
+- name: Retrieve Blueprint IDs22
+  ansible.builtin.set_fact:
+    ctt_j2: "{{ ct_j2.json }}"
+#
+      #    - name:
+      #ansible.builtin.debug:
+      #msg: "{{ ctt_j2 }}"
+#
+- name: "Get Connectvity Template"
+  uri:
+    url: "{{ apstra.baseurl }}/blueprints/{{ bp_id }}/virtual-networks"
+    method: GET
+    status_code: 200
+    headers:
+      content-type: "application/json"
+      AUTHTOKEN: "{{ login.json.token }}"
+    validate_certs: false
+    force_basic_auth: yes
+    body_format: json
+  #ignore_errors: yes
+  register: vns
+
+- name: Retrieve Blueprint IDs
+  ansible.builtin.set_fact:
+    vn_ids: "{{ vns.json.virtual_networks | dict2items | map(attribute='key') | list }}"
+#
+- name:
+  set_fact:
+    vn_name2: "{{ sz.vns | json_query('[].name') }}"
+#
+- name: Set vn_name in desired format
+  ansible.builtin.set_fact:
+    vn_name: "{{ vn_name2[0] }}"
+#
+- name:
+  debug:
+    var: vn_name
+#
+- name: Retrieve Blueprint ID by name
+  ansible.builtin.set_fact:
+    vn_id: "{{ item.value.id }}"
+  loop: "{{ vns.json.virtual_networks | dict2items }}"
+  when: item.value.label == vn_name
+  register: vn_id_results
+
+- name: Define new node IDs to add
+  set_fact:
+    new_node_ids:
+      - "{{ vn_id }}"
+
+- name: Delete node IDs to the existing list
+  set_fact:
+    vn_node_ids: "{{ attach_node_ids | difference(new_node_ids) }}"
+
+- name:
+  debug:
+    var: new_node_ids
+
+- name: Display updated node IDs
+  debug:
+    msg: "The updated list of attach_node_ids is {{ vn_node_ids }}"
+
+- name: Read JSON data from Jinja2 template
+  set_fact:
+    json_template: "{{ lookup('template', 'templates/add-multiple-vn-to-connectivity-template.j2') }}"
+
+- name: Print updated ct_j2 for verification
+  debug:
+    msg: "{{ json_template | to_nice_json }}"
+#
+- name: Print updated ct_j2 for verification
+  debug:
+    var: ctt_j2
+#
+#- name: Filter policies except ABC-TEST-CT-1-1-1-1-1
+#  set_fact:
+#    filtered_policies: "{{ ctt_j2.policies | json_query('[?label != `' + fw_ct_name + '`]') }}"
+#
+#- name: Print updated ct_j2 for verification
+#  debug:
+#    var: filtered_policies
+#
+- name: Filter policies except ABC-TEST-CT-1
+  set_fact:
+    filtered_policies_ct_name: "{{ ctt_j2.policies | json_query('[?label == `' + ct_name + '`]') }}"
+#
+- name: Print updated ct_j2 for verification
+  debug:
+    var: filtered_policies_ct_name
+#
+#- name: Clone filtered_policies_ct_name structure
+#  set_fact:
+#    updated_filtered_policies_ct_name: "{{ filtered_policies_ct_name | map('combine', {'attributes': {'subpolicies': (filtered_policies_ct_name | map(attribute='attributes.subpolicies') | list | first) + [random_uuid2]}}) | list }}"
+#
+#- name: Show updated filtered_policies_ct_name
+#  debug:
+#    var: updated_filtered_policies_ct_name
+#
+- name: Merge msg into ctt_j2.policies
+  set_fact:
+    ctt_j2:
+      policies: "{{ filtered_policies_ct_name + json_template }}"
+
+- name:
+  ansible.builtin.debug:
+    var: ctt_j2  
+#
+#- name: Print updated ct_j2 for verification
+#  debug:
+#    var: ctt_j2
+#
+- name: "Create connectivity template"
+  uri:
+    url: "{{ apstra.baseurl }}/blueprints/{{ bp_id }}/obj-policy-import"
+    method: PUT
+    status_code: 204
+    headers:
+      content-type: "application/json"
+      AUTHTOKEN: "{{ login.json.token }}"
+    validate_certs: false
+    force_basic_auth: yes
+    body: "{{ ctt_j2 }}"
+    body_format: json

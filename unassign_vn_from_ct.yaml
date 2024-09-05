@@ -1,0 +1,8 @@
+---
+- name: Add VN to CT
+  ansible.builtin.include_role:
+    name: unassign_vn_from_ct
+
+- name: Add VN to CT
+  ansible.builtin.include_role:
+    name: unassign_vn_from_fw_ct
