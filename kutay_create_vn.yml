@@ -148,7 +148,7 @@
 
     - name: "Create connectivity template"
       uri:
-        url: "{{ apstra.baseurl }}/blueprints/{{ bp_id }}/virtual-networks-batch?async=full"
+        url: "{{ apstra.baseurl }}/blueprints/{{ bp_id }}/virtual-networks-batch"
         method: POST
         status_code: 202
         headers:
