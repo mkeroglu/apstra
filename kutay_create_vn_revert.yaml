@@ -166,24 +166,34 @@
         #      ansible.builtin.include_role:
         #        name: add_vn_to_ct
 
-    - name: Add VN to CT
-      ansible.builtin.include_role:
-        name: search_vn_from_ct
+    - block:
+        - name: Add VN to CT
+          ansible.builtin.include_role:
+            name: search_vn_from_ct
 
-    - name: Add VN to CT
-      ansible.builtin.include_role:
-        name: search_vn_from_fw_ct
+        - name: Add VN to CT
+          ansible.builtin.include_role:
+            name: search_vn_from_fw_ct
 
-    - name: Add VN to CT
-      ansible.builtin.include_role:
-        name: add_vn_to_ct_multiple
-      when: is_node_id_present == false
+        - name: Add VN to CT Multiple
+          ansible.builtin.include_role:
+            name: add_vn_to_ct_multiple
+          when: is_node_id_present == false
 
-    - name: Add VN to FWCT
-      ansible.builtin.include_role:
-        name: add_vn_to_fw_ct_multiple
-      when: is_node_id_present_fw == false
+        - name: Add VN to FWCT Multiple
+          ansible.builtin.include_role:
+            name: add_vn_to_fw_ct_multiple
+          when: is_node_id_present_fw == false
 
-    - name: "Commit Changes"
-      include_role:
-        name: commit_changes
+        - name: Commit Changes
+          ansible.builtin.include_role:
+            name: commit_changes
+
+      rescue:
+        - name: Revert
+          ansible.builtin.include_role:
+            name: revert
+
+        - name: FAIL
+          ansible.builtin.fail:
+            msg: "OLuşturulan VN CT'e eklenemedi"
