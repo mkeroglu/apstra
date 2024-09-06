@@ -143,7 +143,7 @@
 #
 - name: Set vn_name in desired format
   ansible.builtin.set_fact:
-    vn_name: "{{ vn_name2[0] }}"
+    vn_name: "{{ vn.name }}"
 #
 - name:
   debug:

@@ -1,0 +1,147 @@
+---
+- name: Initialize Variables
+  ansible.builtin.set_fact:
+    leaf_ids: ""
+  when: item.is_shared_vn == false and item.is_current_vn == false
+
+- name:
+  debug:
+    var: sz
+  when: item.is_shared_vn == false and item.is_current_vn == false
+
+- name: Get Device ID
+  ansible.builtin.include_role:
+    name: get_node_system
+  vars:
+    node_type: system
+  when: item.is_shared_vn == false and item.is_current_vn == false
+
+- name: set system id
+  ansible.builtin.set_fact:
+    leaf_ids: "{{ node_system.json }}"
+  when: (leaf_ids | default('')) == "" and (item.is_shared_vn == false and item.is_current_vn == false)
+      #when: (leaf_ids | default('')) == "" and is_shared_vn == false
+
+- name:
+  debug:
+    var: leaf_ids
+  when: item.is_shared_vn == false and item.is_current_vn == false
+
+- name: Get id of the system with specific label
+  ansible.builtin.set_fact:
+    leaf_id: "{{ leaf_ids.nodes | dict2items }}"
+  when: item.is_shared_vn == false and item.is_current_vn == false
+
+- name:
+  debug:
+    var: leaf_id
+  when: item.is_shared_vn == false and item.is_current_vn == false
+
+- name: Initialize empty list for ids
+  set_fact:
+    specific_ids: []
+  when: item.is_shared_vn == false and item.is_current_vn == false
+
+      #    - name: Add ids to specific_ids list
+      #set_fact:
+      #specific_ids: "{{ specific_ids + [item.value.id] }}"
+      #loop: "{{ leaf_id }}"
+      #when: item.value.label in leaf_name
+
+      #    - name: Display specific_ids
+      #debug:
+      #var: specific_ids
+
+
+- name: Initialize Variables
+  ansible.builtin.set_fact:
+    leaf_ids: ""
+  when: item.is_shared_vn == false and item.is_current_vn == false
+
+- name: Get Device ID
+  ansible.builtin.include_role:
+    name: get_node_system
+  vars:
+    node_type: system
+  when: item.is_shared_vn == false and item.is_current_vn == false
+
+- name: set system id
+  ansible.builtin.set_fact:
+    leaf_ids: "{{ node_system.json  | cleanup_leaf_ids }}"
+  when: (leaf_ids | default('')) == "" and (item.is_shared_vn == false and item.is_current_vn == false)
+      # when: (leaf_ids | default('')) == "" and is_shared_vn == false
+
+- name:
+  debug:
+    var: leaf_ids
+  when: item.is_shared_vn == false and item.is_current_vn == false
+
+- name: show vns
+  ansible.builtin.debug:
+    msg: "{{ sz }}"
+  when: item.is_shared_vn == false and item.is_current_vn == false
+
+- name: Include example_role
+  include_role:
+    name: get_leaf_ids
+  when: item.is_shared_vn == false and item.is_current_vn == false
+
+- name: Include example_role
+  include_role:
+    name: get_leaf_ids_fw
+  when: item.is_shared_vn == false and item.is_current_vn == false
+
+- name:
+  debug:
+    var: leaf_id_fw
+  when: item.is_shared_vn == false and item.is_current_vn == false
+
+- name:
+  debug:
+    var: leaf_id_vsphere
+  when: item.is_shared_vn == false and item.is_current_vn == false
+
+- name: Combine leaf_id_fw and leaf_id_vsphere
+  set_fact:
+    combined_leaf_ids: "{{ leaf_id_fw + leaf_id_vsphere }}"
+  when: item.is_shared_vn == false and item.is_current_vn == false
+
+- name: Display combined_leaf_ids
+  debug:
+    var: combined_leaf_ids
+  when: item.is_shared_vn == false and item.is_current_vn == false
+
+- name: "Retrieve Security ID if not set"
+  block:
+  - name: "Get Security ID"
+    ansible.builtin.uri:
+      url: "{{ apstra.baseurl }}/blueprints/{{ bp_id }}/nodes?node_type=security_zone"
+      method: GET
+      return_content: yes
+      status_code: 200
+      headers:
+        content-type: "application/json"
+        AUTHTOKEN: "{{ login.json.token }}"
+      validate_certs: false
+      force_basic_auth: yes
+    register: security
+  when: item.is_shared_vn == false and item.is_current_vn == false
+
+- name: set security zone ID
+  ansible.builtin.set_fact:
+    sz_id: "{{ security.json | cleanup_security_zone(sz.name) }}"
+  when: item.is_shared_vn == false and item.is_current_vn == false
+
+- name: "Create connectivity template"
+  uri:
+    url: "{{ apstra.baseurl }}/blueprints/{{ bp_id }}/virtual-networks-batch"
+    method: POST
+    status_code: 201
+    headers:
+      content-type: "application/json"
+      AUTHTOKEN: "{{ login.json.token }}"
+    validate_certs: false
+    force_basic_auth: yes
+    body: "{{ lookup('ansible.builtin.template','templates/create_vn_kutay.j2') }}"
+    body_format: json
+  when: item.is_shared_vn == false and item.is_current_vn == false

@@ -1,0 +1,6 @@
+---
+- name: Create VNS
+  include_tasks: create_vns.yml
+
+- name: Import CT
+  include_tasks: import_ct.yml
