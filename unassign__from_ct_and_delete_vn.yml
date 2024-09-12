@@ -14,43 +14,15 @@
         vars: 
           vn: "{{ item }}"
         loop: "{{ sz.vns }}"
+        when: item.is_shared_vn == false
 
-      - name: Get virtual networks
-        ansible.builtin.uri:
-          url: "{{ apstra.baseurl }}/blueprints/{{ bp_id }}/nodes?node_type=virtual_network"
-          method: GET
-          return_content: yes
-          status_code: 200
-          headers:
-            content-type: "application/json"
-            AUTHTOKEN: "{{ login.json.token }}"
-          validate_certs: false
-          force_basic_auth: yes
-          body_format: json
-        register: vns
+      - name: Delete VN
+        include_tasks: delete_vn_loop.yaml
+        vars:
+          vn: "{{ item }}"
+        loop: "{{ sz.vns }}"
+        when: item.is_shared_vn == false
 
-
-
-      - name: get vns
-        ansible.builtin.set_fact:
-          vn_id: "{{ item.value.id }}"
-        when: item.value.label == vn_name
-        loop: "{{ vns.json.nodes | dict2items }}"
-
-
-      - name: show message body
-        ansible.builtin.debug:
-          msg: "{{ lookup('template','templates/delete_vn.j2') }}"
-
-      - name: "Delete VN"
-        ansible.builtin.uri:
-          url: "{{ apstra.baseurl }}/blueprints/{{ bp_id }}/delete-virtual-networks"
-          method: POST
-          status_code: 201
-          headers:
-            content-type: "application/json"
-            AUTHTOKEN: "{{ login.json.token }}"            
-          validate_certs: false
-          body: "{{ lookup('template','templates/delete_vn.j2') }}"
-          force_basic_auth: yes
-          body_format: json
+      - name: "Commit Changes"
+        include_role:
+          name: commit_changes
