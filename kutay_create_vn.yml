@@ -23,10 +23,6 @@
         vn: "{{ item }}"
       loop: "{{ sz.vns }}"
 
-    - name:
-      include_role:
-        name: check_diff
-
     - name: "Commit Changes"
       include_role:
         name: commit_changes
