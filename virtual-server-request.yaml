@@ -1,0 +1,28 @@
+---
+  ### ---------------------------------------------------------------------------
+  ### APSTRA API AUTOMATION
+  ### ---------------------------------------------------------------------------
+  - hosts: localhost
+    gather_facts: False
+    connection: local
+    roles:
+      - { role: apstra_auth }
+      - { role: get_bp_id }
+      - { role: check_ds }
+      - { role: check_diff }
+    tasks:
+    - name: Create VNS
+      include_tasks: create_vns.yml
+      vars:
+        vn: "{{ item }}"
+      loop: "{{ sz.vns }}"
+
+    - name: Import CT
+      include_tasks: import_ct.yml
+      vars:
+        vn: "{{ item }}"
+      loop: "{{ sz.vns }}"
+
+    - name: "Commit Changes"
+      include_role:
+        name: commit_changes
