@@ -17,7 +17,7 @@
 
 - name:
   ansible.builtin.set_fact:
-    ct_name: "{{ sz.vns[0].ct_name }}"
+    ct_name: "{{ sz.vns[0].ct_name.split(',') }}"
 
 - name:
   ansible.builtin.set_fact:
@@ -31,13 +31,19 @@
   ansible.builtin.set_fact:
     name: "{{ sz.vns[0].name }}"
 
-- name:
+- name: Process each item
   debug:
-    var: cts
+    msg: "Processing {{ item }}"
+  loop: "{{ ct_name }}"
+
+#- name:
+#  debug:
+#    var: cts
 
 - name: Retrieve Blueprint ID
   ansible.builtin.set_fact:
-    desired_id: "{{ cts.json.policies | selectattr('label', 'search', ct_name) | map(attribute='id') | first }}"
+    desired_id: "{{ cts.json.policies | selectattr('label', 'search', item) | map(attribute='id') | first }}"
+  loop: "{{ ct_name }}"
 
 - name: show blueprint id
   ansible.builtin.debug:
