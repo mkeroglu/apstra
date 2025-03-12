@@ -49,6 +49,11 @@
   ansible.builtin.debug:
     var: desired_id
 
+- name: Force failure for demonstration
+  fail:
+    msg: "Forcing failure for item {{ item }}"
+  loop: "{{ ct_name }}"
+
 - name: "Get Connectvity Template"
   uri:
     url: "{{ apstra.baseurl }}/blueprints/{{ bp_id }}/obj-policy-application-points"
