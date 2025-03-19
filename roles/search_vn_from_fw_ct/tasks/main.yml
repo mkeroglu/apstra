@@ -37,9 +37,9 @@
   set_fact:
     desired_vn_id: "{{ labels | selectattr('value.label', 'equalto', vn_name) | map(attribute='value.id') }}"
 
-- name: Print the ID
-  debug:
-    msg: "ID for label {{ vn_name }} is: {{ desired_vn_id }}"
+      #- name: Print the ID
+      #  debug:
+      #    msg: "ID for label {{ vn_name }} is: {{ desired_vn_id }}"
 
 - name: "Get Connectvity Template"
   uri:
@@ -110,13 +110,13 @@
       #- name:
       #  debug:
       #    var: attach_node_ids
-- name:
-  debug:
-    var: attach_node_ids
+      #- name:
+      #  debug:
+      #    var: attach_node_ids
 
-- name:
-  debug:
-    var: desired_vn_id
+      #- name:
+      #  debug:
+      #    var: desired_vn_id
 
 - name: Extract the first item from desired_vn_id list
   set_fact:
@@ -126,6 +126,6 @@
   set_fact:
     is_vn_id_in_nodes_fw: "{{ first_vn_id in attach_node_ids }}"
 
-- name: Debug output
-  debug:
-    msg: "first_vn_id is in attach_node_ids: {{ is_vn_id_in_nodes_fw }}"
+      #- name: Debug output
+      #  debug:
+      #    msg: "first_vn_id is in attach_node_ids: {{ is_vn_id_in_nodes_fw }}"

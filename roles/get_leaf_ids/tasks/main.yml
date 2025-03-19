@@ -31,9 +31,9 @@
   ansible.builtin.set_fact:
     name: "{{ sz.vns[0].name }}"
 
-- name:
-  debug:
-    var: cts
+      #- name:
+      #  debug:
+      #    var: cts
 
 - name: Retrieve Blueprint ID
   ansible.builtin.set_fact:
@@ -57,35 +57,35 @@
       #ignore_errors: yes
   register: policies
 
-- name:
-  debug:
-    var: policies
+    #- name:
+    #  debug:
+    #    var: policies
 
 - name: Parse JSON output
   set_fact:
     parsed_json: "{{ policies.json }}"
 
-- name: Extract all children IDs
-  debug:
-    msg: "{{ policies.json | json_query('application_points.children[*].children[*].id') }}"
+      #- name: Extract all children IDs
+      #  debug:
+      #    msg: "{{ policies.json | json_query('application_points.children[*].children[*].id') }}"
 
 
-- name: Get policy names
-  debug:
-    msg: "{{ parsed_json | json_query('application_points.children[*].children[*].children[*].children[*].policies[*].policy') }}"
+      #- name: Get policy names
+      #  debug:
+      #    msg: "{{ parsed_json | json_query('application_points.children[*].children[*].children[*].children[*].policies[*].policy') }}"
 
 - name:
   set_fact:
     policies_id: "{{ parsed_json | json_query('application_points.children[*].children[*].children[*].children[*].policies[*].policy') }}"
 
-- name:
-  debug:
-    var: policies_id
+      #- name:
+      #  debug:
+      #    var: policies_id
 
-- name:
-  debug:
-    msg: "{{ item }}"
-  loop: "{{ parsed_json | json_query('application_points.children[*].children[*].id') }}"
+      #- name:
+      #  debug:
+      #    msg: "{{ item }}"
+      #  loop: "{{ parsed_json | json_query('application_points.children[*].children[*].id') }}"
 
 - name: Parse JSON and extract ID
   set_fact:
@@ -93,32 +93,33 @@
   vars:
     query: "[?children[].children[].children[].policies[?policy == desired_id && state == 'used-directly']]"
 
-- name: Display extracted ID
-  debug:
-    var: policy_id
+      #- name: Display extracted ID
+      #  debug:
+      #    var: policy_id
+
 - name: Extract all children IDs
   set_fact:
     poli: "{{ policies.json | json_query('application_points.children[*].children[*].children[*]') }}"
 
-- name: Display extracted ID
-  debug:
-    var: poli
+      #- name: Display extracted ID
+      #  debug:
+      #    var: poli
 
 - name: Parse JSON data
   set_fact:
     poli_data2: "{{ poli | json_query('[0][:27345737]') }}"
 
-- name: Display filtered data
-  debug:
-    var: poli_data2
+      #- name: Display filtered data
+      #  debug:
+      #    var: poli_data2
 
 - name: Parse JSON data
   set_fact:
     poli_data: "{{ poli_data2 | map('first') }}"
 
-- name: Display filtered data
-  debug:
-    var: poli_data
+      #- name: Display filtered data
+      #  debug:
+      #    var: poli_data
           
       #- name: Get the specific id value
       #debug:

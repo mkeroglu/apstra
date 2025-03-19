@@ -14,13 +14,9 @@
     validate_certs: false
     force_basic_auth: yes
   register: bp_ids
-#
-#
 - name: Retrieve Blueprint ID
   ansible.builtin.set_fact:
     bp_id: "{{ bp_ids.json | cleanup_bp_id(bp_name) }}"
-#
-#
 - name: "Get Connectvity Template"
   uri:
     url: "{{ apstra.baseurl }}/blueprints/{{ bp_id }}/obj-policy-export"
@@ -35,35 +31,27 @@
     body_format: json
   #ignore_errors: yes
   register: cts
-#
 - name:
   ansible.builtin.set_fact:
     fw_ct_name: "{{ sz.vns[0].fw_ct_name }}"
-#
 - name:
   ansible.builtin.set_fact:
     vn_id: "{{ sz.vns[0].vn_id }}"
-#
 - name:
   ansible.builtin.set_fact:
     vlan_id: "{{ sz.vns[0].vlan_id }}"
-#
 - name:
   ansible.builtin.set_fact:
     name: "{{ sz.vns[0].name }}"
-
 - name:
   ansible.builtin.debug:
     var: cts  
-#
 - name: Retrieve Blueprint ID
   ansible.builtin.set_fact:
     desired_id: "{{ cts.json.policies | selectattr('label', 'search', fw_ct_name) | map(attribute='id') | first }}"
-#
 - name: show blueprint id
   ansible.builtin.debug:
     msg: "{{ desired_id }}"
-#
 - name: "Get Connectvity Template"
   uri:
     url: "{{ apstra.baseurl }}/blueprints/{{ bp_id }}/obj-policy-export/{{ desired_id }}"
@@ -78,7 +66,6 @@
     body_format: json
   #ignore_errors: yes
   register: ct_j2
-#
 - name:
   ansible.builtin.debug:
     var: ct_j2
@@ -114,11 +101,6 @@
 - name: Retrieve Blueprint IDs22
   ansible.builtin.set_fact:
     ctt_j2: "{{ ct_j2.json }}"
-#
-      #    - name:
-      #ansible.builtin.debug:
-      #msg: "{{ ctt_j2 }}"
-#
 - name: "Get Connectvity Template"
   uri:
     url: "{{ apstra.baseurl }}/blueprints/{{ bp_id }}/virtual-networks"
@@ -136,19 +118,15 @@
 - name: Retrieve Blueprint IDs
   ansible.builtin.set_fact:
     vn_ids: "{{ vns.json.virtual_networks | dict2items | map(attribute='key') | list }}"
-#
 - name:
   set_fact:
     vn_name2: "{{ sz.vns | json_query('[].name') }}"
-#
 - name: Set vn_name in desired format
   ansible.builtin.set_fact:
     vn_name: "{{ vn.name }}"
-#
-- name:
-  debug:
-    var: vn_name
-#
+      #- name:
+      #  debug:
+      #    var: vn_name
 - name: Retrieve Blueprint ID by name
   ansible.builtin.set_fact:
     vn_id: "{{ item.value.id }}"
@@ -165,70 +143,25 @@
   set_fact:
     vn_node_ids: "{{ attach_node_ids + new_node_ids }}"
 
-- name: Display updated node IDs
-  debug:
-    msg: "The updated list of attach_node_ids is {{ vn_node_ids }}"
-#
-#- name:
-#  debug:
-#    msg: "Sanal ağ ID: {{ vn_id_results }}"
-#  vars:
-#    vn_id: "{{ vn_id_results.results | map(attribute='item') | map(attribute='vn_id') | select('defined') | list | first }}"
-#
-#- name:
-#  ansible.builtin.debug:
-#    msg: "{{ vn_id }}"
-#
-#- name: Generate random UUID-like number
-#  set_fact:
-#    random_uuid: "{{ 9999999999999999999999 | random | ansible.builtin.to_uuid }}"
-#
-#- name: Generate random UUID-like number
-#  set_fact:
-#    random_uuid2: "{{ 9999999999999999999999 | random | ansible.builtin.to_uuid }}"
-#
-#- name: Read and print Jinja2 template
-#  debug:
-#    msg: "{{ lookup('template', 'templates/add-multiple-vn-to-connectivity-template.j2') }}"
-#  register: json_template
-#  with_items: "{{ sz.vns }}"
-#
+      #- name: Display updated node IDs
+      #  debug:
+      #    msg: "The updated list of attach_node_ids is {{ vn_node_ids }}"
 - name: Read JSON data from Jinja2 template
   set_fact:
     json_template: "{{ lookup('template', 'templates/add-multiple-vn-to-connectivity-template.j2') }}"
 
-- name: Print updated ct_j2 for verification
-  debug:
-    msg: "{{ json_template | to_nice_json }}"
-#
-- name: Print updated ct_j2 for verification
-  debug:
-    var: ctt_j2
-#
-#- name: Filter policies except ABC-TEST-CT-1-1-1-1-1
-#  set_fact:
-#    filtered_policies: "{{ ctt_j2.policies | json_query('[?label != `' + fw_ct_name + '`]') }}"
-#
-#- name: Print updated ct_j2 for verification
-#  debug:
-#    var: filtered_policies
-#
+      #- name: Print updated ct_j2 for verification
+      #  debug:
+      #    msg: "{{ json_template | to_nice_json }}"
+      #- name: Print updated ct_j2 for verification
+      #  debug:
+      #    var: ctt_j2
 - name: Filter policies except ABC-TEST-CT-1
   set_fact:
     filtered_policies_ct_name: "{{ ctt_j2.policies | json_query('[?label == `' + fw_ct_name + '`]') }}"
-#
-- name: Print updated ct_j2 for verification
-  debug:
-    var: filtered_policies_ct_name
-#
-#- name: Clone filtered_policies_ct_name structure
-#  set_fact:
-#    updated_filtered_policies_ct_name: "{{ filtered_policies_ct_name | map('combine', {'attributes': {'subpolicies': (filtered_policies_ct_name | map(attribute='attributes.subpolicies') | list | first) + [random_uuid2]}}) | list }}"
-#
-#- name: Show updated filtered_policies_ct_name
-#  debug:
-#    var: updated_filtered_policies_ct_name
-#
+      #- name: Print updated ct_j2 for verification
+      #  debug:
+      #    var: filtered_policies_ct_name
 - name: Merge msg into ctt_j2.policies
   set_fact:
     ctt_j2:
@@ -237,11 +170,6 @@
 - name:
   ansible.builtin.debug:
     var: ctt_j2  
-#
-#- name: Print updated ct_j2 for verification
-#  debug:
-#    var: ctt_j2
-#
 - name: "Create connectivity template"
   uri:
     url: "{{ apstra.baseurl }}/blueprints/{{ bp_id }}/obj-policy-import"

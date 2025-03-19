@@ -4,10 +4,10 @@
     leaf_ids: ""
   when: item.is_shared_vn == false and item.is_current_vn == false
 
-- name:
-  debug:
-    var: sz
-  when: item.is_shared_vn == false and item.is_current_vn == false
+    #- name:
+    #  debug:
+    #    var: sz
+    #  when: item.is_shared_vn == false and item.is_current_vn == false
 
 - name: Get Device ID
   ansible.builtin.include_role:
@@ -22,20 +22,20 @@
   when: (leaf_ids | default('')) == "" and (item.is_shared_vn == false and item.is_current_vn == false)
       #when: (leaf_ids | default('')) == "" and is_shared_vn == false
 
-- name:
-  debug:
-    var: leaf_ids
-  when: item.is_shared_vn == false and item.is_current_vn == false
+    #- name:
+    #  debug:
+    #    var: leaf_ids
+    #  when: item.is_shared_vn == false and item.is_current_vn == false
 
 - name: Get id of the system with specific label
   ansible.builtin.set_fact:
     leaf_id: "{{ leaf_ids.nodes | dict2items }}"
   when: item.is_shared_vn == false and item.is_current_vn == false
 
-- name:
-  debug:
-    var: leaf_id
-  when: item.is_shared_vn == false and item.is_current_vn == false
+    #- name:
+    #  debug:
+    #    var: leaf_id
+    #  when: item.is_shared_vn == false and item.is_current_vn == false
 
 - name: Initialize empty list for ids
   set_fact:
@@ -71,10 +71,10 @@
   when: (leaf_ids | default('')) == "" and (item.is_shared_vn == false and item.is_current_vn == false)
       # when: (leaf_ids | default('')) == "" and is_shared_vn == false
 
-- name:
-  debug:
-    var: leaf_ids
-  when: item.is_shared_vn == false and item.is_current_vn == false
+    #- name:
+    #  debug:
+    #    var: leaf_ids
+    #  when: item.is_shared_vn == false and item.is_current_vn == false
 
 - name: show vns
   ansible.builtin.debug:
@@ -91,15 +91,15 @@
     name: get_leaf_ids_fw
   when: item.is_shared_vn == false and item.is_current_vn == false
 
-- name:
-  debug:
-    var: leaf_id_fw
-  when: item.is_shared_vn == false and item.is_current_vn == false
+    #- name:
+    #  debug:
+    #    var: leaf_id_fw
+    #  when: item.is_shared_vn == false and item.is_current_vn == false
 
-- name:
-  debug:
-    var: leaf_id_vsphere
-  when: item.is_shared_vn == false and item.is_current_vn == false
+    #- name:
+    #  debug:
+    #    var: leaf_id_vsphere
+    #  when: item.is_shared_vn == false and item.is_current_vn == false
 
 - name: Combine leaf_id_fw and leaf_id_vsphere
   set_fact:
