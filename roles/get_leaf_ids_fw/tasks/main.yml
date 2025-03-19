@@ -45,7 +45,7 @@
 
 - name: "Get Connectvity Template"
   uri:
-    url: "{{ apstra.baseurl }}/blueprints/{{ bp_id }}/obj-policy-application-points?max_count=100000000000000"
+    url: "{{ apstra.baseurl }}/blueprints/{{ bp_id }}/obj-policy-application-points?policy={{ desired_id }}"
     method: POST
     status_code: 201
     headers:
