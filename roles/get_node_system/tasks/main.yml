@@ -22,30 +22,30 @@
       node_interfaces: "{{ node_system }}"
     when: node_type == "interface"
 
-  - name:
-    debug:
-      msg: "{{ node_interfaces }}"
-    when: node_type == "interface"
+      #  - name:
+      #    debug:
+      #      msg: "{{ node_interfaces }}"
+      #    when: node_type == "interface"
 
   - name: Set Fact Based on Switch
     set_fact:
       node_switch: "{{ node_system }}"
     when: node_type == "system"
  
-  - name:
-    debug:
-      msg: "{{ node_switch }}"
-    when: node_type == "system"
+      #  - name:
+      #    debug:
+      #      msg: "{{ node_switch }}"
+      #    when: node_type == "system"
 
   - name: Set Fact Based on Virtual Network
     set_fact:
       node_vns: "{{ node_system }}"
     when: node_type == "virtual_network"
 
-  - name:
-    debug:
-      msg: "{{ node_vns }}"
-    when: node_type == "virtual_network"
+      #  - name:
+      #    debug:
+      #      msg: "{{ node_vns }}"
+      #    when: node_type == "virtual_network"
 
   - name: Set Fact Based on Connectivity Templates
     set_fact:
