@@ -45,16 +45,16 @@
 
 - name: "Get Connectvity Template"
   uri:
-    url: "{{ apstra.baseurl }}/blueprints/{{ bp_id }}/obj-policy-application-points"
-    method: GET
-    status_code: 200
+    url: "{{ apstra.baseurl }}/blueprints/{{ bp_id }}/obj-policy-application-points?max_count=100000000000000"
+    method: POST
+    status_code: 201
     headers:
       content-type: "application/json"
       AUTHTOKEN: "{{ login.json.token }}"
     validate_certs: false
     force_basic_auth: yes
     body_format: json
-  ignore_errors: yes
+      #ignore_errors: yes
   register: policies
 
 - name:
