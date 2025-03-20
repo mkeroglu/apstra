@@ -14,6 +14,10 @@
     force_basic_auth: yes
   register: bp_ids
 
+- name:
+  debug:
+    var: bp_ids
+
 - name: Retrieve Blueprint ID
   set_fact: 
     bp_id: "{{ bp_ids.json | cleanup_bp_id(bp_name) }}"
