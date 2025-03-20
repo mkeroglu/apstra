@@ -1,0 +1,10 @@
+---
+  ### ---------------------------------------------------------------------------
+  ### APSTRA API AUTOMATION
+  ### ---------------------------------------------------------------------------
+  - hosts: localhost
+    gather_facts: False
+    connection: local
+    roles:
+      - { role: apstra_auth }
+      - { role: get_bp_id }
