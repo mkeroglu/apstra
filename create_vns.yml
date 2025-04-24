@@ -89,7 +89,7 @@
 - name: Include example_role
   include_role:
     name: get_leaf_ids_fw
-  when: item.is_shared_vn == false and item.is_current_vn == false
+  when: item.is_shared_vn == false and item.is_current_vn == false and item.is_gateway_type_fw == true
 
     #- name:
     #  debug:
@@ -103,8 +103,15 @@
 
 - name: Combine leaf_id_fw and leaf_id_vsphere
   set_fact:
-    combined_leaf_ids: "{{ leaf_id_fw + leaf_id_vsphere }}"
+    combined_leaf_ids: "{{ leaf_id_vsphere }}"
   when: item.is_shared_vn == false and item.is_current_vn == false
+
+- name: Combine leaf_id_fw and leaf_id_vsphere
+  set_fact:
+    combined_leaf_ids: "{{ leaf_id_fw + leaf_id_vsphere }}"
+  when: item.is_shared_vn == false and item.is_current_vn == false and item.is_gateway_type_fw == true
+
+
 
 - name: Display combined_leaf_ids
   debug:
