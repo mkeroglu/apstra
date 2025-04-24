@@ -3,6 +3,10 @@
   ansible.builtin.include_role:
     name: search_vn_from_ct
 
+- name: Set is_vn_id_in_nodes_fw
+  set_fact:
+    is_vn_id_in_nodes_fw: false
+
 - name: Add VN to CT
   ansible.builtin.include_role:
     name: search_vn_from_fw_ct
