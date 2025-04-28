@@ -11,25 +11,9 @@
       - { role: check_ds }
       - { role: check_diff }
     tasks:
-    - name: Create VNS
-      include_tasks: create_vns.yml
-      vars:
-        vn: "{{ item }}"
-      loop: "{{ sz.vns }}"
-
-    - name: "Check VN for CT"
-      include_role:
-        name: leaf_ids_for_vn
-      vars:
-        vn: "{{ item }}"
-      loop: "{{ sz.vns }}"
-
-    - name: Import CT
-      include_tasks: import_ct.yml
-      vars:
-        vn: "{{ item }}"
-      loop: "{{ sz.vns }}"
-
     - name: "Commit Changes"
       include_role:
-        name: commit_changes
+        name: leaf_ids_for_vn 
+      vars:
+        vn: "{{ item }}"
+      loop: "{{ sz.vns }}"

@@ -1,0 +1,205 @@
+---
+- name: Initialize Variables
+  ansible.builtin.set_fact:
+    leaf_ids: ""
+  when: item.is_shared_vn == false and item.is_current_vn == true
+
+- name: Get Device ID
+  ansible.builtin.include_role:
+    name: get_node_system
+  vars:
+    node_type: system
+  when: item.is_shared_vn == false and item.is_current_vn == true
+
+- name: set system id
+  ansible.builtin.set_fact:
+    leaf_ids: "{{ node_system.json }}"
+  when: (leaf_ids | default('')) == "" and (item.is_shared_vn == false and item.is_current_vn == true)
+
+- name: Get id of the system with specific label
+  ansible.builtin.set_fact:
+    leaf_id: "{{ leaf_ids.nodes | dict2items }}"
+  when: item.is_shared_vn == false and item.is_current_vn == true
+
+- name: Initialize empty list for ids
+  set_fact:
+    specific_ids: []
+  when: item.is_shared_vn == false and item.is_current_vn == true
+
+- name: Initialize Variables
+  ansible.builtin.set_fact:
+    leaf_ids: ""
+  when: item.is_shared_vn == false and item.is_current_vn == true
+
+- name: Get Device ID
+  ansible.builtin.include_role:
+    name: get_node_system
+  vars:
+    node_type: system
+  when: item.is_shared_vn == false and item.is_current_vn == true
+
+- name: set system id
+  ansible.builtin.set_fact:
+    leaf_ids: "{{ node_system.json  | cleanup_leaf_ids }}"
+  when: (leaf_ids | default('')) == "" and (item.is_shared_vn == false and item.is_current_vn == true)
+
+- name: show vns
+  ansible.builtin.debug:
+    msg: "{{ sz }}"
+  when: item.is_shared_vn == false and item.is_current_vn == true
+
+- name: Include example_role
+  include_role:
+    name: get_leaf_ids
+  when: item.is_shared_vn == false and item.is_current_vn == true
+
+- name: Include example_role
+  include_role:
+    name: get_leaf_ids_fw
+  when: item.is_shared_vn == false and item.is_current_vn == true and item.is_gateway_type_fw == true
+
+- name: Combine leaf_id_fw and leaf_id_vsphere
+  set_fact:
+    combined_leaf_ids: "{{ leaf_id_vsphere }}"
+  when: item.is_shared_vn == false and item.is_current_vn == true
+
+- name: Combine leaf_id_fw and leaf_id_vsphere
+  set_fact:
+    combined_leaf_ids: "{{ leaf_id_fw + leaf_id_vsphere }}"
+  when: item.is_shared_vn == false and item.is_current_vn == true and item.is_gateway_type_fw == true
+
+- name:
+  debug:
+    var: combined_leaf_ids
+  when: item.is_shared_vn == false and item.is_current_vn == true 
+
+- name: "Get Connectvity Template"
+  uri:
+    url: "{{ apstra.baseurl }}/blueprints/{{ bp_id }}/virtual-networks"
+    method: GET
+    status_code: 200
+    headers:
+      content-type: "application/json"
+      AUTHTOKEN: "{{ login.json.token }}"
+    validate_certs: false
+    force_basic_auth: yes
+    body_format: json
+  register: virtual_networks
+  when: item.is_shared_vn == false and item.is_current_vn == true
+
+- name: Set vn_name in desired format
+  ansible.builtin.set_fact:
+    virtual_networks_name: "{{ vn.name }}"
+  when: item.is_shared_vn == false and item.is_current_vn == true 
+
+- name:
+  debug:
+    var: virtual_networks_name
+  when: item.is_shared_vn == false and item.is_current_vn == true 
+
+- name: Set vn_name in desired format
+  ansible.builtin.set_fact:
+    virtual_networks_vlan_id: "{{ vn.vlan_id }}"
+  when: item.is_shared_vn == false and item.is_current_vn == true 
+
+- name:
+  debug:
+    var: virtual_networks_vlan_id
+  when: item.is_shared_vn == false and item.is_current_vn == true 
+
+- name: Retrieve Blueprint IDs
+  ansible.builtin.set_fact:
+    virtual_networks_id: "{{ virtual_networks.json.virtual_networks | dict2items | selectattr('value.label', 'equalto', virtual_networks_name) | map(attribute='value.id') | first }}"
+  when: item.is_shared_vn == false and item.is_current_vn == true 
+
+- name:
+  debug:
+    var: virtual_networks_id
+  when: item.is_shared_vn == false and item.is_current_vn == true 
+
+- name: Retrieve Blueprint IDs
+  ansible.builtin.set_fact:
+    virtual_networks_leaf: "{{ virtual_networks.json.virtual_networks | dict2items | selectattr('value.label', 'equalto', virtual_networks_name) | map(attribute='value.bound_to') | json_query('[].system_id')}}"
+  when: item.is_shared_vn == false and item.is_current_vn == true 
+
+- name:
+  debug:
+    var: virtual_networks_leaf
+  when: item.is_shared_vn == false and item.is_current_vn == true
+
+- name: Check if each combined_leaf_id exists in virtual_networks_leaf
+  set_fact:
+    leaf_matches: "{{ combined_leaf_ids | difference(virtual_networks_leaf) }}"
+  when: item.is_shared_vn == false and item.is_current_vn == true
+
+- name: Show the matched values
+  debug:
+    msg: "{{ leaf_matches }}"
+  when: item.is_shared_vn == false and item.is_current_vn == true 
+
+- name: Combine leaf_id_fw and leaf_id_vsphere
+  set_fact:
+    combined_leaf_ids: "{{ leaf_matches + virtual_networks_leaf }}"
+  when: item.is_shared_vn == false and item.is_current_vn == true and leaf_matches | length > 0
+
+- name: "Retrieve Security ID if not set"
+  block:
+  - name: "Get Security ID"
+    ansible.builtin.uri:
+      url: "{{ apstra.baseurl }}/blueprints/{{ bp_id }}/nodes?node_type=security_zone"
+      method: GET
+      return_content: yes
+      status_code: 200
+      headers:
+        content-type: "application/json"
+        AUTHTOKEN: "{{ login.json.token }}"
+      validate_certs: false
+      force_basic_auth: yes
+    register: security
+  when: item.is_shared_vn == false and item.is_current_vn == true and leaf_matches | length > 0
+
+- name: set security zone ID
+  ansible.builtin.set_fact:
+    sz_id: "{{ security.json | cleanup_security_zone(sz.name) }}"
+  when: item.is_shared_vn == false and item.is_current_vn == true and leaf_matches | length > 0
+
+- name: "Create connectivity template"
+  uri:
+    url: "{{ apstra.baseurl }}/blueprints/{{ bp_id }}/virtual-networks/{{ virtual_networks_id }}"
+    method: GET
+    status_code: 200
+    headers:
+      content-type: "application/json"
+      AUTHTOKEN: "{{ login.json.token }}"
+    validate_certs: false
+    force_basic_auth: yes
+  when: item.is_shared_vn == false and item.is_current_vn == true and leaf_matches | length > 0
+  register: vn_comment
+
+- name:
+  set_fact:
+    body: "{{ vn_comment.json | combine({'bound_to': vn_comment.json.bound_to + [{'access_switch_node_ids': [], 'system_id': vn_id_loop, 'vlan_id': virtual_networks_vlan_id | int }]}) }}"
+  loop: "{{ leaf_matches }}"
+  vars:
+    vn_id_loop: "{{ item }}"
+  when: item.is_shared_vn == false and item.is_current_vn == true
+
+- name:
+  debug:
+    var: body
+  when: item.is_shared_vn == false and item.is_current_vn == true 
+
+- name: "Create connectivity template"
+  uri:
+    url: "{{ apstra.baseurl }}/blueprints/{{ bp_id }}/virtual-networks/{{ virtual_networks_id }}"
+    method: PATCH
+    status_code: 204
+    headers:
+      content-type: "application/json"
+      AUTHTOKEN: "{{ login.json.token }}"
+    validate_certs: false
+    force_basic_auth: yes
+    body: "{{ body }}"
+    body_format: json
+  when: item.is_shared_vn == false and item.is_current_vn == true and leaf_matches | length > 0
+  register: vn_comment

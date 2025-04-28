@@ -1,0 +1,37 @@
+{
+   "virtual_networks": [
+      {
+         "vn_id": "{{ item.vn_id }}",
+         "vn_type": "vxlan",
+         "svi_ips": [],
+         "default_endpoint_tag_types": {
+            "link": "vlan_tagged"
+         },
+         "bound_to": [
+	 {% for i in combined_leaf_ids %}
+            {
+               "system_id": "{{ i }}",
+               "access_switch_node_ids": [],
+               "vlan_id": {{ item.vlan_id }}
+            }
+	 {% if not loop.last %},{% endif %}{% endfor %}
+         ],
+         "vni_ids": [
+            {{ item.vn_id }}
+         ],
+         "rt_policy": {
+            "import_RTs": null,
+            "export_RTs": null
+         },
+         {% if item.name is defined %}
+         "label": "{{ item.name }}",
+         {% else %}
+         "label": "{{ sz.name }}_VN",
+         {% endif %}
+         "ipv4_enabled": false,
+         "ipv6_enabled": false,
+         "security_zone_id": "{{ sz_id }}",
+         "dhcp_service": "dhcpServiceDisabled"
+      }
+   ]
+}
