@@ -176,16 +176,26 @@
 
 - name:
   set_fact:
-    body: "{{ vn_comment.json | combine({'bound_to': vn_comment.json.bound_to + [{'access_switch_node_ids': [], 'system_id': vn_id_loop, 'vlan_id': vn_id_loop | int }]}) }}"
-  loop: "{{ combined_leaf_ids }}"
-  vars:
-    vn_id_loop: "{{ item }}"
-  when: is_shared_vn == false and is_current_vn == true
+    bound_to: "{{ vn_comment.json.bound_to }}"
+  when: is_shared_vn == false and is_current_vn == true and leaf_matches | length > 0
+
+- name: Listeyi item'lar ile güncelle
+  set_fact:
+    bound_to: "{{ bound_to + [ {'access_switch_node_ids': [], 'system_id': item, 'vlan_id': virtual_networks_vlan_id | int } ] }}"
+  loop: "{{ leaf_matches }}"
+  loop_control:
+    loop_var: item
+  when: is_shared_vn == false and is_current_vn == true and leaf_matches | length > 0
 
 - name:
-  debug:
-    var: body
-  when: is_shared_vn == false and is_current_vn == true 
+  set_fact:
+    vn_comment: "{{ vn_comment.json }}"
+  when: is_shared_vn == false and is_current_vn == true and leaf_matches | length > 0
+
+- name:
+  set_fact:
+    body: "{{ vn_comment | combine({'bound_to': bound_to})  }}"
+  when: is_shared_vn == false and is_current_vn == true and leaf_matches | length > 0
 
 - name: "Create connectivity template"
   uri:
