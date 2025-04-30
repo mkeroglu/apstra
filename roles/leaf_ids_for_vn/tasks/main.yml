@@ -119,7 +119,7 @@
 
 - name:
   debug:
-    msg: "{{ virtual_networks | dict2items | selectattr('value.label', 'equalto', virtual_networks_name)}}"
+    msg: "{{ virtual_networks | dict2items | selectattr('value.label', 'equalto', virtual_networks_name) | map(attribute='value.bound_to') )}}"
 
 - name: Retrieve Blueprint IDs
   ansible.builtin.set_fact:
