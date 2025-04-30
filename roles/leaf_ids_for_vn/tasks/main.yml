@@ -190,12 +190,12 @@
   loop: "{{ leaf_matches }}"
   vars:
     vn_id_loop: "{{ item }}"
-  when: item.is_shared_vn == false and item.is_current_vn == true
+  when: is_shared_vn == false and is_current_vn == true
 
 - name:
   debug:
     var: body
-  when: item.is_shared_vn == false and item.is_current_vn == true 
+  when: is_shared_vn == false and is_current_vn == true 
 
 - name: "Create connectivity template"
   uri:
@@ -209,5 +209,5 @@
     force_basic_auth: yes
     body: "{{ body }}"
     body_format: json
-  when: item.is_shared_vn == false and item.is_current_vn == true and leaf_matches | length > 0
+  when: is_shared_vn == false and is_current_vn == true and leaf_matches | length > 0
   register: vn_comment
