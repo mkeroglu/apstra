@@ -135,6 +135,11 @@
     combined_leaf_ids: "{{ leaf_matches + virtual_networks_leaf }}"
   when: item.is_shared_vn == false and item.is_current_vn == true and leaf_matches | length > 0
 
+- name:
+  debug:
+    var: combined_leaf_ids
+  when: item.is_shared_vn == false and item.is_current_vn == true
+
 - name: "Retrieve Security ID if not set"
   block:
   - name: "Get Security ID"
