@@ -76,11 +76,6 @@
     combined_leaf_ids: "{{ leaf_id_fw + leaf_id_vsphere }}"
   when: item.is_shared_vn == false and item.is_current_vn == true and item.is_gateway_type_fw == true
 
-- name:
-  debug:
-    var: combined_leaf_ids
-  when: item.is_shared_vn == false and item.is_current_vn == true 
-
 - name: "Get Connectvity Template"
   uri:
     url: "{{ apstra.baseurl }}/blueprints/{{ bp_id }}/virtual-networks"
@@ -100,19 +95,9 @@
     virtual_networks_name: "{{ vn.name }}"
   when: item.is_shared_vn == false and item.is_current_vn == true 
 
-- name:
-  debug:
-    var: virtual_networks_name
-  when: item.is_shared_vn == false and item.is_current_vn == true 
-
 - name: Set vn_name in desired format
   ansible.builtin.set_fact:
     virtual_networks_vlan_id: "{{ vn.vlan_id }}"
-  when: item.is_shared_vn == false and item.is_current_vn == true 
-
-- name:
-  debug:
-    var: virtual_networks_vlan_id
   when: item.is_shared_vn == false and item.is_current_vn == true 
 
 - name: Retrieve Blueprint IDs
@@ -120,15 +105,15 @@
     virtual_networks_id: "{{ virtual_networks.json.virtual_networks | dict2items | selectattr('value.label', 'equalto', virtual_networks_name) | map(attribute='value.id') | first }}"
   when: item.is_shared_vn == false and item.is_current_vn == true 
 
-- name:
-  debug:
-    var: virtual_networks_id
-  when: item.is_shared_vn == false and item.is_current_vn == true 
-
 - name: Retrieve Blueprint IDs
   ansible.builtin.set_fact:
     virtual_networks_leaf: "{{ virtual_networks.json.virtual_networks| dict2items | selectattr('value.label', 'equalto', virtual_networks_name) | list | map(attribute='value.bound_to') | list | json_query('[].system_id') }}"
   when: item.is_shared_vn == false and item.is_current_vn == true 
+
+- name:
+  debug:
+    var: combined_leaf_ids
+  when: item.is_shared_vn == false and item.is_current_vn == true
 
 - name:
   debug:
@@ -140,10 +125,10 @@
     leaf_matches: "{{ combined_leaf_ids | difference(virtual_networks_leaf) }}"
   when: item.is_shared_vn == false and item.is_current_vn == true
 
-- name: Show the matched values
+- name:
   debug:
-    msg: "{{ leaf_matches }}"
-  when: item.is_shared_vn == false and item.is_current_vn == true 
+    var: leaf_matches
+  when: item.is_shared_vn == false and item.is_current_vn == true
 
 - name: Combine leaf_id_fw and leaf_id_vsphere
   set_fact:
