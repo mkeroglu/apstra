@@ -4,6 +4,14 @@
     leaf_ids: ""
   when: item.is_shared_vn == false and item.is_current_vn == true
 
+- name:
+  set_fact:
+    is_shared_vn: "{{ item.is_shared_vn }}"
+
+- name:
+  set_fact:
+    is_current_vn: "{{ item.is_current_vn }}"
+
 - name: Get Device ID
   ansible.builtin.include_role:
     name: get_node_system
