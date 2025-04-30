@@ -119,11 +119,11 @@
 
 - name:
   debug:
-    msg: "{{ virtual_networks | dict2items | selectattr('value.label', 'equalto', virtual_networks_name) | map(attribute='value.bound_to') | list }}"
+    msg: "{{ virtual_networks | dict2items | selectattr('value', 'is mapping') |selectattr('value.label', 'equalto', virtual_networks_name) | map(attribute='value.bound_to') | list }}"
 
 - name: Retrieve Blueprint IDs
   ansible.builtin.set_fact:
-    virtual_networks_leaf: "{{ virtual_networks.json.virtual_networks | dict2items | selectattr('value.label', 'equalto', virtual_networks_name) | map(attribute='value.bound_to') | json_query('[].system_id')}}"
+    virtual_networks_leaf: "{{ virtual_networks.json.virtual_networks | dict2items | selectattr('value', 'is mapping') | selectattr('value.label', 'equalto', virtual_networks_name) | map(attribute='value.bound_to') | json_query('[].system_id')}}"
   when: item.is_shared_vn == false and item.is_current_vn == true 
 
 - name:
