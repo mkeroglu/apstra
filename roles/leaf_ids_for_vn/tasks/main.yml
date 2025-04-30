@@ -176,7 +176,7 @@
 
 - name:
   set_fact:
-    body: "{{ vn_comment.json | combine({'bound_to': vn_comment.json.bound_to + [{'access_switch_node_ids': [], 'system_id': vn_id_loop, 'vlan_id': virtual_networks_vlan_id | int }]}) }}"
+    body: "{{ vn_comment.json | combine({'bound_to': vn_comment.json.bound_to + [{'access_switch_node_ids': [], 'system_id': vn_id_loop, 'vlan_id': vn_id_loop | int }]}) }}"
   loop: "{{ combined_leaf_ids }}"
   vars:
     vn_id_loop: "{{ item }}"
