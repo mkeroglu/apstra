@@ -96,7 +96,7 @@
 
 - name: Check if first_vn_id is in attach_node_ids
   set_fact:
-    is_vn_id_in_nodes: "{{ first_vn_id in attach_node_ids }}"
+    is_vn_id_in_nodes: "{{ attach_node_ids | select('equalto', first_vn_id) | list | length > 0 }}"
 
 - name:
   debug:
