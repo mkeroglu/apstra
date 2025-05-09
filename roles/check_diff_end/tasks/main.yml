@@ -39,18 +39,24 @@
 - name:
   set_fact:
     is_there_a_commit: true
-  when: item.value.added > 0 or item.value.changed > 0 or item.value.removed > 0
-  loop: "{{ digest | dict2items }}"
-  loop_control:
-    label: "{{ item.key }}"
+  when: 
+    digest.node.added > 0 or
+    digest.node.changed > 0 or
+    digest.node.removed > 0 or
+    digest.relationship.added > 0 or
+    digest.relationship.changed > 0 or
+    digest.relationship.removed > 0
 
 - name:
   set_fact:
     is_there_a_commit: false
-  when: item.value.added == 0 and item.value.changed == 0 and item.value.removed == 0
-  loop: "{{ digest | dict2items }}"
-  loop_control:
-    label: "{{ item.key }}"
+  when: 
+    digest.node.added == 0 and
+    digest.node.changed == 0 and
+    digest.node.removed == 0 and
+    digest.relationship.added == 0 and
+    digest.relationship.changed == 0 and
+    digest.relationship.removed == 0
 
 - name:
   debug:
