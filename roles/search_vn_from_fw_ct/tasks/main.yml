@@ -17,10 +17,6 @@
     msg: "{{ virtual_networks.json.virtual_networks }}"
   register: virtual_networks
 
-    #- name:
-    #  debug:
-    #    var: virtual_networks
-
 - name: Extract labels
   set_fact:
     labels: "{{ virtual_networks.msg | dict2items }}"
@@ -29,17 +25,9 @@
   ansible.builtin.set_fact:
     vn_name: "{{ vn.name }}"
 
-      #- name: Print labels
-      #  debug:
-      #    msg: "{{ labels }}"
-
 - name: Find ID for label "TVNI-112-101"
   set_fact:
-    desired_vn_id: "{{ labels | selectattr('value.label', 'equalto', vn_name) | map(attribute='value.id') }}"
-
-      #- name: Print the ID
-      #  debug:
-      #    msg: "ID for label {{ vn_name }} is: {{ desired_vn_id }}"
+    desired_vn_id: "{{ labels | selectattr('value.label', 'equalto', vn_name) | map(attribute='value.id') | list }}"
 
 - name: "Get Connectvity Template"
   uri:
@@ -99,24 +87,9 @@
   ansible.builtin.set_fact:
     ctt_j2: "{{ ct_j2.json }}"
 
-      #- name:
-      #  debug:
-      #    var: ctt_j2
-
 - name:
   ansible.builtin.set_fact:
     attach_node_ids: "{{ ct_j2.json.policies | json_query('[?policy_type_name==`AttachMultipleVLAN`].attributes.tagged_vn_node_ids') | first }}"
-
-      #- name:
-      #  debug:
-      #    var: attach_node_ids
-      #- name:
-      #  debug:
-      #    var: attach_node_ids
-
-      #- name:
-      #  debug:
-      #    var: desired_vn_id
 
 - name: Extract the first item from desired_vn_id list
   set_fact:
@@ -125,7 +98,3 @@
 - name: Check if first_vn_id is in attach_node_ids
   set_fact:
     is_vn_id_in_nodes_fw: "{{ first_vn_id in attach_node_ids }}"
-
-      #- name: Debug output
-      #  debug:
-      #    msg: "first_vn_id is in attach_node_ids: {{ is_vn_id_in_nodes_fw }}"
