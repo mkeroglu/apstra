@@ -26,7 +26,7 @@
 
 - name: Find ID for label "TVNI-112-101"
   set_fact:
-    desired_vn_id: "{{ labels | selectattr('value.label', 'equalto', vn_name) | map(attribute='value.id') | first }}"
+    desired_vn_id: "{{ labels | selectattr('value.label', 'equalto', vn_name) | map(attribute='value.id') | list }}"
 
 - name:
   debug:
