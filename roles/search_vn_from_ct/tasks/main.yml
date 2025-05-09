@@ -28,6 +28,10 @@
   set_fact:
     desired_vn_id: "{{ labels | selectattr('value.label', 'equalto', vn_name) | map(attribute='value.id') }}"
 
+- name:
+  debug:
+    var: desired_vn_id
+
 - name: "Get Connectvity Template"
   uri:
     url: "{{ apstra.baseurl }}/blueprints/{{ bp_id }}/obj-policy-export"
