@@ -30,6 +30,11 @@
         vn: "{{ item }}"
       loop: "{{ sz.vns }}"
 
+    - name: "Last Diff Check"
+      include_role:
+        name: check_diff_end
+
     - name: "Commit Changes"
       include_role:
         name: commit_changes
+      when: is_there_a_commit

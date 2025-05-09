@@ -36,10 +36,22 @@
   debug:
     var: digest
 
-- name: Check if any value is greater than zero
-  fail:
-    msg: "Apstra üzerinde Bekleyen Commit İşlemi Vardır. Lütfen Kontrol Ediniz. {{ non_null }}"
+- name:
+  set_fact:
+    is_there_a_commit: true
   when: item.value.added > 0 or item.value.changed > 0 or item.value.removed > 0
   loop: "{{ digest | dict2items }}"
   loop_control:
     label: "{{ item.key }}"
+
+- name:
+  set_fact:
+    is_there_a_commit: false
+  when: item.value.added == 0 and item.value.changed == 0 and item.value.removed == 0
+  loop: "{{ digest | dict2items }}"
+  loop_control:
+    label: "{{ item.key }}"
+
+- name:
+  debug:
+    var: is_there_a_commit
