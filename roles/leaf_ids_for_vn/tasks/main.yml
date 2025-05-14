@@ -101,8 +101,12 @@
   when: item.is_current_vn == true 
 
 - name: Retrieve Blueprint IDs
+  debug:    
+    msg: "{{ virtual_networks_name }}"
+
+- name: Retrieve Blueprint IDs
   debug:
-    msg: "{{ virtual_networks.json.virtual_networks | dict2items | selectattr('value.label', 'equalto', virtual_networks_name) | list }}"
+    msg: "{{ virtual_networks.json.virtual_networks | dict2items }}"
 
 - name: Retrieve Blueprint IDs
   ansible.builtin.set_fact:
