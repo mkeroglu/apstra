@@ -200,30 +200,37 @@
 - name: Label'ı Boş Olanları Kontrol Et
   set_fact:
     cleaned_endpoints: "{{ body.endpoints | selectattr('label', 'equalto', '') | list }}"
+  when: is_current_vn == true and leaf_matches | length > 0
 
 - name: Label'ı Boş Olanlardan Label'ı Kaldır
   set_fact:
     cleaned_endpoints: "{{ cleaned_endpoints | map('dict2items') | map('rejectattr', 'key', 'equalto', 'label') | map('list') | map('items2dict') | list }}"
+  when: is_current_vn == true and leaf_matches | length > 0
 
 - name: Label'ı Boş Olmayanları Tespit Et
   set_fact:
     cleaned_endpoints2: "{{ body.endpoints | selectattr('label', '!=', '') | list }}"
+  when: is_current_vn == true and leaf_matches | length > 0
 
 - name: Listele
   set_fact:
     cleaned_endpoints2: "{{ cleaned_endpoints2 | list }}"
+  when: is_current_vn == true and leaf_matches | length > 0
 
 - name: cleaned_endpoints ve cleaned_endpoints2 listelerini birleştir
   set_fact:
     merged_endpoints: "{{ cleaned_endpoints + cleaned_endpoints2 }}"
+  when: is_current_vn == true and leaf_matches | length > 0
 
 - name: Endpoints'i değiştir
   set_fact:
     body: "{{ body | combine({ 'endpoints': merged_endpoints }) }}"
+  when: is_current_vn == true and leaf_matches | length > 0
 
 - name:
   debug:
     var: body
+  when: is_current_vn == true and leaf_matches | length > 0
 
 - name: "Create connectivity template"
   uri:
