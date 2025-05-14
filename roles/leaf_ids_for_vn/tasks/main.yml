@@ -203,7 +203,7 @@
 
 - name: Label'ı Boş Olanlardan Label'ı Kaldır
   set_fact:
-    cleaned_endpoints: "{{ cleaned_endpoints | map('dict2items') | list |  map('rejectattr', 'key', 'equalto', 'label') | list | map('items2dict') | list }}"
+    cleaned_endpoints: "{{ cleaned_endpoints | map('dict2items') | list | map('list') | list |  map('rejectattr', 'key', 'equalto', 'label') | list | map('items2dict') | list }}"
 
 - name: Label'ı Boş Olmayanları Tespit Et
   set_fact:
