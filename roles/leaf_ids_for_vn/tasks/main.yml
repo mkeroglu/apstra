@@ -102,7 +102,7 @@
 
 - name: Retrieve Blueprint IDs
   ansible.builtin.set_fact:
-    virtual_networks_id: "{{ virtual_networks.json.virtual_networks | dict2items | selectattr('value.label', 'equalto', virtual_networks_name) | map(attribute='value.id') | first }}"
+    virtual_networks_id: "{{ virtual_networks.json.virtual_networks | dict2items | selectattr('value.label', 'equalto', virtual_networks_name) | list | map(attribute='value.id') | first }}"
   when: item.is_current_vn == true 
 
 - name: Retrieve Blueprint IDs
