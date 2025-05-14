@@ -5,12 +5,34 @@
   - hosts: localhost
     gather_facts: False
     connection: local
-    roles:
-      - { role: apstra_auth }
-      - { role: get_bp_id }
     tasks:
-    - name: Import CT
-      include_tasks: test-tast.yaml
-      vars:
-        vn: "{{ item }}"
-      loop: "{{ sz.vns }}"
+    - name: JSON dosyasını oku
+      set_fact:
+        body: "{{ lookup('file', 'test.json') | from_json }}"
+
+    - name: label boşsa kaldır
+      set_fact:
+        cleaned_endpoints: "{{ body.endpoints | selectattr('label', 'equalto', '') | list }}"
+
+    - name:
+      set_fact:
+        cleaned_endpoints: "{{ cleaned_endpoints | map('dict2items') | map('rejectattr', 'key', 'equalto', 'label') | map('items2dict') | list }}"
+
+    - name: label boşsa kaldır
+      set_fact:
+        cleaned_endpoints2: "{{ body.endpoints | selectattr('label', '!=', '') | list }}"
+
+    - name:
+      set_fact:
+        cleaned_endpoints2: "{{ cleaned_endpoints2 | list }}"
+
+    - name: cleaned_endpoints ve cleaned_endpoints2 listelerini birleştir
+      set_fact:
+        merged_endpoints: "{{ cleaned_endpoints + cleaned_endpoints2 }}"
+    - name:
+      set_fact:
+        body: "{{ body | combine({ 'endpoints': merged_endpoints }) }}"
+    - name:
+      debug:
+        var: body
+

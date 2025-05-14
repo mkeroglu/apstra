@@ -1,0 +1,802 @@
+{
+    "id": "CfPf2w2kBPI359zhvDM",
+    "label": "TTS_ATS_NETWORK_10_6_72_128_27",
+    "description": null,
+    "vn_type": "vxlan",
+    "bound_to": [
+      {
+        "system_id": "2Pblv_iY-_AzIXALyzU",
+        "access_switch_node_ids": [],
+        "vlan_id": 675
+      },
+      {
+        "system_id": "UwAYwsFLu9-c3iDAxKw",
+        "access_switch_node_ids": [],
+        "vlan_id": 675
+      },
+      {
+        "system_id": "QMLUz8M6ukaq0x9wnUE",
+        "access_switch_node_ids": [],
+        "vlan_id": 675
+      },
+      {
+        "system_id": "ffz22m30lGIoUIahVIk",
+        "access_switch_node_ids": [],
+        "vlan_id": 675
+      },
+      {
+        "system_id": "hHAYPpICWsgX_rupBNE",
+        "access_switch_node_ids": [],
+        "vlan_id": 675
+      },
+      {
+        "system_id": "WCwhVPz28mg9hVKmBTc",
+        "access_switch_node_ids": [],
+        "vlan_id": 675
+      },
+      {
+        "system_id": "tiFWW9_gr4hmv9YkYvE",
+        "access_switch_node_ids": [],
+        "vlan_id": 675
+      },
+      {
+        "system_id": "l6NybL8-t9tJpc_BAPM",
+        "access_switch_node_ids": [],
+        "vlan_id": 675
+      },
+      {
+        "system_id": "cjfLw_NIbEDtB10BBlQ",
+        "access_switch_node_ids": [],
+        "vlan_id": 675
+      },
+      {
+        "system_id": "xMlVncnqESkeIZySBi8",
+        "access_switch_node_ids": [],
+        "vlan_id": 675
+      },
+      {
+        "system_id": "qXIMjzG6_82N1h7ywz0",
+        "access_switch_node_ids": [],
+        "vlan_id": 675
+      }
+    ],
+    "vn_id": "700675",
+    "reserved_vlan_id": null,
+    "ipv4_subnet": "10.6.72.128/27",
+    "ipv6_subnet": null,
+    "virtual_gateway_ipv4": "10.6.72.157",
+    "virtual_gateway_ipv6": null,
+    "virtual_gateway_ipv4_enabled": true,
+    "virtual_gateway_ipv6_enabled": false,
+    "virtual_mac": null,
+    "ipv4_enabled": true,
+    "ipv6_enabled": false,
+    "dhcp_service": "dhcpServiceDisabled",
+    "security_zone_id": "JqgXhvpkIpd_JRwAots",
+    "rt_policy": null,
+    "l3_mtu": 9102,
+    "route_target": "700675:1",
+    "svi_ips": [
+      {
+        "system_id": "YV1C8a-uE8A2nw6F_pg",
+        "ipv4_addr": null,
+        "ipv6_addr": null,
+        "ipv4_mode": "enabled",
+        "ipv6_mode": "disabled",
+        "ipv4_requirement": null,
+        "ipv6_requirement": null
+      },
+      {
+        "system_id": "ETnqRZyMcMI0vkG7fTM",
+        "ipv4_addr": null,
+        "ipv6_addr": null,
+        "ipv4_mode": "enabled",
+        "ipv6_mode": "disabled",
+        "ipv4_requirement": null,
+        "ipv6_requirement": null
+      },
+      {
+        "system_id": "a20nyDn_ULocN6YUk5k",
+        "ipv4_addr": null,
+        "ipv6_addr": null,
+        "ipv4_mode": "enabled",
+        "ipv6_mode": "disabled",
+        "ipv4_requirement": null,
+        "ipv6_requirement": null
+      },
+      {
+        "system_id": "c8zGM5tbwI3w_OaMnVs",
+        "ipv4_addr": null,
+        "ipv6_addr": null,
+        "ipv4_mode": "enabled",
+        "ipv6_mode": "disabled",
+        "ipv4_requirement": null,
+        "ipv6_requirement": null
+      },
+      {
+        "system_id": "fLj8Av8B_s8zUqcj7YM",
+        "ipv4_addr": null,
+        "ipv6_addr": null,
+        "ipv4_mode": "enabled",
+        "ipv6_mode": "disabled",
+        "ipv4_requirement": null,
+        "ipv6_requirement": null
+      },
+      {
+        "system_id": "iOLHBqhGhuFVjt-bqKM",
+        "ipv4_addr": null,
+        "ipv6_addr": null,
+        "ipv4_mode": "enabled",
+        "ipv6_mode": "disabled",
+        "ipv4_requirement": null,
+        "ipv6_requirement": null
+      },
+      {
+        "system_id": "7daFEeImSKmMS1LbXnM",
+        "ipv4_addr": null,
+        "ipv6_addr": null,
+        "ipv4_mode": "enabled",
+        "ipv6_mode": "disabled",
+        "ipv4_requirement": null,
+        "ipv6_requirement": null
+      },
+      {
+        "system_id": "sQglD0qojPfxI_ygwB0",
+        "ipv4_addr": null,
+        "ipv6_addr": null,
+        "ipv4_mode": "enabled",
+        "ipv6_mode": "disabled",
+        "ipv4_requirement": null,
+        "ipv6_requirement": null
+      },
+      {
+        "system_id": "6LFpuVZCrGpLL767Kuc",
+        "ipv4_addr": null,
+        "ipv6_addr": null,
+        "ipv4_mode": "enabled",
+        "ipv6_mode": "disabled",
+        "ipv4_requirement": null,
+        "ipv6_requirement": null
+      },
+      {
+        "system_id": "ecLZ41iCegwiQwTdv7g",
+        "ipv4_addr": null,
+        "ipv6_addr": null,
+        "ipv4_mode": "enabled",
+        "ipv6_mode": "disabled",
+        "ipv4_requirement": null,
+        "ipv6_requirement": null
+      },
+      {
+        "system_id": "oVkhN9QWqHzeWUcE6qE",
+        "ipv4_addr": null,
+        "ipv6_addr": null,
+        "ipv4_mode": "enabled",
+        "ipv6_mode": "disabled",
+        "ipv4_requirement": null,
+        "ipv6_requirement": null
+      },
+      {
+        "system_id": "Yp07wdRiQBeaLwsxAVk",
+        "ipv4_addr": null,
+        "ipv6_addr": null,
+        "ipv4_mode": "enabled",
+        "ipv6_mode": "disabled",
+        "ipv4_requirement": null,
+        "ipv6_requirement": null
+      },
+      {
+        "system_id": "ZFUtsxFNuj-qlGbOl5s",
+        "ipv4_addr": null,
+        "ipv6_addr": null,
+        "ipv4_mode": "enabled",
+        "ipv6_mode": "disabled",
+        "ipv4_requirement": null,
+        "ipv6_requirement": null
+      },
+      {
+        "system_id": "aeCpTidUSx2jx7Nh06I",
+        "ipv4_addr": null,
+        "ipv6_addr": null,
+        "ipv4_mode": "enabled",
+        "ipv6_mode": "disabled",
+        "ipv4_requirement": null,
+        "ipv6_requirement": null
+      },
+      {
+        "system_id": "miwC3UoZz-1wDaP_Ey4",
+        "ipv4_addr": null,
+        "ipv6_addr": null,
+        "ipv4_mode": "enabled",
+        "ipv6_mode": "disabled",
+        "ipv4_requirement": null,
+        "ipv6_requirement": null
+      },
+      {
+        "system_id": "GeGBCxKdHhgI_i6D1MA",
+        "ipv4_addr": null,
+        "ipv6_addr": null,
+        "ipv4_mode": "enabled",
+        "ipv6_mode": "disabled",
+        "ipv4_requirement": null,
+        "ipv6_requirement": null
+      },
+      {
+        "system_id": "m16bCBMCStAZycTSaS0",
+        "ipv4_addr": null,
+        "ipv6_addr": null,
+        "ipv4_mode": "enabled",
+        "ipv6_mode": "disabled",
+        "ipv4_requirement": null,
+        "ipv6_requirement": null
+      },
+      {
+        "system_id": "BFgnbS1wZg1ZucdVKa8",
+        "ipv4_addr": null,
+        "ipv6_addr": null,
+        "ipv4_mode": "enabled",
+        "ipv6_mode": "disabled",
+        "ipv4_requirement": null,
+        "ipv6_requirement": null
+      },
+      {
+        "system_id": "70KP7gd8vxuPv3XRgRY",
+        "ipv4_addr": null,
+        "ipv6_addr": null,
+        "ipv4_mode": "enabled",
+        "ipv6_mode": "disabled",
+        "ipv4_requirement": null,
+        "ipv6_requirement": null
+      },
+      {
+        "system_id": "hftibGuxV1CEFdztBPI",
+        "ipv4_addr": null,
+        "ipv6_addr": null,
+        "ipv4_mode": "enabled",
+        "ipv6_mode": "disabled",
+        "ipv4_requirement": null,
+        "ipv6_requirement": null
+      },
+      {
+        "system_id": "x2SzuT_MPcoWlrIWDgw",
+        "ipv4_addr": null,
+        "ipv6_addr": null,
+        "ipv4_mode": "enabled",
+        "ipv6_mode": "disabled",
+        "ipv4_requirement": null,
+        "ipv6_requirement": null
+      },
+      {
+        "system_id": "-YRPnO2pUL0V1ECZPO8",
+        "ipv4_addr": null,
+        "ipv6_addr": null,
+        "ipv4_mode": "enabled",
+        "ipv6_mode": "disabled",
+        "ipv4_requirement": null,
+        "ipv6_requirement": null
+      }
+    ],
+    "endpoints": [
+      {
+        "label": "",
+        "interface_id": "t_dHGp5-2kXl1uoGYeU",
+        "tag_type": "vlan_tagged"
+      },
+      {
+        "label": "",
+        "interface_id": "kTXLuKtHwW0hlmq7bzg",
+        "tag_type": "vlan_tagged"
+      },
+      {
+        "label": "",
+        "interface_id": "71Qn6lb64qFj7Cau844",
+        "tag_type": "vlan_tagged"
+      },
+      {
+        "label": "",
+        "interface_id": "4KeUmxzq5oKWW3I1bk0",
+        "tag_type": "vlan_tagged"
+      },
+      {
+        "label": "",
+        "interface_id": "ii70euMw2-24o6a2D3E",
+        "tag_type": "vlan_tagged"
+      },
+      {
+        "label": "",
+        "interface_id": "vdSDRUzvx3jxUHpkOHI",
+        "tag_type": "vlan_tagged"
+      },
+      {
+        "label": "",
+        "interface_id": "wNmnis941Wo307pLIrs",
+        "tag_type": "vlan_tagged"
+      },
+      {
+        "label": "",
+        "interface_id": "t-kPIdXRhzdXxzaqK_g",
+        "tag_type": "vlan_tagged"
+      },
+      {
+        "label": "",
+        "interface_id": "D7dRNPa3HoBJo7VACMA",
+        "tag_type": "vlan_tagged"
+      },
+      {
+        "label": "",
+        "interface_id": "HMdw-_IPp73L0GGmhKg",
+        "tag_type": "vlan_tagged"
+      },
+      {
+        "label": "",
+        "interface_id": "bZa7xd9X-w_y9W9ZQOE",
+        "tag_type": "vlan_tagged"
+      },
+      {
+        "label": "",
+        "interface_id": "SX9PehOmWpqnLxicMeA",
+        "tag_type": "vlan_tagged"
+      },
+      {
+        "label": "",
+        "interface_id": "w5C8PgfaJcN2c1NDpfg",
+        "tag_type": "vlan_tagged"
+      },
+      {
+        "label": "",
+        "interface_id": "1nlbWEQ0-BvpDTVJr1I",
+        "tag_type": "vlan_tagged"
+      },
+      {
+        "label": "",
+        "interface_id": "Sv5NRe9-E729GkaWRw8",
+        "tag_type": "vlan_tagged"
+      },
+      {
+        "label": "",
+        "interface_id": "Pz92Y457Fg-AKG27r1c",
+        "tag_type": "vlan_tagged"
+      },
+      {
+        "label": "",
+        "interface_id": "ixeRWf_nQDj1_dNYfzM",
+        "tag_type": "vlan_tagged"
+      },
+      {
+        "label": "",
+        "interface_id": "C9HAKLDnNG3JOPw_7Xg",
+        "tag_type": "vlan_tagged"
+      },
+      {
+        "label": "",
+        "interface_id": "mhQ28a3IHSXL4EozJq4",
+        "tag_type": "vlan_tagged"
+      },
+      {
+        "label": "",
+        "interface_id": "ABw1dbnPv2wa1xFX_IY",
+        "tag_type": "vlan_tagged"
+      },
+      {
+        "label": "",
+        "interface_id": "N3bXYhkm0KbEg6v68pI",
+        "tag_type": "vlan_tagged"
+      },
+      {
+        "label": "",
+        "interface_id": "KlgYWcr1nh_Q8t_49sQ",
+        "tag_type": "vlan_tagged"
+      },
+      {
+        "label": "",
+        "interface_id": "jBo6FHWQnxNMWnO-te8",
+        "tag_type": "vlan_tagged"
+      },
+      {
+        "label": "",
+        "interface_id": "dnfaWk2mMIzFdnhpML0",
+        "tag_type": "vlan_tagged"
+      },
+      {
+        "label": "",
+        "interface_id": "-ykkDCYe7RJVOsdibnc",
+        "tag_type": "vlan_tagged"
+      },
+      {
+        "label": "",
+        "interface_id": "OUKZRxAIR80YOPA2dSE",
+        "tag_type": "vlan_tagged"
+      },
+      {
+        "label": "",
+        "interface_id": "blOCWbmO9XWIAbnHboU",
+        "tag_type": "vlan_tagged"
+      },
+      {
+        "label": "",
+        "interface_id": "FR8sQtxCC21t-ufW_sg",
+        "tag_type": "vlan_tagged"
+      },
+      {
+        "label": "",
+        "interface_id": "zqn72Itvi-WnRUyqg9s",
+        "tag_type": "vlan_tagged"
+      },
+      {
+        "label": "",
+        "interface_id": "NNDvB4YV-s0n7Fj_XG4",
+        "tag_type": "vlan_tagged"
+      },
+      {
+        "label": "",
+        "interface_id": "ypktyDL0qzLHhf9PAD0",
+        "tag_type": "vlan_tagged"
+      },
+      {
+        "label": "",
+        "interface_id": "IOmh17Vxkvv50ScKRTk",
+        "tag_type": "vlan_tagged"
+      },
+      {
+        "label": "",
+        "interface_id": "UasFQknA8e0aRio1BAs",
+        "tag_type": "vlan_tagged"
+      },
+      {
+        "label": "",
+        "interface_id": "0oVWLnFrdUeVyQbiYqs",
+        "tag_type": "vlan_tagged"
+      },
+      {
+        "label": "",
+        "interface_id": "tKf38ltvBSz7AzoSU4o",
+        "tag_type": "vlan_tagged"
+      },
+      {
+        "label": "",
+        "interface_id": "T-0GjgPo1zddeqHmDRI",
+        "tag_type": "vlan_tagged"
+      },
+      {
+        "label": "",
+        "interface_id": "tLgLw-7be_bMCxs81nA",
+        "tag_type": "vlan_tagged"
+      },
+      {
+        "label": "",
+        "interface_id": "I-ClMel82_a5PcDa6zs",
+        "tag_type": "vlan_tagged"
+      },
+      {
+        "label": "",
+        "interface_id": "xUgCTc6gx5XsyNuRpCM",
+        "tag_type": "vlan_tagged"
+      },
+      {
+        "label": "",
+        "interface_id": "8lHnRuT6H61-XjPziPI",
+        "tag_type": "vlan_tagged"
+      },
+      {
+        "label": "",
+        "interface_id": "yCI07qfreBXE8w4llcI",
+        "tag_type": "vlan_tagged"
+      },
+      {
+        "label": "",
+        "interface_id": "PGHc2VaGCrDTzN8U-RI",
+        "tag_type": "vlan_tagged"
+      },
+      {
+        "label": "",
+        "interface_id": "BFGwrZHz3BfS5K82P9Q",
+        "tag_type": "vlan_tagged"
+      },
+      {
+        "label": "",
+        "interface_id": "R73i2aUrFS_v0xCmlfo",
+        "tag_type": "vlan_tagged"
+      },
+      {
+        "label": "",
+        "interface_id": "GScW72-vFUg4uiRL6C4",
+        "tag_type": "vlan_tagged"
+      },
+      {
+        "label": "",
+        "interface_id": "j6sxT0YcFMILFkcNups",
+        "tag_type": "vlan_tagged"
+      },
+      {
+        "label": "",
+        "interface_id": "1DkVYa2mxnmvuTF0Qvs",
+        "tag_type": "vlan_tagged"
+      },
+      {
+        "label": "",
+        "interface_id": "KptSFI3pViiNJWtj6gg",
+        "tag_type": "vlan_tagged"
+      },
+      {
+        "label": "",
+        "interface_id": "zSBXOF8Hk3BOvkDhMTE",
+        "tag_type": "vlan_tagged"
+      },
+      {
+        "label": "",
+        "interface_id": "iuNYljNb_sVvUJ7oqY8",
+        "tag_type": "vlan_tagged"
+      },
+      {
+        "label": "",
+        "interface_id": "gKL2KK-RveSuk9PCgXQ",
+        "tag_type": "vlan_tagged"
+      },
+      {
+        "label": "",
+        "interface_id": "CPvtj5RUQpUDf5-r4Bo",
+        "tag_type": "vlan_tagged"
+      },
+      {
+        "label": "",
+        "interface_id": "-9Cnh773kcZfZY0d1Lc",
+        "tag_type": "vlan_tagged"
+      },
+      {
+        "label": "",
+        "interface_id": "xm_mLLQEPSQ1_DU7ukA",
+        "tag_type": "vlan_tagged"
+      },
+      {
+        "label": "",
+        "interface_id": "oJBFikaUkY2HIskAguY",
+        "tag_type": "vlan_tagged"
+      },
+      {
+        "label": "",
+        "interface_id": "eZOjMFvhQdj3Yz1zNMc",
+        "tag_type": "vlan_tagged"
+      },
+      {
+        "label": "",
+        "interface_id": "mF8kHiEz3qw_YrGBLvY",
+        "tag_type": "vlan_tagged"
+      },
+      {
+        "label": "",
+        "interface_id": "8FIqfWqNfbVN3Tsom38",
+        "tag_type": "vlan_tagged"
+      },
+      {
+        "label": "",
+        "interface_id": "lI0EQkQ6GJBIsDqNV1Q",
+        "tag_type": "vlan_tagged"
+      },
+      {
+        "label": "",
+        "interface_id": "Pd3h5yqVjzy-zRoeWaA",
+        "tag_type": "vlan_tagged"
+      },
+      {
+        "label": "",
+        "interface_id": "EDApxkDedDPKYcMy_Wg",
+        "tag_type": "vlan_tagged"
+      },
+      {
+        "label": "",
+        "interface_id": "zSETaJJyEKluxgGyGBY",
+        "tag_type": "vlan_tagged"
+      },
+      {
+        "label": "",
+        "interface_id": "X5XhgsMhIaUV1AeGvps",
+        "tag_type": "vlan_tagged"
+      },
+      {
+        "label": "",
+        "interface_id": "SDsKhHyXH3Stn16OmPM",
+        "tag_type": "vlan_tagged"
+      },
+      {
+        "label": "",
+        "interface_id": "zY6ePKxzxQtCfHGfIvQ",
+        "tag_type": "vlan_tagged"
+      },
+      {
+        "label": "",
+        "interface_id": "w9zj4Sgyj3VTJyxQ71A",
+        "tag_type": "vlan_tagged"
+      },
+      {
+        "label": "",
+        "interface_id": "z3b5SmlLA6E8oRh4bXI",
+        "tag_type": "vlan_tagged"
+      },
+      {
+        "label": "",
+        "interface_id": "RFMeMRa-1FNuQLGyTYY",
+        "tag_type": "vlan_tagged"
+      },
+      {
+        "label": "",
+        "interface_id": "t-kUgf5yunppIRqC69g",
+        "tag_type": "vlan_tagged"
+      },
+      {
+        "label": "",
+        "interface_id": "Ac4ajdWNKfLF8Suvfb0",
+        "tag_type": "vlan_tagged"
+      },
+      {
+        "label": "",
+        "interface_id": "tsB_jcq1vuqYCB7BAjY",
+        "tag_type": "vlan_tagged"
+      },
+      {
+        "label": "",
+        "interface_id": "tDDVCUmgULO0yw3h3qY",
+        "tag_type": "vlan_tagged"
+      },
+      {
+        "label": "",
+        "interface_id": "RFNzB5KvaYr2AgLiUxU",
+        "tag_type": "vlan_tagged"
+      },
+      {
+        "label": "",
+        "interface_id": "jH8J3oQKU89b1OxTWJ0",
+        "tag_type": "vlan_tagged"
+      },
+      {
+        "label": "",
+        "interface_id": "DcU-NIaleVhVY0hwjv8",
+        "tag_type": "vlan_tagged"
+      },
+      {
+        "label": "",
+        "interface_id": "79venKDCASnhx6drdnc",
+        "tag_type": "vlan_tagged"
+      },
+      {
+        "label": "",
+        "interface_id": "hRZnFbkOqMMl4wHVZjM",
+        "tag_type": "vlan_tagged"
+      },
+      {
+        "label": "",
+        "interface_id": "ORu-WvuAUhFnVLPtjgc",
+        "tag_type": "vlan_tagged"
+      },
+      {
+        "label": "",
+        "interface_id": "EuKghJZ1kJJYSJnk_kg",
+        "tag_type": "vlan_tagged"
+      },
+      {
+        "label": "",
+        "interface_id": "l5KK12OY99JKQusSpsI",
+        "tag_type": "vlan_tagged"
+      },
+      {
+        "label": "",
+        "interface_id": "0y4cdS-5lYqqP2tarns",
+        "tag_type": "vlan_tagged"
+      },
+      {
+        "label": "",
+        "interface_id": "lG1tff0owFX7uDAou8k",
+        "tag_type": "vlan_tagged"
+      },
+      {
+        "label": "",
+        "interface_id": "-nDnwHaBsy3wjN9w3FU",
+        "tag_type": "vlan_tagged"
+      },
+      {
+        "label": "",
+        "interface_id": "qH3WZ6esD18DQ7U-J8I",
+        "tag_type": "vlan_tagged"
+      },
+      {
+        "label": "",
+        "interface_id": "bCSOt_OwhnAAWoeJzq4",
+        "tag_type": "vlan_tagged"
+      },
+      {
+        "label": "",
+        "interface_id": "3PYMBvLxEXEEsNBDTyo",
+        "tag_type": "vlan_tagged"
+      },
+      {
+        "label": "",
+        "interface_id": "8cw7z_6efMEaoyi_ctI",
+        "tag_type": "vlan_tagged"
+      },
+      {
+        "label": "",
+        "interface_id": "9qeJID4doi_0elC5s0A",
+        "tag_type": "vlan_tagged"
+      },
+      {
+        "label": "",
+        "interface_id": "n2XFBeulfVoj0lVROcc",
+        "tag_type": "vlan_tagged"
+      },
+      {
+        "label": "",
+        "interface_id": "UoAOJjYI7xDEW7E3kSM",
+        "tag_type": "vlan_tagged"
+      },
+      {
+        "label": "",
+        "interface_id": "Rqk5i36ugGfRI3WtSR4",
+        "tag_type": "vlan_tagged"
+      },
+      {
+        "label": "",
+        "interface_id": "JcN_F4pXCjcQNYKRD-c",
+        "tag_type": "vlan_tagged"
+      },
+      {
+        "label": "",
+        "interface_id": "8Urm7ahcihZB-0sVkMQ",
+        "tag_type": "vlan_tagged"
+      },
+      {
+        "label": "",
+        "interface_id": "H3lonosg5mSpVQ1u3fE",
+        "tag_type": "vlan_tagged"
+      },
+      {
+        "label": "",
+        "interface_id": "Gx6k9tSI0Bpfg0fSCYc",
+        "tag_type": "vlan_tagged"
+      },
+      {
+        "label": "",
+        "interface_id": "VM5njZN3XEgo5b9OEI4",
+        "tag_type": "vlan_tagged"
+      },
+      {
+        "label": "",
+        "interface_id": "IDasL7UuXlZLHOV-Iqo",
+        "tag_type": "vlan_tagged"
+      },
+      {
+        "label": "",
+        "interface_id": "V657bG09MZPqU-smooc",
+        "tag_type": "vlan_tagged"
+      },
+      {
+        "label": "",
+        "interface_id": "kPQzN3ZWUDFarrt85qE",
+        "tag_type": "vlan_tagged"
+      },
+      {
+        "label": "",
+        "interface_id": "rtkgvWKLvIRpmmcl9uQ",
+        "tag_type": "vlan_tagged"
+      },
+      {
+        "label": "",
+        "interface_id": "14NzXULZiZQu2wfR4F0",
+        "tag_type": "vlan_tagged"
+      },
+      {
+        "label": "",
+        "interface_id": "Ud-1KjmGCG8zGlJ_xiU",
+        "tag_type": "vlan_tagged"
+      },
+      {
+        "label": "kutay",
+        "interface_id": "Ud-1KjmGCG8iGlJ_xiU",
+        "tag_type": "vlan_tagged"
+      },
+      {
+        "label": "",
+        "interface_id": "cXc4IO0IFNpclGn-jjc",
+        "tag_type": "vlan_tagged"
+      }
+    ],
+    "floating_ips": []
+  }
