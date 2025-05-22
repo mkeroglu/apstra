@@ -28,4 +28,4 @@
 - name: Add VN to FW-CT
   ansible.builtin.include_role:
     name: add_vn_to_fw_ct_multiple
-  when: is_vn_id_in_nodes_fw == false and item.is_gateway_type_fw == true
+  when: is_vn_id_in_nodes_fw == false and item.is_shared_vn == false and item.is_gateway_type_fw == true
