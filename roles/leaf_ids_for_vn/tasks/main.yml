@@ -100,15 +100,29 @@
     virtual_networks_vlan_id: "{{ vn.vlan_id }}"
   when: item.is_current_vn == true 
 
+- name: Set vn_name in desired format
+  ansible.builtin.set_fact:
+    virtual_networks_vn_id: "{{ vn.vn_id }}"
+  when: item.is_current_vn == true
+
 - name: Retrieve Blueprint IDs
   ansible.builtin.set_fact:
-    virtual_networks_id: "{{ virtual_networks.json.virtual_networks | dict2items | selectattr('value.label', 'equalto', virtual_networks_name) | map(attribute='value.id') | first }}"
+    virtual_networks_id: "{{ virtual_networks.json.virtual_networks | dict2items | selectattr('value.vn_id', 'equalto', virtual_networks_vn_id) | map(attribute='value.id') | first }}"
   when: item.is_current_vn == true 
 
 - name: Retrieve Blueprint IDs
   ansible.builtin.set_fact:
-    virtual_networks_leaf: "{{ virtual_networks.json.virtual_networks| dict2items | selectattr('value.label', 'equalto', virtual_networks_name) | list | map(attribute='value.bound_to') | list | json_query('[].system_id') }}"
+    virtual_networks_leaf: "{{ virtual_networks.json.virtual_networks| dict2items | selectattr('value.vn_id', 'equalto', virtual_networks_vn_id) | list | map(attribute='value.bound_to') | list | json_query('[].system_id') }}"
   when: item.is_current_vn == true 
+
+- name:
+  debug:
+    var: virtual_networks_id
+
+
+- name:
+  debug:
+    var: virtual_networks_lead
 
 - name:
   debug:
