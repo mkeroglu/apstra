@@ -31,27 +31,35 @@
     body_format: json
   #ignore_errors: yes
   register: cts
+
 - name:
   ansible.builtin.set_fact:
     fw_ct_name: "{{ sz.vns[0].fw_ct_name }}"
+
 - name:
   ansible.builtin.set_fact:
     vn_id: "{{ sz.vns[0].vn_id }}"
+
 - name:
   ansible.builtin.set_fact:
     vlan_id: "{{ sz.vns[0].vlan_id }}"
+
 - name:
   ansible.builtin.set_fact:
     name: "{{ sz.vns[0].name }}"
+
 - name:
   ansible.builtin.debug:
     var: cts  
+
 - name: Retrieve Blueprint ID
   ansible.builtin.set_fact:
     desired_id: "{{ cts.json.policies | selectattr('label', 'search', fw_ct_name) | map(attribute='id') | first }}"
+
 - name: show blueprint id
   ansible.builtin.debug:
     msg: "{{ desired_id }}"
+
 - name: "Get Connectvity Template"
   uri:
     url: "{{ apstra.baseurl }}/blueprints/{{ bp_id }}/obj-policy-export/{{ desired_id }}"
@@ -118,20 +126,24 @@
 - name: Retrieve Blueprint IDs
   ansible.builtin.set_fact:
     vn_ids: "{{ vns.json.virtual_networks | dict2items | map(attribute='key') | list }}"
+
 - name:
   set_fact:
     vn_name2: "{{ sz.vns | json_query('[].name') }}"
+
 - name: Set vn_name in desired format
   ansible.builtin.set_fact:
     vn_name: "{{ vn.name }}"
-      #- name:
-      #  debug:
-      #    var: vn_name
+    
+- name: Set vn_name in desired format
+  ansible.builtin.set_fact:
+    virtual_network_vn_id: "{{ vn.vn_id }}"
+
 - name: Retrieve Blueprint ID by name
   ansible.builtin.set_fact:
     vn_id: "{{ item.value.id }}"
   loop: "{{ vns.json.virtual_networks | dict2items }}"
-  when: item.value.label == vn_name
+  when: item.value.vn_id == virtual_network_vn_id
   register: vn_id_results
 
 - name: Define new node IDs to add
