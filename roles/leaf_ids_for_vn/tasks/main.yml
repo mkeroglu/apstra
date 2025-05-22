@@ -117,15 +117,6 @@
 
 - name:
   debug:
-    var: virtual_networks_id
-
-
-- name:
-  debug:
-    var: virtual_networks_lead
-
-- name:
-  debug:
     var: combined_leaf_ids
   when: item.is_current_vn == true
 

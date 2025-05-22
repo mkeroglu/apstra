@@ -25,9 +25,13 @@
   ansible.builtin.set_fact:
     vn_name: "{{ vn.name }}"
 
+- name:
+  ansible.builtin.set_fact:
+    virtual_network_id: "{{ vn.vn_id }}"
+
 - name: Find ID for label "TVNI-112-101"
   set_fact:
-    desired_vn_id: "{{ labels | selectattr('value.label', 'equalto', vn_name) | map(attribute='value.id') | list }}"
+    desired_vn_id: "{{ labels | selectattr('value.vn_id', 'equalto', virtual_network_id) | map(attribute='value.id') | list }}"
 
 - name: "Get Connectvity Template"
   uri:
