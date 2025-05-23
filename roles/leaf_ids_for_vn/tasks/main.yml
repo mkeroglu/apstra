@@ -64,7 +64,7 @@
 - name: Include example_role
   include_role:
     name: get_leaf_ids_fw
-  when: item.is_current_vn == true and item.is_gateway_type_fw == true
+  when: item.is_current_vn == true and is_shared_vn == false and item.is_gateway_type_fw == true
 
 - name: Combine leaf_id_fw and leaf_id_vsphere
   set_fact:
@@ -74,7 +74,7 @@
 - name: Combine leaf_id_fw and leaf_id_vsphere
   set_fact:
     combined_leaf_ids: "{{ leaf_id_fw + leaf_id_vsphere }}"
-  when: item.is_current_vn == true and item.is_gateway_type_fw == true
+  when: item.is_current_vn == true and is_shared_vn == false and item.is_gateway_type_fw == true
 
 - name: "Get Connectvity Template"
   uri:
