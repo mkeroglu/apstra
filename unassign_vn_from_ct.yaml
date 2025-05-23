@@ -6,3 +6,4 @@
 - name: Add VN to CT
   ansible.builtin.include_role:
     name: unassign_vn_from_fw_ct
+  when: item.is_gateway_type_fw == true
