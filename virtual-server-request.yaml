@@ -11,6 +11,10 @@
       - { role: check_ds }
       - { role: check_diff }
     tasks:
+    - name: Create Empty VN Message
+      set_fact:
+        vn_messages: []
+
     - name: Create VNS
       include_tasks: create_vns.yml
       vars:
@@ -38,3 +42,7 @@
       include_role:
         name: commit_changes
       when: is_there_a_commit
+
+    - name: Set VN Messages
+      debug:
+        msg: "{{ vn_messages | join(' | ') }}"

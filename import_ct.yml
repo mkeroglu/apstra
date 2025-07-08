@@ -29,3 +29,24 @@
   ansible.builtin.include_role:
     name: add_vn_to_fw_ct_multiple
   when: is_vn_id_in_nodes_fw == false and item.is_shared_vn == false and item.is_gateway_type_fw == true
+
+- name: Set Status Message
+  set_fact:
+    vn_message: |-
+          {% if not item.is_shared_vn and not item.is_current_vn %}
+          {{ item.name }} isimli Virtual Network Oluşturulmuştur.
+          {% else %}
+          {{ item.name }} isimli Virtual Network halihazırda vardır.
+          {% endif %}
+
+          {% if not is_vn_id_in_nodes %}
+          {{ item.name }} isimli Virtual Network {{ item.ct_name }} isimli Connectivity Template içerisine eklenmiştir.
+          {% endif %}
+
+          {% if not is_vn_id_in_nodes_fw and not item.is_shared_vn and item.is_gateway_type_fw %}
+          {{ item.name }} isimli Virtual Network {{ item.fw_ct_name }} isimli Connectivity Template içerisine eklenmiştir.
+          {% endif %}
+
+- name:
+  set_fact:
+    vn_messages: "{{ vn_messages + [vn_message] }}"
