@@ -36,10 +36,32 @@
   debug:
     var: digest
 
-- name: Check if any value is greater than zero
+      #- name: Check if any value is greater than zero
+      #  fail:
+      #    msg: "Apstra üzerinde Bekleyen Commit İşlemi Vardır. Lütfen Kontrol Ediniz. {{ non_null }}"
+      #  when: item.value.added > 0 or item.value.changed > 0 or item.value.removed > 0
+      #  loop: "{{ digest | dict2items }}"
+      #  loop_control:
+      #    label: "{{ item.key }}"
+
+- name: Non-zero değerleri filtrele
+  set_fact:
+    non_zero_changes: >-
+      {{
+        digest | dict2items
+        | selectattr('value', 'defined')
+        | selectattr('value', '!=', None)
+        | selectattr('value.added', '>', 0)
+          + digest | dict2items
+          | selectattr('value.changed', '>', 0)
+          + digest | dict2items
+          | selectattr('value.removed', '>', 0)
+      | unique
+      }}
+
+- name: Fail eğer herhangi bir değişiklik varsa
   fail:
-    msg: "Apstra üzerinde Bekleyen Commit İşlemi Vardır. Lütfen Kontrol Ediniz. {{ non_null }}"
-  when: item.value.added > 0 or item.value.changed > 0 or item.value.removed > 0
-  loop: "{{ digest | dict2items }}"
-  loop_control:
-    label: "{{ item.key }}"
+    msg: >-
+      Apstra üzerinde Bekleyen Commit İşlemi Vardır. Lütfen Kontrol Ediniz. 
+  when: non_zero_changes | length > 0
+

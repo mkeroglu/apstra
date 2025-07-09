@@ -16,36 +16,28 @@
       force_basic_auth: yes
       body_format: json
     register: node_system
+    ignore_errors: yes
+    run_once: true
+  
+  - name: "Fail if nodes are empty in node_system"
+    fail:
+      msg: "HATA: node_system içinde hiçbir node bulunamadı!"
+    when: node_system.json.nodes | length == 0
 
   - name: Set Fact Based on Interfaces
     set_fact:
       node_interfaces: "{{ node_system }}"
     when: node_type == "interface"
 
-      #  - name:
-      #    debug:
-      #      msg: "{{ node_interfaces }}"
-      #    when: node_type == "interface"
-
   - name: Set Fact Based on Switch
     set_fact:
       node_switch: "{{ node_system }}"
     when: node_type == "system"
  
-      #  - name:
-      #    debug:
-      #      msg: "{{ node_switch }}"
-      #    when: node_type == "system"
-
   - name: Set Fact Based on Virtual Network
     set_fact:
       node_vns: "{{ node_system }}"
     when: node_type == "virtual_network"
-
-      #  - name:
-      #    debug:
-      #      msg: "{{ node_vns }}"
-      #    when: node_type == "virtual_network"
 
   - name: Set Fact Based on Connectivity Templates
     set_fact:

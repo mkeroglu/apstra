@@ -24,7 +24,13 @@
     force_basic_auth: yes
     body_format: json
   register: login
-  run_once: True
+  ignore_errors: yes
+  run_once: true
+
+- name: "Log custom error message if login fails"
+  fail:
+    msg: "Apstra'ya giriş yapılamıyor. Lütfen erişim bilgilerini kontrol edin. Status: {{ login.status }}, Response: {{ login.content }}"
+  when: login is failed
 
 - debug:
     msg: "Retrieved Login Token"
