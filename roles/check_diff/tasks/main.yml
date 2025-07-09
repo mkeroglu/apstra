@@ -48,15 +48,11 @@
   set_fact:
     non_zero_changes: >-
       {{
-        digest | dict2items
-        | selectattr('value', 'defined')
-        | selectattr('value', '!=', None)
-        | selectattr('value.added', '>', 0)
-          + digest | dict2items
-          | selectattr('value.changed', '>', 0)
-          + digest | dict2items
-          | selectattr('value.removed', '>', 0)
-      | unique
+        (
+          (digest | dict2items | selectattr('value.added', '>', 0) | list) +
+          (digest | dict2items | selectattr('value.changed', '>', 0) | list) +
+          (digest | dict2items | selectattr('value.removed', '>', 0) | list)
+        ) | unique
       }}
 
 - name: Fail eğer herhangi bir değişiklik varsa
