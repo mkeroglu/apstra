@@ -4,11 +4,6 @@
     leaf_ids: ""
   when: item.is_shared_vn == false and item.is_current_vn == false
 
-    #- name:
-    #  debug:
-    #    var: sz
-    #  when: item.is_shared_vn == false and item.is_current_vn == false
-
 - name: Get Device ID
   ansible.builtin.include_role:
     name: get_node_system
@@ -20,38 +15,16 @@
   ansible.builtin.set_fact:
     leaf_ids: "{{ node_system.json }}"
   when: (leaf_ids | default('')) == "" and (item.is_shared_vn == false and item.is_current_vn == false)
-      #when: (leaf_ids | default('')) == "" and is_shared_vn == false
-
-    #- name:
-    #  debug:
-    #    var: leaf_ids
-    #  when: item.is_shared_vn == false and item.is_current_vn == false
 
 - name: Get id of the system with specific label
   ansible.builtin.set_fact:
     leaf_id: "{{ leaf_ids.nodes | dict2items }}"
   when: item.is_shared_vn == false and item.is_current_vn == false
 
-    #- name:
-    #  debug:
-    #    var: leaf_id
-    #  when: item.is_shared_vn == false and item.is_current_vn == false
-
 - name: Initialize empty list for ids
   set_fact:
     specific_ids: []
   when: item.is_shared_vn == false and item.is_current_vn == false
-
-      #    - name: Add ids to specific_ids list
-      #set_fact:
-      #specific_ids: "{{ specific_ids + [item.value.id] }}"
-      #loop: "{{ leaf_id }}"
-      #when: item.value.label in leaf_name
-
-      #    - name: Display specific_ids
-      #debug:
-      #var: specific_ids
-
 
 - name: Initialize Variables
   ansible.builtin.set_fact:
@@ -69,12 +42,6 @@
   ansible.builtin.set_fact:
     leaf_ids: "{{ node_system.json  | cleanup_leaf_ids }}"
   when: (leaf_ids | default('')) == "" and (item.is_shared_vn == false and item.is_current_vn == false)
-      # when: (leaf_ids | default('')) == "" and is_shared_vn == false
-
-    #- name:
-    #  debug:
-    #    var: leaf_ids
-    #  when: item.is_shared_vn == false and item.is_current_vn == false
 
 - name: show vns
   ansible.builtin.debug:
@@ -91,16 +58,6 @@
     name: get_leaf_ids_fw
   when: item.is_shared_vn == false and item.is_current_vn == false and item.is_gateway_type_fw == true
 
-    #- name:
-    #  debug:
-    #    var: leaf_id_fw
-    #  when: item.is_shared_vn == false and item.is_current_vn == false
-
-    #- name:
-    #  debug:
-    #    var: leaf_id_vsphere
-    #  when: item.is_shared_vn == false and item.is_current_vn == false
-
 - name: Combine leaf_id_fw and leaf_id_vsphere
   set_fact:
     combined_leaf_ids: "{{ leaf_id_vsphere }}"
@@ -110,8 +67,6 @@
   set_fact:
     combined_leaf_ids: "{{ leaf_id_fw + leaf_id_vsphere }}"
   when: item.is_shared_vn == false and item.is_current_vn == false and item.is_gateway_type_fw == true
-
-
 
 - name: Display combined_leaf_ids
   debug:
@@ -152,3 +107,10 @@
     body: "{{ lookup('ansible.builtin.template','templates/create_vn_kutay.j2') }}"
     body_format: json
   when: item.is_shared_vn == false and item.is_current_vn == false
+  ignore_errors: yes
+  register: create_vn_response
+
+- name: "Log detailed error if VN creation failed"
+  fail:
+    msg: "HATA: Virtual Network oluşturulamadı! Status: {{ create_vn_response.status }}"
+  when: create_vn_response.status != 201

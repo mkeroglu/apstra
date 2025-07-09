@@ -14,10 +14,6 @@
     force_basic_auth: yes
   register: bp_ids
 
-- name:
-  debug:
-    var: bp_ids
-
 - name: Retrieve Blueprint ID
   set_fact: 
     bp_id: "{{ bp_ids.json | cleanup_bp_id(bp_name) }}"
@@ -25,3 +21,9 @@
 - name:
   ansible.builtin.debug:
     msg: "{{ bp_id }}"
+
+- name: "Check if bp_id is empty"
+  fail:
+    msg: "HATA: İlgili Apstra üzerinde {{bp_name}} isimli Blueprint bulunmamaktadır."
+  when: bp_id is not defined or bp_id | length == 0
+
